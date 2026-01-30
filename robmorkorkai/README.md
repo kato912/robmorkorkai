@@ -1,75 +1,48 @@
-# React + TypeScript + Vite
+# 📍 RobMorKorKai (รอบ มข.)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+แพลตฟอร์มค้นหาร้านอาหาร คาเฟ่ และธุรกิจยอดฮิตรอบมหาวิทยาลัยขอนแก่น พร้อม AI Assistant ช่วยแนะนำร้าน (Frontend Version)
 
-Currently, two official plugins are available:
+## 🛠 Tech Stack
+* **Framework:** React + TypeScript (Vite)
+* **Styling:** Bootstrap 5 (SCSS/CSS)
+* **Icons:** Lucide React
+* **Routing:** React Router Dom v6
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 📦 การติดตั้งและ Library ที่ใช้ (Dependencies)
+### 1. ติดตั้งทั้งหมดในครั้งเดียว (One-click Install)
+สำหรับคนที่ clone โปรเจกต์มาใหม่ ให้รันคำสั่งนี้เพื่อลงทุกอย่าง:
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+```bash
+npm install bootstrap react-router-dom lucide-react class-variance-authority clsx tailwind-merge @radix-ui/react-slot @radix-ui/react-checkbox
 
-Note: This will impact Vite dev & build performances.
+1. Core Framework & Routing
+  npm install bootstrap react-router-dom
 
-## Expanding the ESLint configuration
+2. Icon
+  npm install lucide-react
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+3. Advanced UI Components & Utils
+  # Utility สำหรับจัดการ Class names
+  npm install class-variance-authority clsx tailwind-merge
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+# Headless UI Primitives (Radix UI)
+  npm install @radix-ui/react-slot @radix-ui/react-checkbox
+  
+```text
+src/
+├── components/
+│   ├── login/                 # Component ย่อยของหน้า Login
+│   │   ├── AuthContent.tsx      <-- ส่วนเนื้อหาปุ่ม Login (ใช้ร่วมกันทั้ง 2 จอ)
+│   │   ├── LoginMobileView.tsx  <-- Layout สำหรับมือถือ (มี Header สีน้ำเงิน)
+│   │   ├── LoginDesktopView.tsx <-- Layout สำหรับ PC (แบ่งครึ่งจอ)
+│   │   └── ...
+│   └── (future-features)/     # ฟีเจอร์อื่นๆ ในอนาคต
+│
+├── pages/
+│   ├── Login.tsx              # หน้าหลัก (ทำหน้าที่สลับ Mobile/Desktop View)
+│   └── ...
+│
+├── App.tsx                    # Main Routing
+└── main.tsx                   # Entry Point
