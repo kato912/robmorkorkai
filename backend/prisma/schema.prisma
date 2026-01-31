@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  // url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  name              String?
+  image             String? 
+  isVerifiedStudent Boolean  @default(false)
+  role              Role     @default(USER)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  lastLoginAt       DateTime @default(now())
+  reviews           Review[]
+}
+
+model Shop {
+  id            String   @id @default(uuid())
+  
+  osmId         String   @unique 
+  
+  name          String
+  type          String?  // เช่น 'cafe', 'restaurant', 'noodle_shop'
+  address       String?  // ที่อยู่คร่าวๆ จาก OSM
+  
+  latitude      Float
+  longitude     Float
+  
+  // ข้อมูลที่รอให้ User หรือ Admin มาเติม (OSM ไม่มีให้)
+  coverImage    String? 
+  openHours     String? 
+  priceRange    String?
+
+  averageRating Float    @default(0)
+  reviewCount   Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  reviews       Review[]
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int      // 1-5 ดาว
+  comment   String   @db.Text
+  
+  // Content Moderation
+  isFlagged Boolean  @default(false) // ถูก report หรือไม่
+  isHidden  Boolean  @default(false) // admin ซ่อนรีวิวนี้
+
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  shopId    String
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([shopId])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
