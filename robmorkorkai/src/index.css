@@ -1,0 +1,14 @@
+/* ปิดแถบสีเวลาแตะปุ่มบนมือถือ */
+button, a {
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+}
+
+/* ป้องกันปุ่ม Danger ของ Bootstrap เปลี่ยนเป็นสีดำเข้มตอนกด */
+.btn-outline-danger:active, 
+.btn-outline-danger:focus {
+    background-color: #dc3545 !important;
+    color: white !important;
+    box-shadow: none !important;
+    border-color: #dc3545 !important;
+}

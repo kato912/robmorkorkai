@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // ✅ 1. เพิ่ม useNavigate
 import { MapPin } from "lucide-react";
 
 const GoogleIcon = () => (
@@ -11,7 +11,20 @@ const GoogleIcon = () => (
     </svg>
 );
 
-export const AuthContent: React.FC = () => {
+interface Props {
+    onLogin?: () => void; // ใส่ ? เผื่อไว้ก่อน แต่จริงๆ ควรส่งมา
+}
+
+export const AuthContent: React.FC<Props> = ({ onLogin }) => {
+    const navigate = useNavigate(); // ✅ 3. เตรียมคำสั่งย้ายหน้า
+
+    const handleGoogleClick = () => {
+        if (onLogin) {
+            onLogin();
+            navigate("/profile"); // 2. ย้ายไปหน้า Profile
+        }
+    };
+
     return (
         <div className="w-100" style={{ maxWidth: "400px" }}>
             {/* Title */}
@@ -19,13 +32,16 @@ export const AuthContent: React.FC = () => {
                 <div className="d-none d-lg-inline-flex bg-primary bg-opacity-10 p-3 rounded-4 mb-3">
                     <MapPin size={32} className="text-primary" />
                 </div>
-                <h2 className="fw-bold text-dark h4 h-lg-2">ยินดีต้อนรับ</h2> {/* h4 on mobile, h2 on desktop */}
+                <h2 className="fw-bold text-dark h4 h-lg-2">ยินดีต้อนรับ</h2>
                 <p className="small text-muted">เข้าสู่ระบบด้วยบัญชี Google ของคุณ</p>
             </div>
 
             {/* Buttons */}
             <div className="d-grid gap-3">
-                <button className="btn btn-outline-secondary py-3 d-flex align-items-center justify-content-center gap-2 fw-medium bg-white">
+                <button 
+                    onClick={handleGoogleClick}
+                    className="btn btn-outline-secondary py-3 d-flex align-items-center justify-content-center gap-2 fw-medium bg-white"
+                >
                     <GoogleIcon />
                     เข้าสู่ระบบด้วย Google
                 </button>
@@ -35,7 +51,7 @@ export const AuthContent: React.FC = () => {
                     <span className="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small text-uppercase">หรือ</span>
                 </div>
 
-                <Link to="/guest" className="btn btn-light text-secondary fw-medium py-2">
+                <Link to="/" className="btn btn-light text-secondary fw-medium py-2">
                     ดูร้านค้าโดยไม่ต้องเข้าสู่ระบบ
                 </Link>
             </div>

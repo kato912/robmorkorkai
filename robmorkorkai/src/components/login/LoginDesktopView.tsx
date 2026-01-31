@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
 import { AuthContent } from "./AuthContent";
 
+interface Props {
+    onLogin: () => void;
+}
+
 const StatBox: React.FC<{ number: string; label: string }> = ({ number, label }) => (
     <div className="bg-white bg-opacity-10 p-3 rounded-3">
         <div className="fs-3 fw-bold">{number}</div>
@@ -10,11 +14,10 @@ const StatBox: React.FC<{ number: string; label: string }> = ({ number, label })
     </div>
 );
 
-const LoginDesktopView: React.FC = () => {
+const LoginDesktopView: React.FC<Props> = ({ onLogin }) => {
     return (
         <div className="row g-0 min-vh-100">
 
-            {/* 🔵 Left Side: Hero Section */}
             <div
                 className="col-6 d-flex flex-column justify-content-between p-5 text-white position-relative overflow-hidden"
                 style={{ background: "linear-gradient(135deg, #2563eb, #1d4ed8)" }}
@@ -41,10 +44,8 @@ const LoginDesktopView: React.FC = () => {
                 </div>
             </div>
 
-            {/* ⚪ Right Side: Login Form */}
             <div className="col-6 d-flex align-items-center justify-content-center bg-white">
-                {/* เรียกใช้เนื้อหาปุ่มกด */}
-                <AuthContent />
+                <AuthContent onLogin={onLogin} />
             </div>
         </div>
     );
