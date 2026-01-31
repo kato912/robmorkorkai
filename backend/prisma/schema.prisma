@@ -1,12 +1,8 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// prisma/schema.prisma
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
+  // ❌ ห้ามใส่ output ตรงนี้เด็ดขาด
 }
 
 datasource db {
@@ -14,54 +10,49 @@ datasource db {
   // url      = env("DATABASE_URL")
 }
 
+// --- 1. User (รองรับ Login Google + Auth.js) ---
 model User {
   id                String   @id @default(uuid())
   email             String   @unique
   name              String?
-  image             String? 
+  image             String?
   isVerifiedStudent Boolean  @default(false)
   role              Role     @default(USER)
+  
+  reviews           Review[]
+
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   lastLoginAt       DateTime @default(now())
-  reviews           Review[]
 }
 
+// --- 2. Shop (รองรับ OpenStreetMap) ---
 model Shop {
   id            String   @id @default(uuid())
-  
-  osmId         String   @unique 
-  
+  osmId         String   @unique  // ID จาก OpenStreetMap
   name          String
-  type          String?  // เช่น 'cafe', 'restaurant', 'noodle_shop'
-  address       String?  // ที่อยู่คร่าวๆ จาก OSM
+  type          String?  
+  address       String?
   
+  // พิกัดสำหรับแสดงบนแผนที่ Leaflet
   latitude      Float
   longitude     Float
   
-  // ข้อมูลที่รอให้ User หรือ Admin มาเติม (OSM ไม่มีให้)
-  coverImage    String? 
-  openHours     String? 
-  priceRange    String?
-
-  averageRating Float    @default(0)
-  reviewCount   Int      @default(0)
+  coverImage    String?
+  openHours     String?
+  
+  reviews       Review[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-
-  reviews       Review[]
 }
 
+// --- 3. Review ---
 model Review {
   id        String   @id @default(uuid())
-  rating    Int      // 1-5 ดาว
+  rating    Int
   comment   String   @db.Text
+  isFlagged Boolean  @default(false)
   
-  // Content Moderation
-  isFlagged Boolean  @default(false) // ถูก report หรือไม่
-  isHidden  Boolean  @default(false) // admin ซ่อนรีวิวนี้
-
-  // Relations
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
@@ -70,9 +61,6 @@ model Review {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@index([userId])
-  @@index([shopId])
 }
 
 enum Role {
