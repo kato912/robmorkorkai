@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import Login from './components/pages/LoginPage';
 import HomePage from './components/pages/HomePage';
 import AIPage from './components/pages/AIPage';
 import ShopDetailPage from './components/pages/ShopDetailPage';
 import ProfilePage from './components/pages/ProfilePage';
+import { AddShopPage } from "./components/pages/AddShopPage";
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -36,6 +36,9 @@ const AppContent = () => {
       <Route path="/login" element={<Login onLogin={handleLogin} />} />
       <Route path="/profile" element={
         isLoggedIn ? <ProfilePage onLogout={handleLogout} /> : <Navigate to="/login" replace />
+      } />
+      <Route path="/add-shop" element={
+        isLoggedIn ? <AddShopPage /> : <Navigate to="/login" replace />
       } />
     </Routes>
   );

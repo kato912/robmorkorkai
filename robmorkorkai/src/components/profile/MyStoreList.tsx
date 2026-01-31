@@ -38,7 +38,7 @@ export const MyStoreList: React.FC<Props> = ({ stores }) => {
                             />
                             <div className="flex-grow-1">
                                 <h5 className="fw-bold text-dark m-0" style={{ fontSize: '1rem' }}>{store.name}</h5>
-                                <span className="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-0 mt-1" style={{ fontSize: '10px' }}>
+                                <span className={`badge rounded-pill px-2 py-0 mt-1 ${store.status === 'verified' ? 'bg-success bg-opacity-10 text-success' : 'bg-warning bg-opacity-10 text-warning'}`} style={{ fontSize: '10px' }}>
                                     {store.status === 'verified' ? 'Verified' : 'Pending'}
                                 </span>
                             </div>
@@ -48,8 +48,8 @@ export const MyStoreList: React.FC<Props> = ({ stores }) => {
                 </Link>
             ))}
 
-            {/* 2. ปุ่มเพิ่มร้านค้า (Dashed Border) */}
-            <Link to="/profile/add-store" className="text-decoration-none">
+            {/* 2. ปุ่มเพิ่มร้านค้า (แก้ไข Link ตรงนี้ ✅) */}
+            <Link to="/add-shop" className="text-decoration-none">
                 <div className="card border-2 border-dashed border-primary bg-primary bg-opacity-10 rounded-4 p-4 mb-4 text-center cursor-pointer hover-bg-primary-subtle transition">
                     <div className="d-flex align-items-center justify-content-center gap-3">
                         <div className="bg-white p-2 rounded-circle text-primary shadow-sm">

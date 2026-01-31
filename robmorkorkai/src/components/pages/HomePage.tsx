@@ -12,6 +12,8 @@ export interface HomeViewProps {
     filteredShops: any[];
     zones: typeof zones;
     categories: typeof categories;
+    openTime: string;
+    reviewCount?: number;
 }
 
 export const zones = [
@@ -31,17 +33,15 @@ export const categories = [
 ];
 
 export const shops = [
-    { id: "1", name: "Study Space Cafe", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=500", rating: 4.8, zone: "กังสดาล", category: "คาเฟ่", verified: true },
-    { id: "2", name: "Midnight Brew", image: "https://images.unsplash.com/photo-1493857671505-72967e2e2760?auto=format&fit=crop&w=500", rating: 4.5, zone: "หลังมอ", category: "คาเฟ่", verified: false },
-    { id: "3", name: "Shabu King", image: "https://images.unsplash.com/photo-1574484284008-86d47dc7b905?auto=format&fit=crop&w=500", rating: 4.2, zone: "กังสดาล", category: "ชาบู/ปิ้งย่าง", verified: true },
-    { id: "4", name: "Library Hub", image: "https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=500", rating: 4.6, zone: "ฝั่งบึง", category: "อ่านหนังสือ", verified: true },
+    { id: "1", name: "Study Space Cafe", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=500", rating: 4.8, zone: "กังสดาล", openTime: "18:00 - 03:00 น." ,category: "คาเฟ่", verified: true },
+    { id: "2", name: "Midnight Brew", image: "https://images.unsplash.com/photo-1493857671505-72967e2e2760?auto=format&fit=crop&w=500", rating: 4.5, zone: "หลังมอ", openTime: "18:00 - 03:00 น.", category: "คาเฟ่", verified: false },
+    { id: "3", name: "Shabu King", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800", rating: 4.2, zone: "กังสดาล", openTime: "18:00 - 03:00 น.", category: "ชาบู/ปิ้งย่าง", verified: true },
+    { id: "4", name: "Library Hub", image: "https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=500", rating: 4.6, zone: "ฝั่งบึง", openTime: "18:00 - 03:00 น.", category: "อ่านหนังสือ", verified: true },
 ];
 
-// ✅ 2. แก้บรรทัดนี้ให้รับ Props
-const HomePage: React.FC<Props> = ({ isLoggedIn }) => {
+const HomePage: React.FC<HomeViewProps  > = ({ isLoggedIn }) => {
     const [selectedZone, setSelectedZone] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
     // Logic การกรองร้านค้า
     const filteredShops = shops.filter((shop) => {
         const matchZone = selectedZone

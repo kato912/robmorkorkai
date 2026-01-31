@@ -7,38 +7,50 @@ interface Props {
     isMobile?: boolean;
 }
 
-export const ZoneFilter: React.FC<Props> = ({ zones, selectedZone, setSelectedZone, isMobile }) => {
+export const ZoneFilter: React.FC<Props> = ({ zones = [], selectedZone, setSelectedZone, isMobile }) => {
+    const safeZones = zones || [];
+
     return (
         <div
             className={isMobile ? "d-flex gap-2 overflow-auto pb-2" : "d-flex flex-column gap-2"}
-            style={isMobile ? { scrollbarWidth: 'none' } : {}}
+            style={isMobile ? { 
+                scrollbarWidth: 'none', 
+                msOverflowStyle: 'none',
+                paddingRight: '16px'
+            } : {}}
         >
             {/* --- ปุ่ม "ทั้งหมด" (All) --- */}
             <button
                 onClick={() => setSelectedZone(null)}
-                className={`btn text-nowrap ${isMobile ? 'rounded-pill px-3 btn-sm' : 'text-start py-2'} ${selectedZone === null
-                        ? "btn-dark shadow-sm border-0" // เลือกแล้วสีเข้ม
-                        : "btn-light bg-white border text-secondary"
+                // ✅ เพิ่ม d-flex align-items-center justify-content-center เพื่อจัดกึ่งกลาง
+                className={`btn border px-3 text-nowrap d-flex align-items-center justify-content-center ${
+                    isMobile ? 'rounded-pill' : 'text-start w-100 py-2 rounded-3'
+                } ${selectedZone === null
+                        ? "btn-dark text-white border-dark shadow-sm" 
+                        : "btn-white bg-white text-secondary border-light-subtle"
                     }`}
+                style={{ height: isMobile ? '38px' : 'auto', fontSize: '14px' }}
             >
-                <span className="fw-medium">ทั้งหมด</span>
-                {!isMobile && <small className="ms-2 opacity-50">(All Zones)</small>}
+                <span className="fw-bold">ทั้งหมด</span>
+                {!isMobile && <small className="ms-2 opacity-50 fw-normal">(All Zones)</small>}
             </button>
 
             {/* --- ปุ่มโซนต่างๆ --- */}
-            {zones.map((zone) => (
+            {safeZones.map((zone) => (
                 <button
                     key={zone.id}
                     onClick={() => setSelectedZone(zone.id)}
-                    className={`btn text-nowrap position-relative overflow-hidden ${isMobile ? 'rounded-pill px-3 btn-sm' : 'text-start py-2'
-                        } ${selectedZone === zone.id
-                            ? "btn-primary shadow-sm"
-                            : "btn-light bg-white border text-secondary"
+                    className={`btn border px-3 text-nowrap d-flex align-items-center justify-content-center ${
+                        isMobile ? 'rounded-pill' : 'text-start w-100 py-2 rounded-3'
+                    } ${selectedZone === zone.id
+                            ? "btn-primary text-white border-primary shadow-sm"
+                            : "btn-white bg-white text-secondary border-light-subtle"
                         }`}
+                    style={{ height: isMobile ? '38px' : 'auto', fontSize: '14px' }}
                 >
                     <span className="fw-medium">{zone.label}</span>
                     {!isMobile && (
-                        <small className={`ms-2 ${selectedZone === zone.id ? 'text-white-50' : 'text-muted opacity-50'}`}>
+                        <small className={`ms-2 fw-normal ${selectedZone === zone.id ? 'text-white-50' : 'text-muted opacity-50'}`}>
                             ({zone.labelEn})
                         </small>
                     )}
