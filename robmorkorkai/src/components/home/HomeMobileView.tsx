@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // ✅ 1. เพิ่ม useNavigate
 import { Search, MapPin, Menu, X } from "lucide-react";
 import { AIBanner } from "./AIBanner";
 import { ShopCard } from "./ShopCard";
@@ -14,12 +14,21 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
     selectedCategory, setSelectedCategory,
     filteredShops, zones, categories
 }) => {
+    const navigate = useNavigate(); // ✅ 2. เรียกใช้ hook
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [searchText, setSearchText] = useState(""); // State สำหรับรับค่า input
     const profileImage = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
+
+    // ✅ 3. ฟังก์ชันกด Enter แล้วไปหน้า Search
+    const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            // ส่งค่าที่พิมพ์ไปด้วย (ถ้าหน้า Search รองรับการรับค่าผ่าน state หรือ url)
+            navigate('/search', { state: { startQuery: searchText } });
+        }
+    };
 
     return (
         <>
-            {/* ป้องกันแถบดำตอนกดปุ่มบนมือถือ */}
             <style>{`* { -webkit-tap-highlight-color: transparent; }`}</style>
 
             <div className="bg-light min-vh-100" style={{ paddingBottom: '100px' }}>
@@ -29,10 +38,10 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
                         <div className="d-flex align-items-center gap-2">
                             <MapPin size={24} /> <span className="fw-bold fs-5">robmorkorkai</span>
                         </div>
-                        
+
                         {isLoggedIn ? (
                             <Link to="/profile" className="text-decoration-none">
-                                <img 
+                                <img
                                     src={profileImage}
                                     alt="Profile"
                                     className="rounded-circle border border-2 border-white"
@@ -45,10 +54,17 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
                             </button>
                         )}
                     </div>
-                    
+
                     <div className="position-relative">
                         <Search className="position-absolute top-50 translate-middle-y ms-3 text-secondary" size={20} />
-                        <input className="form-control rounded-pill ps-5 border-0 shadow-sm" placeholder="ค้นหาร้านอาหาร..." />
+                        {/* ✅ 4. Input ผูกกับ handleSearch */}
+                        <input
+                            className="form-control rounded-pill ps-5 border-0 shadow-sm"
+                            placeholder="ค้นหาร้านอาหาร..."
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            onKeyDown={handleSearch} // กด Enter แล้วไป
+                        />
                     </div>
                 </div>
 
@@ -71,6 +87,7 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
                     <div className="mb-5">
                         <h6 className="fw-bold text-secondary mb-3">🔥 ร้านยอดฮิต</h6>
                         <div className="d-flex flex-column gap-3">
+                            {/* แสดงรายการตามปกติ (เหมือนเดิม) ไม่ต้องกรอง Local */}
                             {filteredShops.map((shop) => (
                                 <ShopCard key={shop.id} shop={shop} />
                             ))}
@@ -80,10 +97,10 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
 
             <BottomNav activePage="home" isLoggedIn={isLoggedIn} />
-            
+
             {/* Menu Overlay */}
             {mobileMenuOpen && (
                 <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 z-3" onClick={() => setMobileMenuOpen(false)}>

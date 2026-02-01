@@ -7,6 +7,7 @@ import AIPage from './components/pages/AIPage';
 import ShopDetailPage from './components/pages/ShopDetailPage';
 import ProfilePage from './components/pages/ProfilePage';
 import { AddShopPage } from "./components/pages/AddShopPage";
+import { SearchPage } from "./components/pages/SearchPage"; // ✅ 1. Import SearchPage เข้ามา
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -31,8 +32,9 @@ const AppContent = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} />} />
+      <Route path="/search" element={<SearchPage isLoggedIn={isLoggedIn} />} />
       <Route path='/ai' element={<AIPage />} />
-      <Route path="/shop/:id" element={<ShopDetailPage />} />
+      <Route path="/shop/:id" element={<ShopDetailPage isLoggedIn={isLoggedIn}/>} />
       <Route path="/login" element={<Login onLogin={handleLogin} />} />
       <Route path="/profile" element={
         isLoggedIn ? <ProfilePage onLogout={handleLogout} /> : <Navigate to="/login" replace />

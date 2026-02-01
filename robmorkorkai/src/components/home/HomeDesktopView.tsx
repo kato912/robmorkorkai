@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ShopCard } from "./ShopCard";
 import { ZoneFilter } from "./ZoneFilter";
 import { CategoryFilter } from "./CategoryFilter";
@@ -14,13 +15,28 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
     setSelectedCategory,
     filteredShops, 
     zones, 
-    categories
+    categories,
 }) => {
+    const navigate = useNavigate(); // ✅ 2. เรียกใช้ Hook
+    const [searchQuery, setSearchQuery] = useState("");
+    const handleSearch = () => {
+        if (searchQuery.trim()) {
+            navigate('/search', { state: { startQuery: searchQuery } });
+        }
+    };
     return (
         <div className="bg-light min-vh-100">
 
             {/* Navbar */}
-            <TopNavbar activePage="home" isLoggedIn={isLoggedIn} showSearchBar={true} />
+            {/* ✅ 2. ส่งค่าต่อไปให้ Navbar (เพิ่มแค่ 3 บรรทัดนี้) */}
+            <TopNavbar 
+                activePage="home" 
+                isLoggedIn={isLoggedIn} 
+                showSearchBar={true} 
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                handleSearch={handleSearch}
+            />
 
             <div className="container py-5">
                 <div className="row g-4">

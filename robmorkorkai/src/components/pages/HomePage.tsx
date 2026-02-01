@@ -1,48 +1,44 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import HomeMobileView from "../home/HomeMobileView";
 import HomeDesktopView from "../home/HomeDesktopView";
+import { ZONES as zones, CATEGORIES as categories, MOCK_SHOPS as shops } from "../../data/mockDatat";
 
-// export to HomeDesktopView/HomeMobileView
 export interface HomeViewProps {
-    isLoggedIn: boolean; //check status login
-    selectedZone: string | null; // check selectedzone
-    setSelectedZone: (id: string | null) => void; // update if selectedzone
-    selectedCategory: string | null; // check selected category
-    setSelectedCategory: (id: string | null) => void; // update if selected category
+    isLoggedIn: boolean; 
+    selectedZone: string | null; 
+    setSelectedZone: (id: string | null) => void; 
+    selectedCategory: string | null; 
+    setSelectedCategory: (id: string | null) => void; 
     filteredShops: any[];
     zones: typeof zones;
     categories: typeof categories;
-    openTime: string;
+    openTime?: string;
     reviewCount?: number;
+    
+    // Search Props
+    searchQuery: string;
+    setSearchQuery: (text: string) => void;
+    handleSearch: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-export const zones = [
-    { id: "kangsadan", label: "กังสดาล", labelEn: "Kangsadan" },
-    { id: "langmor", label: "หลังมอ", labelEn: "Lang Mor" },
-    { id: "bueng", label: "ฝั่งบึง", labelEn: "Bueng Side" },
-    { id: "korombo", label: "โคลัมโบ", labelEn: "korumbo" },
-];
+// ❌ ลบ zones, categories, shops ที่เคยประกาศตรงนี้ออกให้หมดครับ ❌
 
-export const categories = [
-    { id: "cafe", label: "คาเฟ่" },
-    { id: "food", label: "อาหาร" },
-    { id: "shabu", label: "ชาบู/ปิ้งย่าง" },
-    { id: "coworking", label: "อ่านหนังสือ" },
-    { id: "somrod", label: "ซ่อมรถ" },
-    { id: "tiwtor", label: "ติวเตอร์" }
-];
+const HomePage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+    const navigate = useNavigate();
 
-export const shops = [
-    { id: "1", name: "Study Space Cafe", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=500", rating: 4.8, zone: "กังสดาล", openTime: "18:00 - 03:00 น." ,category: "คาเฟ่", verified: true },
-    { id: "2", name: "Midnight Brew", image: "https://images.unsplash.com/photo-1493857671505-72967e2e2760?auto=format&fit=crop&w=500", rating: 4.5, zone: "หลังมอ", openTime: "18:00 - 03:00 น.", category: "คาเฟ่", verified: false },
-    { id: "3", name: "Shabu King", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800", rating: 4.2, zone: "กังสดาล", openTime: "18:00 - 03:00 น.", category: "ชาบู/ปิ้งย่าง", verified: true },
-    { id: "4", name: "Library Hub", image: "https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=500", rating: 4.6, zone: "ฝั่งบึง", openTime: "18:00 - 03:00 น.", category: "อ่านหนังสือ", verified: true },
-];
-
-const HomePage: React.FC<HomeViewProps  > = ({ isLoggedIn }) => {
     const [selectedZone, setSelectedZone] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    // Logic การกรองร้านค้า
+    const [searchQuery, setSearchQuery] = useState("");
+
+    // ฟังก์ชัน Search
+    const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" && searchQuery.trim() !== "") {
+            navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+        }
+    };
+
+    // Logic การกรองร้านค้า (ใช้ shops ที่ import มา)
     const filteredShops = shops.filter((shop) => {
         const matchZone = selectedZone
             ? shop.zone === zones.find((z) => z.id === selectedZone)?.label
@@ -56,21 +52,23 @@ const HomePage: React.FC<HomeViewProps  > = ({ isLoggedIn }) => {
         return matchZone && matchCategory;
     });
 
-    const viewProps = {
+    const viewProps: HomeViewProps = {
         isLoggedIn,
         selectedZone,
         setSelectedZone,
         selectedCategory,
         setSelectedCategory,
         filteredShops,
-        zones,
-        categories
+        zones,       // ส่งค่าที่ import มา
+        categories,  // ส่งค่าที่ import มา
+        searchQuery,
+        setSearchQuery,
+        handleSearch
     };
 
     return (
         <>
             <div className="d-lg-none">
-                {/* HomeMobileView จะได้รับ isLoggedIn ไปด้วย และเอาไปส่งต่อให้ Navbar */}
                 <HomeMobileView {...viewProps} />
             </div>
             <div className="d-none d-lg-block">

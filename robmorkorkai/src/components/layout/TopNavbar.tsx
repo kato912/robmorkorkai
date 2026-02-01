@@ -6,18 +6,26 @@ interface Props {
     activePage: string;
     isLoggedIn: boolean;
     showSearchBar?: boolean;
+    searchQuery?: string;
+    setSearchQuery?: (text: string) => void;
+    handleSearch?: () => void; 
 }
 
-export const TopNavbar: React.FC<Props> = ({ activePage, isLoggedIn, showSearchBar = false }) => {
+export const TopNavbar: React.FC<Props> = ({ 
+    activePage, 
+    isLoggedIn, 
+    showSearchBar = false,
+    searchQuery,
+    setSearchQuery,
+    handleSearch
+}) => {
     
     const profileImage = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
-
     return (
-        // ✅ 1. เปลี่ยน bg-white เป็น bg-primary และเพิ่ม text-white
         <nav className="bg-primary sticky-top shadow-sm" style={{ zIndex: 1020 }}>
             <div className="container py-3 d-flex align-items-center justify-content-between">
                 
-                {/* Logo: สีขาว */}
+                {/* Logo */}
                 <Link to="/" className="d-flex align-items-center gap-2 text-white text-decoration-none">
                     <MapPin size={28} />
                     <span className="h4 fw-bold m-0">robmorkorkai</span>
@@ -30,7 +38,18 @@ export const TopNavbar: React.FC<Props> = ({ activePage, isLoggedIn, showSearchB
                         <input 
                             className="form-control rounded-pill ps-5 border-0 shadow-sm" 
                             placeholder="ค้นหาร้านอาหาร, คาเฟ่..." 
-                            style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }} // ปรับสีพื้นช่องค้นหาให้สว่าง
+                            style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}
+                            
+                            // ✅ Binding ค่า (เหมือนเดิม)
+                            value={searchQuery || ""} 
+                            onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
+
+                            // ✅ จุดสำคัญ: เช็คว่ากด Enter หรือไม่?
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && handleSearch) {
+                                    handleSearch(); // ถ้ากด Enter ให้เรียกฟังก์ชันเปลี่ยนหน้าทันที
+                                }
+                            }}
                         />
                     </div>
                 )}
@@ -57,7 +76,6 @@ export const TopNavbar: React.FC<Props> = ({ activePage, isLoggedIn, showSearchB
                     {isLoggedIn ? (
                         <Link to="/profile" className="d-flex align-items-center gap-2 text-decoration-none">
                             <div className="position-relative">
-                                {/* ✅ รูปโปรไฟล์ ขอบสีขาว (border-white) เพื่อให้เด่นบนพื้นฟ้า */}
                                 <img 
                                     src={profileImage}
                                     alt="Profile"
