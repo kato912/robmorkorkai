@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Camera, MapPin, Link2, FileText, Store, X, CheckCircle, Home, Bot, User } from "lucide-react";
+import { 
+    ArrowLeft, Camera, MapPin, Link2, FileText, Store, 
+    X, CheckCircle, Home, Bot, User, Clock
+} from "lucide-react";
 import { TopNavbar } from "../layout/TopNavbar";
 import { CustomDropdown } from "../addStore/CustomDropdown"; 
 
@@ -13,6 +16,7 @@ export const AddShopPage: React.FC = () => {
         zone: "",
         category: "",
         googleMapsLink: "",
+        openHours: "", // <-- เพิ่มตรงนี้
         image: null as string | null,
     });
 
@@ -30,7 +34,6 @@ export const AddShopPage: React.FC = () => {
         window.scrollTo(0, 0);
     };
 
-    // Data Options
     const categoryOptions = [
         { value: "cafe", label: "คาเฟ่" },
         { value: "restaurant", label: "ร้านอาหาร" },
@@ -154,13 +157,51 @@ export const AddShopPage: React.FC = () => {
                         </div>
 
                         <div className="col-md-6">
-                            {/* เรียกใช้ Component */}
                             <CustomDropdown 
                                 label="หมวดหมู่"
                                 placeholder="เลือกหมวดหมู่..."
                                 value={storeData.category}
                                 onChange={(val) => setStoreData({...storeData, category: val})}
                                 options={categoryOptions}
+                            />
+                        </div>
+
+                        {/* โซน */}
+                        <div className="col-md-6">
+                            <CustomDropdown 
+                                label="โซน"
+                                icon={MapPin}
+                                placeholder="เลือกโซน..."
+                                value={storeData.zone}
+                                onChange={(val) => setStoreData({...storeData, zone: val})}
+                                options={zoneOptions}
+                            />
+                        </div>
+
+                        {/* ✅ 2. เพิ่ม UI: เวลาเปิด-ปิด */}
+                        <div className="col-md-6">
+                            <label className="form-label fw-bold small text-secondary">
+                                <Clock size={16} className="me-1 mb-1" /> เวลาเปิด-ปิด
+                            </label>
+                            <input 
+                                type="text" 
+                                className="form-control form-control-lg rounded-3 fs-6 bg-white" 
+                                placeholder="เช่น 10:00 - 22:00 น." 
+                                value={storeData.openHours} 
+                                onChange={(e) => setStoreData({ ...storeData, openHours: e.target.value })} 
+                            />
+                        </div>
+
+                        <div className="col-12">
+                            <label className="form-label fw-bold small text-secondary">
+                                <Link2 size={16} className="me-1 mb-1" /> ลิงก์ Google Maps
+                            </label>
+                            <input
+                                type="text"
+                                className="form-control form-control-lg rounded-3 fs-6 bg-white"
+                                placeholder="http://googleusercontent.com/..."
+                                value={storeData.googleMapsLink}
+                                onChange={(e) => setStoreData({ ...storeData, googleMapsLink: e.target.value })}
                             />
                         </div>
 
@@ -175,31 +216,6 @@ export const AddShopPage: React.FC = () => {
                                 value={storeData.description}
                                 onChange={(e) => setStoreData({ ...storeData, description: e.target.value })}
                             ></textarea>
-                        </div>
-
-                        <div className="col-md-6">
-                            {/* เรียกใช้ Component */}
-                            <CustomDropdown 
-                                label="โซน"
-                                icon={MapPin}
-                                placeholder="เลือกโซน..."
-                                value={storeData.zone}
-                                onChange={(val) => setStoreData({...storeData, zone: val})}
-                                options={zoneOptions}
-                            />
-                        </div>
-
-                        <div className="col-md-6">
-                            <label className="form-label fw-bold small text-secondary">
-                                <Link2 size={16} className="me-1 mb-1" /> ลิงก์ Google Maps
-                            </label>
-                            <input
-                                type="text"
-                                className="form-control form-control-lg rounded-3 fs-6 bg-white"
-                                placeholder="http://googleusercontent.com/..."
-                                value={storeData.googleMapsLink}
-                                onChange={(e) => setStoreData({ ...storeData, googleMapsLink: e.target.value })}
-                            />
                         </div>
                     </div>
 
