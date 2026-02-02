@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { 
     ArrowLeft, Camera, MapPin, Link2, FileText, Store, 
-    X, CheckCircle, Home, Bot, User, Clock
+    X, CheckCircle, Clock 
 } from "lucide-react";
 import { TopNavbar } from "../layout/TopNavbar";
-import { CustomDropdown } from "../addStore/CustomDropdown"; 
+import { BottomNav } from "../layout/BottomNav"; // ✅ เรียกใช้ BottomNav ที่มีอยู่แล้ว
+import { CustomDropdown } from "../addStore/CustomDropdown"; // ✅ เรียกใช้ CustomDropdown จากไฟล์แยก
 
 export const AddShopPage: React.FC = () => {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ export const AddShopPage: React.FC = () => {
         zone: "",
         category: "",
         googleMapsLink: "",
-        openHours: "", // <-- เพิ่มตรงนี้
+        openHours: "",
         image: null as string | null,
     });
 
@@ -75,6 +76,10 @@ export const AddShopPage: React.FC = () => {
                         </Link>
                     </div>
                 </div>
+                {/* Mobile Bottom Nav */}
+                <div className="d-lg-none mt-auto">
+                    <BottomNav />
+                </div>
             </div>
         );
     }
@@ -83,7 +88,7 @@ export const AddShopPage: React.FC = () => {
         <div className="bg-light min-vh-100 pb-5">
             {/* Desktop Navbar */}
             <div className="d-none d-lg-block">
-                <TopNavbar isLoggedIn={true} />
+                <TopNavbar activePage="profile" />
             </div>
 
             {/* Mobile Header */}
@@ -157,6 +162,7 @@ export const AddShopPage: React.FC = () => {
                         </div>
 
                         <div className="col-md-6">
+                            {/* เรียกใช้ Component จากไฟล์แยก */}
                             <CustomDropdown 
                                 label="หมวดหมู่"
                                 placeholder="เลือกหมวดหมู่..."
@@ -166,8 +172,8 @@ export const AddShopPage: React.FC = () => {
                             />
                         </div>
 
-                        {/* โซน */}
                         <div className="col-md-6">
+                            {/* เรียกใช้ Component จากไฟล์แยก */}
                             <CustomDropdown 
                                 label="โซน"
                                 icon={MapPin}
@@ -178,7 +184,6 @@ export const AddShopPage: React.FC = () => {
                             />
                         </div>
 
-                        {/* ✅ 2. เพิ่ม UI: เวลาเปิด-ปิด */}
                         <div className="col-md-6">
                             <label className="form-label fw-bold small text-secondary">
                                 <Clock size={16} className="me-1 mb-1" /> เวลาเปิด-ปิด
@@ -239,21 +244,8 @@ export const AddShopPage: React.FC = () => {
                 </div>
             </div>
 
-            <div className="d-lg-none fixed-bottom bg-white border-top py-2 px-4 shadow-lg">
-                <div className="d-flex justify-content-between">
-                    <Link to="/" className="d-flex flex-column align-items-center text-decoration-none text-secondary">
-                        <Home size={24} />
-                        <span style={{ fontSize: '10px' }}>หน้าแรก</span>
-                    </Link>
-                    <Link to="/ai" className="d-flex flex-column align-items-center text-decoration-none text-secondary">
-                        <Bot size={24} />
-                        <span style={{ fontSize: '10px' }}>AI</span>
-                    </Link>
-                    <Link to="/profile" className="d-flex flex-column align-items-center text-decoration-none text-primary fw-bold">
-                        <User size={24} />
-                        <span style={{ fontSize: '10px' }}>โปรไฟล์</span>
-                    </Link>
-                </div>
+            <div className="d-lg-none">
+                <BottomNav activePage="profile"/>
             </div>
         </div>
     );
