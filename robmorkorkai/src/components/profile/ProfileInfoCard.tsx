@@ -17,6 +17,24 @@ export const ProfileInfoCard: React.FC<Props> = ({
     setIsEditing,
     onLogout
 }) => {
+    const cameraBtnStyle: React.CSSProperties = {
+        width: '36px',   // กำหนดกว้าง
+        height: '36px',  // กำหนดสูงเท่ากัน
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 0,
+        borderRadius: '50%', // ทำเป็นวงกลม
+        position: 'absolute',
+        bottom: '0',
+        right: '0',
+        border: '3px solid white', // ขอบขาวตัดกับรูป
+        backgroundColor: '#0d6efd', // สีน้ำเงิน (Primary)
+        color: 'white',
+        cursor: 'pointer',
+        zIndex: 10
+    };
+
     const renderField = (label: string, value: string, field: keyof ProfileData, icon: React.ReactNode) => (
         <div className="mb-3">
             <label className="text-secondary small mb-1 ms-1">{label}</label>
@@ -46,7 +64,7 @@ export const ProfileInfoCard: React.FC<Props> = ({
                         className="rounded-circle shadow-sm border border-4 border-white"
                         style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                     />
-                    <button className="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 end-0 p-2 border border-2 border-white shadow-sm">
+                    <button className="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 end-0 p-2 border border-2 border-white shadow-sm" style={cameraBtnStyle} onClick={() => alert("ฟีเจอร์อัปโหลดรูปยังไม่เปิดใช้งาน")}>
                         <Camera size={14} />
                     </button>
                 </div>

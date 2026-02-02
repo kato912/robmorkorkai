@@ -1,6 +1,7 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom"; // ✅ 1. เพิ่ม useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import { MapPin } from "lucide-react";
+import { useAuth } from "../../context/AuthContext"; 
 
 const GoogleIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,14 +16,13 @@ interface Props {
     onLogin?: () => void; // ใส่ ? เผื่อไว้ก่อน แต่จริงๆ ควรส่งมา
 }
 
-export const AuthContent: React.FC<Props> = ({ onLogin }) => {
-    const navigate = useNavigate(); // ✅ 3. เตรียมคำสั่งย้ายหน้า
+export const AuthContent: React.FC<Props> = ({ }) => {
+    const navigate = useNavigate();
+    const { login } = useAuth(); 
 
     const handleGoogleClick = () => {
-        if (onLogin) {
-            onLogin();
-            navigate("/profile"); // 2. ย้ายไปหน้า Profile
-        }
+        login(); 
+        navigate("/profile");
     };
 
     return (

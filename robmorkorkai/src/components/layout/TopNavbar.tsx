@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Search, LogIn } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 interface Props {
     activePage: string;
-    isLoggedIn: boolean;
     showSearchBar?: boolean;
     searchQuery?: string;
     setSearchQuery?: (text: string) => void;
@@ -13,13 +13,12 @@ interface Props {
 
 export const TopNavbar: React.FC<Props> = ({ 
     activePage, 
-    isLoggedIn, 
     showSearchBar = false,
     searchQuery,
     setSearchQuery,
     handleSearch
 }) => {
-    
+    const { isLoggedIn } = useAuth(); 
     const profileImage = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
     return (
         <nav className="bg-primary sticky-top shadow-sm" style={{ zIndex: 1020 }}>

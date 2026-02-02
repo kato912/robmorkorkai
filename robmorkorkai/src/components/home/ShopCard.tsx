@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Star } from "lucide-react";
+import type { Shop } from "../../data/mockDatat";
 
-export const ShopCard: React.FC<{ shop: any }> = ({ shop }) => (
+export const ShopCard: React.FC<{ shop: Shop }> = ({ shop }) => (
     <Link to={`/shop/${shop.id}`} className="text-decoration-none">
         <div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
             <div className="position-relative" style={{ height: "180px" }}>

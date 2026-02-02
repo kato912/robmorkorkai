@@ -1,46 +1,45 @@
-import React, { useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+// import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+// Context
+import { AuthProvider, useAuth } from "./context/AuthContext";
+
+// Pages
 import Login from './components/pages/LoginPage';
 import HomePage from './components/pages/HomePage';
 import AIPage from './components/pages/AIPage';
 import ShopDetailPage from './components/pages/ShopDetailPage';
 import ProfilePage from './components/pages/ProfilePage';
 import { AddShopPage } from "./components/pages/AddShopPage";
-import { SearchPage } from "./components/pages/SearchPage"; // ✅ 1. Import SearchPage เข้ามา
+import { SearchPage } from "./components/pages/SearchPage";
+
+// สร้าง Component Wrapper สำหรับ Route ที่ต้อง Login (Protected Route)
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const { isLoggedIn } = useAuth();
+  return isLoggedIn ? children : <Navigate to="/login" replace />;
+};
 
 const AppContent = () => {
-  const navigate = useNavigate();
-
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem("isLoggedIn") === "true";
-  });
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    localStorage.setItem("isLoggedIn", "true");
-    navigate("/"); // login เสร็จให้เด้งไปหน้าแรกเลย
-  };
-
-  const handleLogout = () => {
-    // 1. เคลียร์ค่าใน Storage ก่อน
-    localStorage.removeItem("isLoggedIn");
-    localStorage.clear(); 
-    window.location.href = "/";
-  };
-
   return (
     <Routes>
-      <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} />} />
-      <Route path="/search" element={<SearchPage isLoggedIn={isLoggedIn} />} />
+      {/* ลบ Props isLoggedIn={...} ออกให้หมด เพราะข้างในจะไปเรียก useAuth เอง */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/search" element={<SearchPage />} />
       <Route path='/ai' element={<AIPage />} />
-      <Route path="/shop/:id" element={<ShopDetailPage isLoggedIn={isLoggedIn}/>} />
-      <Route path="/login" element={<Login onLogin={handleLogin} />} />
+
+      {/* ShopDetailPage ก็ไม่ต้องส่ง Props แล้ว */}
+      <Route path="/shop/:id" element={<ShopDetailPage />} />
+
+      {/* Login ไม่ต้องรับ onLogin แล้ว */}
+      <Route path="/login" element={<Login />} />
+
+      {/* ใช้ ProtectedRoute แบบใหม่ สั้นและอ่านง่ายกว่า */}
       <Route path="/profile" element={
-        isLoggedIn ? <ProfilePage onLogout={handleLogout} /> : <Navigate to="/login" replace />
+        <ProtectedRoute><ProfilePage /></ProtectedRoute>
       } />
       <Route path="/add-shop" element={
-        isLoggedIn ? <AddShopPage /> : <Navigate to="/login" replace />
+        <ProtectedRoute><AddShopPage /></ProtectedRoute>
       } />
     </Routes>
   );
@@ -49,7 +48,9 @@ const AppContent = () => {
 const App = () => {
   return (
     <BrowserRouter>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </BrowserRouter>
   );
 }

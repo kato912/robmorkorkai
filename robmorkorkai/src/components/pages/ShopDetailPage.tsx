@@ -3,9 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import ShopDetailMobileView from "../shop/ShopDetailMobileView";
 import ShopDetailDesktopView from "../shop/ShopDetailDesktop";
 import { ReviewModal } from "../shop/ReviewModal";
-
-// ✅ แก้ตรงนี้: Import จากไฟล์ mockData แทน HomePage
-import { MOCK_SHOPS as shops } from "../../data/mockDatat"; 
+import { useAuth } from "../../context/AuthContext";
+import { MOCK_SHOPS as shops, type Shop } from "../../data/mockDatat";
 
 // Mock Data รีวิว (เก็บไว้ที่เดิมได้ หรือจะย้ายไป mockData ก็ได้ แต่เก็บไว้ที่นี่ก่อนเพื่อง่ายต่อการแก้)
 const initialReviews = [
@@ -16,7 +15,7 @@ const initialReviews = [
 ];
 
 export interface ShopDetailProps {
-    shop: any;
+    shop: Shop;
     reviews: typeof initialReviews;
     verifiedOnly: boolean;
     setVerifiedOnly: (val: boolean) => void;
@@ -27,7 +26,8 @@ export interface ShopDetailProps {
     onOpenReviewModal: () => void;
 }
 
-const ShopDetailPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+const ShopDetailPage: React.FC = ({}) => {
+    const { isLoggedIn } = useAuth();
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     

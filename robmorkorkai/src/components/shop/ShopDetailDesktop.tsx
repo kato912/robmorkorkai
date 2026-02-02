@@ -11,8 +11,7 @@ const ShopDetailDesktopView: React.FC<ShopDetailProps> = ({
     shop,
     reviews,
     verifiedOnly,
-    setVerifiedOnly,
-    isLoggedIn, 
+    setVerifiedOnly, 
     hasMore,
     handleShowMore,
     totalFilteredCount,
@@ -21,7 +20,7 @@ const ShopDetailDesktopView: React.FC<ShopDetailProps> = ({
     return (
         <div className="bg-light min-vh-100">
             {/* Top Navbar */}
-            <TopNavbar isLoggedIn={isLoggedIn} />
+            <TopNavbar activePage="Shopdetail" />
 
             <div className="container py-5">
                 {/* Breadcrumb */}

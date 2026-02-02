@@ -3,11 +3,7 @@ import { Link } from "react-router-dom";
 import { ChevronLeft, MapPin } from "lucide-react";
 import { AuthContent } from "./AuthContent";
 
-interface Props {
-    onLogin: () => void;
-}
-
-const LoginMobileView: React.FC<Props> = ({ onLogin }) => {
+const LoginMobileView: React.FC = () => {
     return (
         <div className="d-flex flex-column min-vh-100 bg-light">
             {/* Header สีฟ้า */}
@@ -29,7 +25,7 @@ const LoginMobileView: React.FC<Props> = ({ onLogin }) => {
             <div className="flex-grow-1 px-4" style={{ marginTop: "-2rem" }}>
                 <div className="card border-0 shadow-sm rounded-4 p-4 bg-white">
 
-                    <AuthContent onLogin={onLogin} />
+                    <AuthContent />
 
                 </div>
             </div>

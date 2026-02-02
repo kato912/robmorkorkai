@@ -5,6 +5,7 @@ import { ProfileHeader } from "../profile/ProfileHeader";
 import { ProfileInfoCard } from "../profile/ProfileInfoCard";
 import { MyStoreList } from "../profile/MyStoreList";
 import { BottomNav } from "../layout/BottomNav";
+import { useAuth } from "../../context/AuthContext";
 
 export interface ProfileData {
     name: string;
@@ -14,12 +15,9 @@ export interface ProfileData {
     imageUrl: string;
 }
 
-interface Props {
-    onLogout: () => void;
-}
-
-const ProfilePage: React.FC<Props> = ({ onLogout }) => {
+const ProfilePage: React.FC = () => {
     const navigate = useNavigate();
+    const { logout } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -28,7 +26,7 @@ const ProfilePage: React.FC<Props> = ({ onLogout }) => {
         email: "somchai@kkumail.com",
         phone: "081-234-5678",
         studentId: "643021001-2",
-        imageUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200" 
+        imageUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200"
     });
 
     const myStores = [
@@ -42,7 +40,7 @@ const ProfilePage: React.FC<Props> = ({ onLogout }) => {
 
     const handleLogout = () => {
         setIsLoggingOut(true);
-        onLogout();
+        logout();
     };
 
     return (
@@ -67,8 +65,8 @@ const ProfilePage: React.FC<Props> = ({ onLogout }) => {
                         <Link to="/" className="text-white text-decoration-none opacity-75 hover-opacity-100 fw-medium">Home</Link>
                         <Link to="/ai" className="text-white text-decoration-none opacity-75 hover-opacity-100 fw-medium">AI Helper</Link>
                         <div className="border-start border-white border-opacity-25 ps-4">
-                             <img
-                                src={profile.imageUrl} 
+                            <img
+                                src={profile.imageUrl}
                                 alt="Profile"
                                 className="rounded-circle border border-2 border-white shadow-sm"
                                 style={{ width: '38px', height: '38px', objectFit: 'cover' }}
@@ -87,8 +85,8 @@ const ProfilePage: React.FC<Props> = ({ onLogout }) => {
                 <div className="row g-4 justify-content-center">
                     {/* Profile Section */}
                     <div className="col-lg-4 pt-4">
-                        <div style={{ 
-                            opacity: isLoggingOut ? 0.6 : 1, 
+                        <div style={{
+                            opacity: isLoggingOut ? 0.6 : 1,
                             pointerEvents: isLoggingOut ? 'none' : 'auto',
                             transition: 'all 0.3s ease'
                         }}>
@@ -110,7 +108,7 @@ const ProfilePage: React.FC<Props> = ({ onLogout }) => {
             </div>
 
             <div className="d-lg-none">
-                <BottomNav activePage="profile" isLoggedIn={true} />
+                <BottomNav activePage="profile" />
             </div>
         </div>
     );

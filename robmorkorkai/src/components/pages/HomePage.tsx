@@ -2,18 +2,17 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HomeMobileView from "../home/HomeMobileView";
 import HomeDesktopView from "../home/HomeDesktopView";
-import { ZONES as zones, CATEGORIES as categories, MOCK_SHOPS as shops } from "../../data/mockDatat";
+import { ZONES as zones, CATEGORIES as categories, MOCK_SHOPS as shops, type Shop } from "../../data/mockDatat";
 
 export interface HomeViewProps {
-    isLoggedIn: boolean; 
     selectedZone: string | null; 
     setSelectedZone: (id: string | null) => void; 
     selectedCategory: string | null; 
     setSelectedCategory: (id: string | null) => void; 
-    filteredShops: any[];
+    filteredShops: Shop[];
     zones: typeof zones;
     categories: typeof categories;
-    openTime?: string;
+    openHours?: string;
     reviewCount?: number;
     
     // Search Props
@@ -22,45 +21,40 @@ export interface HomeViewProps {
     handleSearch: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-// ❌ ลบ zones, categories, shops ที่เคยประกาศตรงนี้ออกให้หมดครับ ❌
-
-const HomePage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+const HomePage: React.FC = () => {
     const navigate = useNavigate();
-
     const [selectedZone, setSelectedZone] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
-    // ฟังก์ชัน Search
     const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && searchQuery.trim() !== "") {
             navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
         }
     };
 
-    // Logic การกรองร้านค้า (ใช้ shops ที่ import มา)
     const filteredShops = shops.filter((shop) => {
-        const matchZone = selectedZone
-            ? shop.zone === zones.find((z) => z.id === selectedZone)?.label
+        // 1. กรองโซน (เทียบ shop.zoneId กับ selectedZone)
+        const matchZone = (selectedZone && selectedZone !== "all")
+            ? shop.zoneId === selectedZone
             : true;
 
-        const catLabel = categories.find(c => c.id === selectedCategory)?.label;
-        const matchCategory = selectedCategory
-            ? shop.category.includes(catLabel || "")
+        // 2. กรองหมวดหมู่ (เทียบ shop.category กับ selectedCategory)
+        const matchCategory = (selectedCategory && selectedCategory !== "all")
+            ? shop.category === selectedCategory
             : true;
 
         return matchZone && matchCategory;
     });
 
     const viewProps: HomeViewProps = {
-        isLoggedIn,
         selectedZone,
         setSelectedZone,
         selectedCategory,
         setSelectedCategory,
         filteredShops,
-        zones,       // ส่งค่าที่ import มา
-        categories,  // ส่งค่าที่ import มา
+        zones,       
+        categories,  
         searchQuery,
         setSearchQuery,
         handleSearch

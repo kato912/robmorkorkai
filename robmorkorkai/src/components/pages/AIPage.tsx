@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AIMobileView from "../ai/AIMobileView";
 import AIDesktopView from "../ai/AIDesktopView";
+import { useAuth } from "../../context/AuthContext"; 
 
 // เอาออกไปให้ Aidesktop / Aimobile -> components/ai
 export interface AIViewProps {
@@ -13,21 +14,7 @@ export interface AIViewProps {
 }
 
 const AIPage: React.FC = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
-        localStorage.getItem("isLoggedIn") === "true"
-    );
-
-    // useEffect เพื่อคอยเช็คสถานะเผื่อมีการเปลี่ยนแปลง
-    useEffect(() => {
-        const checkAuth = () => {
-            setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
-        };
-
-        // ตรวจสอบสถานะทุกครั้งที่หน้าแอปถูกโฟกัส หรือมีการเปลี่ยนหน้า
-        window.addEventListener('storage', checkAuth);
-        return () => window.removeEventListener('storage', checkAuth);
-    }, []);
-
+    const { isLoggedIn } = useAuth(); // ✅ บรรทัดเดียวจบ
     const [query, setQuery] = useState("");
     const [showResults, setShowResults] = useState(false);
     const [results, setResults] = useState<any[]>([]);

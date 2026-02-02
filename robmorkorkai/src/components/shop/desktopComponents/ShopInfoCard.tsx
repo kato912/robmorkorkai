@@ -1,21 +1,32 @@
 import React from "react";
 import { Share2, Heart, Star, MapPin, Clock, PenLine } from "lucide-react";
+import type { Shop } from "../../../data/mockDatat";
 
 interface ShopInfoCardProps {
-    shop: any; // หรือระบุ Type ของ shop ให้ชัดเจนถ้ามี interface
+    shop: Shop;
     totalFilteredCount: number;
     onOpenReviewModal: () => void;
 }
 
 export const ShopInfoCard: React.FC<ShopInfoCardProps> = ({ shop, totalFilteredCount, onOpenReviewModal }) => {
+    const circleBtnStyle: React.CSSProperties = {
+        width: '42px',
+        height: '42px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 0,
+        borderWidth: '2px' 
+    };
+    
     return (
         <div className="bg-white p-4 rounded-4 shadow-sm mb-4 border">
             {/* Header: Name & Actions */}
             <div className="d-flex justify-content-between align-items-start mb-3">
                 <h1 className="fw-bold mb-0">{shop.name}</h1>
                 <div className="d-flex gap-2">
-                    <button className="btn btn-outline-secondary rounded-circle p-2"><Share2 size={20} /></button>
-                    <button className="btn btn-outline-danger rounded-circle p-2"><Heart size={20} /></button>
+                    <button className="btn btn-outline-secondary rounded-circle p-2" style={circleBtnStyle}><Share2 size={20} /></button>
+                    <button className="btn btn-outline-danger rounded-circle p-2" style={circleBtnStyle}><Heart size={20} /></button>
                 </div>
             </div>
 
@@ -42,7 +53,7 @@ export const ShopInfoCard: React.FC<ShopInfoCardProps> = ({ shop, totalFilteredC
                 <div className="col-6">
                     <div className="p-3 bg-light rounded-3 h-100">
                         <div className="text-muted small mb-1"><Clock size={16}/> เวลาเปิด</div>
-                        <div className="fw-bold text-success">{shop.openTime}</div>
+                        <div className="fw-bold text-success">{shop.openHours}</div>
                     </div>
                 </div>
             </div>

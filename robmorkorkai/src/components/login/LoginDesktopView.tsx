@@ -3,10 +3,6 @@ import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
 import { AuthContent } from "./AuthContent";
 
-interface Props {
-    onLogin: () => void;
-}
-
 const StatBox: React.FC<{ number: string; label: string }> = ({ number, label }) => (
     <div className="bg-white bg-opacity-10 p-3 rounded-3">
         <div className="fs-3 fw-bold">{number}</div>
@@ -14,7 +10,7 @@ const StatBox: React.FC<{ number: string; label: string }> = ({ number, label })
     </div>
 );
 
-const LoginDesktopView: React.FC<Props> = ({ onLogin }) => {
+const LoginDesktopView: React.FC = () => {
     return (
         <div className="row g-0 min-vh-100">
 
@@ -45,7 +41,7 @@ const LoginDesktopView: React.FC<Props> = ({ onLogin }) => {
             </div>
 
             <div className="col-6 d-flex align-items-center justify-content-center bg-white">
-                <AuthContent onLogin={onLogin} />
+                <AuthContent />
             </div>
         </div>
     );

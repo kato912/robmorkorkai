@@ -52,7 +52,7 @@ export const AddShopPage: React.FC = () => {
         return (
             <div className="min-vh-100 bg-light d-flex flex-column">
                 <div className="d-none d-lg-block">
-                    <TopNavbar isLoggedIn={true} activePage="AddShopPage"/>
+                    <TopNavbar activePage="AddShopPage"/>
                 </div>
                 <div className="flex-grow-1 d-flex flex-column align-items-center justify-content-center px-4 py-5">
                     <div className="bg-success bg-opacity-10 rounded-circle p-4 mb-4">

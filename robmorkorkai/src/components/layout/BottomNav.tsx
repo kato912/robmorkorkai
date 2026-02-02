@@ -1,13 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Home, Bot, User, LogIn } from "lucide-react";
+import { useAuth } from "../../context/AuthContext"; // ✅ Import Hook
 
 interface Props {
     activePage: string;
-    isLoggedIn: boolean;
 }
 
-export const BottomNav: React.FC<Props> = ({ activePage, isLoggedIn }) => {
+export const BottomNav: React.FC<Props> = ({ activePage }) => {
+    const { isLoggedIn } = useAuth();
+
     return (
         <nav
             style={{

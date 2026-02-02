@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react"; // ❌ ไม่ต้องใช้ useEffect แล้ว เพราะย้ายไปอยู่ใน MobileHeader แล้ว
+import React, { useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { Search, Star, ArrowUpAz } from "lucide-react";
 
@@ -7,29 +7,22 @@ import { TopNavbar } from "../layout/TopNavbar";
 import { BottomNav } from "../layout/BottomNav";
 import { SearchShopCard } from "../search/SearchShopCard";
 import { SearchFilterSidebar } from "../search/SearchFilterSidebar";
-import { MobileSearchHeader } from "../search/MobileSearchHeader"; // ✅ Import มาใหม่
+import { MobileSearchHeader } from "../search/MobileSearchHeader"; 
 
 // Data
 import { MOCK_SHOPS } from "../../data/mockDatat";
 
 type SortOption = "rating" | "reviews" | "name";
 
-interface SearchPageProps {
-    isLoggedIn: boolean;
-}
-
-export const SearchPage: React.FC<SearchPageProps> = ({ isLoggedIn }) => {
+export const SearchPage: React.FC = () => {
     // --- State ---
     const location = useLocation();
     const startQuery = location.state?.startQuery || "";
-
     const [searchQuery, setSearchQuery] = useState(startQuery);
     const [selectedZone, setSelectedZone] = useState("all");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
     const [sortBy, setSortBy] = useState<SortOption>("rating");
-
-    // ❌ ลบ State showMobileFilters และ isScrolled ออกไปได้เลย (ย้ายไปอยู่ใน MobileSearchHeader แล้ว)
 
     // --- Logic: Filtering ---
     const filteredShops = useMemo(() => {
@@ -84,11 +77,10 @@ export const SearchPage: React.FC<SearchPageProps> = ({ isLoggedIn }) => {
     return (
         <div className="bg-light min-vh-100 pb-5">
 
-            {/* ✅ Desktop Header */}
+            {/* Desktop Header */}
             <div className="d-none d-lg-block">
                 <TopNavbar
                     activePage="search"
-                    isLoggedIn={isLoggedIn}
                     showSearchBar={true}
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
@@ -96,7 +88,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({ isLoggedIn }) => {
                 />
             </div>
 
-            {/* ✅ Mobile Header (Component ใหม่) */}
+            {/* Mobile Header */}
             <MobileSearchHeader 
                 searchQuery={searchQuery} setSearchQuery={setSearchQuery}
                 selectedZone={selectedZone} setSelectedZone={setSelectedZone}
@@ -157,7 +149,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({ isLoggedIn }) => {
                 </div>
             </div>
 
-            <div className="d-lg-none"><BottomNav activePage="search" isLoggedIn={isLoggedIn} /></div>
+            <div className="d-lg-none"><BottomNav activePage="home" /></div>
         </div>
     );
 };

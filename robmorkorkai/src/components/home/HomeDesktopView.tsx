@@ -8,7 +8,6 @@ import { TopNavbar } from "../layout/TopNavbar";
 import type { HomeViewProps } from "../pages/HomePage"
 
 const HomeDesktopView: React.FC<HomeViewProps> = ({
-    isLoggedIn,
     selectedZone, 
     setSelectedZone,
     selectedCategory, 
@@ -17,7 +16,7 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
     zones, 
     categories,
 }) => {
-    const navigate = useNavigate(); // ✅ 2. เรียกใช้ Hook
+    const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const handleSearch = () => {
         if (searchQuery.trim()) {
@@ -31,7 +30,6 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
             {/* ✅ 2. ส่งค่าต่อไปให้ Navbar (เพิ่มแค่ 3 บรรทัดนี้) */}
             <TopNavbar 
                 activePage="home" 
-                isLoggedIn={isLoggedIn} 
                 showSearchBar={true} 
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}

@@ -10,7 +10,6 @@ const ShopDetailMobileView: React.FC<ShopDetailProps> = ({
     reviews,
     verifiedOnly,
     setVerifiedOnly,
-    isLoggedIn, // ไม่ได้ใช้ใน Mobile View นี้แล้ว (ถ้าไม่ได้จะเอาไปทำ logic อื่น)
     hasMore,
     handleShowMore,
     totalFilteredCount,

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // ✅ 1. เพิ่ม useNavigate
+import { Link, useNavigate } from "react-router-dom"; 
 import { Search, MapPin, Menu, X } from "lucide-react";
 import { AIBanner } from "./AIBanner";
 import { ShopCard } from "./ShopCard";
@@ -7,14 +7,15 @@ import { ZoneFilter } from "./ZoneFilter";
 import { CategoryFilter } from "./CategoryFilter";
 import { BottomNav } from "../layout/BottomNav";
 import type { HomeViewProps } from '../pages/HomePage'
+import { useAuth } from "../../context/AuthContext"; 
 
 const HomeMobileView: React.FC<HomeViewProps> = ({
-    isLoggedIn,
     selectedZone, setSelectedZone,
     selectedCategory, setSelectedCategory,
     filteredShops, zones, categories
 }) => {
-    const navigate = useNavigate(); // ✅ 2. เรียกใช้ hook
+    const navigate = useNavigate();
+    const { isLoggedIn } = useAuth(); 
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [searchText, setSearchText] = useState(""); // State สำหรับรับค่า input
     const profileImage = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
@@ -99,7 +100,7 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
                 </div>
             </div>
 
-            <BottomNav activePage="home" isLoggedIn={isLoggedIn} />
+            <BottomNav activePage="home" />
 
             {/* Menu Overlay */}
             {mobileMenuOpen && (
