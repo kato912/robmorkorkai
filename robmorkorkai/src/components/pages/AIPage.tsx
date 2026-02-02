@@ -14,7 +14,7 @@ export interface AIViewProps {
 }
 
 const AIPage: React.FC = () => {
-    const { isLoggedIn } = useAuth(); // ✅ บรรทัดเดียวจบ
+    const { isLoggedIn } = useAuth(); 
     const [query, setQuery] = useState("");
     const [showResults, setShowResults] = useState(false);
     const [results, setResults] = useState<any[]>([]);

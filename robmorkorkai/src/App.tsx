@@ -11,6 +11,7 @@ import HomePage from './components/pages/HomePage';
 import AIPage from './components/pages/AIPage';
 import ShopDetailPage from './components/pages/ShopDetailPage';
 import ProfilePage from './components/pages/ProfilePage';
+import { AdminPage } from "./components/pages/AdminPage";
 import { AddShopPage } from "./components/pages/AddShopPage";
 import { SearchPage } from "./components/pages/SearchPage";
 
@@ -41,6 +42,8 @@ const AppContent = () => {
       <Route path="/add-shop" element={
         <ProtectedRoute><AddShopPage /></ProtectedRoute>
       } />
+
+      <Route path="/admin" element={<AdminPage />} />
     </Routes>
   );
 }
