@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Context
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
+// Pages
+import Login from './components/pages/LoginPage';
+import HomePage from './components/pages/HomePage';
+import AIPage from './components/pages/AIPage';
+import ShopDetailPage from './components/pages/ShopDetailPage';
+import ProfilePage from './components/pages/ProfilePage';
+import { AdminPage } from "./components/pages/AdminPage";
+import { AddShopPage } from "./components/pages/AddShopPage";
+import { SearchPage } from "./components/pages/SearchPage";
+
+// สร้าง Component Wrapper สำหรับ Route ที่ต้อง Login (Protected Route)
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const { isLoggedIn } = useAuth();
+  return isLoggedIn ? children : <Navigate to="/login" replace />;
+};
+
+const AppContent = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Routes>
+      {/* ลบ Props isLoggedIn={...} ออกให้หมด เพราะข้างในจะไปเรียก useAuth เอง */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/search" element={<SearchPage />} />
+      <Route path='/ai' element={<AIPage />} />
+
+      {/* ShopDetailPage ก็ไม่ต้องส่ง Props แล้ว */}
+      <Route path="/shop/:id" element={<ShopDetailPage />} />
+
+      {/* Login ไม่ต้องรับ onLogin แล้ว */}
+      <Route path="/login" element={<Login />} />
+
+      {/* ใช้ ProtectedRoute แบบใหม่ สั้นและอ่านง่ายกว่า */}
+      <Route path="/profile" element={
+        <ProtectedRoute><ProfilePage /></ProtectedRoute>
+      } />
+      <Route path="/add-shop" element={
+        <ProtectedRoute><AddShopPage /></ProtectedRoute>
+      } />
+
+      <Route path="/admin" element={<AdminPage />} />
+    </Routes>
+  );
 }
 
-export default App
+const App = () => {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
+
+export default App;

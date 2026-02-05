@@ -19,5 +19,13 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+
+    rules: {
+      "react/style-prop-object": "off",
+      
+      // แถม: ปิดเตือนเรื่องการใช้ any (เผื่อคุณรำคาญตอน dev)
+      "@typescript-eslint/no-explicit-any": "off",
+      "react-refresh/only-export-components": "off",
+    },
   },
 ])
