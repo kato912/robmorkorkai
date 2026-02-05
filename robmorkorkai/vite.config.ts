@@ -1,13 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react({
-      babel: {
-        plugins: [['babel-plugin-react-compiler']],
-      },
-    }),
-  ],
+  plugins: [react()],
+  server: {
+    proxy: {
+      // เมื่อไหร่ที่มี request ขึ้นต้นด้วย /api ให้ส่งไปที่ Backend (Port 3000)
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: false,
+        secure: false,
+
+      }
+    }
+  }
 })

@@ -1,42 +1,118 @@
-import React, { createContext, useContext, useState, type ReactNode } from "react";
-// 1. เพิ่ม import useNavigate
-import { useNavigate } from "react-router-dom"; 
+import React, { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+
+interface User {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+}
 
 interface AuthContextType {
     isLoggedIn: boolean;
+    user: User | null;
     login: () => void;
     logout: () => void;
+    loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    // 2. เรียกใช้ Hook
-    const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-        return localStorage.getItem("isLoggedIn") === "true";
-    });
+    // 1. ฟังก์ชันเช็ค Session จาก Backend
+    const checkSession = async () => {
+        try {
+            // เรียก API ไปที่ /api/auth/session
+            const res = await fetch("/api/auth/session");
+            const session = await res.json();
 
-    const login = () => {
-        setIsLoggedIn(true);
-        localStorage.setItem("isLoggedIn", "true");
+            if (session && Object.keys(session).length > 0) {
+                setIsLoggedIn(true);
+                setUser(session.user);
+            } else {
+                setIsLoggedIn(false);
+                setUser(null);
+            }
+        } catch (error) {
+            console.error("Failed to fetch session:", error);
+            setIsLoggedIn(false);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const logout = () => {
-        // ✅ 3. สั่งย้ายหน้านำไปก่อนเลย (หนีออกจาก ProtectedRoute)
-        navigate("/", { replace: true });
+    // เช็ค Session เมื่อเปิดเว็บครั้งแรก
+    useEffect(() => {
+        checkSession();
+    }, []);
 
-        // ✅ 4. ค่อยเคลียร์ค่าทีหลัง (React จะย้ายหน้าก่อน แล้วค่อยอัปเดต State)
-        setTimeout(() => {
-            setIsLoggedIn(false);
-            localStorage.removeItem("isLoggedIn");
-            localStorage.clear();
-        }, 100); // ใส่ delay นิดนึงเพื่อให้แน่ใจว่าย้ายหน้าเสร็จแล้วจริงๆ
+    const login = async () => { 
+        try {
+            // 1. ขอ CSRF Token จาก Backend ก่อน 
+            const res = await fetch("/api/auth/csrf");
+            const { csrfToken } = await res.json();
+
+            //สร้าง Form จำลองขึ้นมาเพื่อส่ง POST Request ไปที่ /api/auth/signin/google
+            const form = document.createElement("form");
+            form.method = "post";
+            form.action = "/api/auth/signin/google"; // ระบุ Provider เป็น google
+
+            // ใส่ CSRF Token ลงใน Form
+            const csrfInput = document.createElement("input");
+            csrfInput.type = "hidden";
+            csrfInput.name = "csrfToken";
+            csrfInput.value = csrfToken;
+            form.appendChild(csrfInput);
+
+            const callbackInput = document.createElement("input");
+            callbackInput.type = "hidden";
+            callbackInput.name = "callbackUrl";
+            callbackInput.value = window.location.origin; // กลับมาหน้า Homepage
+            form.appendChild(callbackInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        } catch (error) {
+            console.error("Login flow failed:", error);
+        }
+    };
+
+    const logout = async () => {
+        // Logout ก็ควรทำเหมือนกันเพื่อความปลอดภัย (หรือใช้ Redirect ก็ได้ถ้าระบบยอมรับ GET)
+        // แนะนำให้ใช้ CSRF Token เหมือนกันถ้าทำได้ แต่ถ้า Auth.js ยอมรับ GET ก็ใช้แบบเดิมได้
+        // เพื่อความชัวร์ ใช้แบบ Form Submit เหมือน Login ก็ดีครับ
+        try {
+            const res = await fetch("/api/auth/csrf");
+            const { csrfToken } = await res.json();
+
+            const form = document.createElement("form");
+            form.method = "post";
+            form.action = "/api/auth/signout";
+
+            const csrfInput = document.createElement("input");
+            csrfInput.type = "hidden";
+            csrfInput.name = "csrfToken";
+            csrfInput.value = csrfToken;
+            form.appendChild(csrfInput);
+
+            // Logout เสร็จให้กลับหน้าแรก
+            const callbackInput = document.createElement("input");
+            callbackInput.type = "hidden";
+            callbackInput.name = "callbackUrl";
+            callbackInput.value = window.location.origin + "/";
+            form.appendChild(callbackInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        } catch (error) {
+            window.location.href = "/api/auth/signout"; // Fallback
+        }
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+        <AuthContext.Provider value={{ isLoggedIn, user, login, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );

@@ -24,6 +24,11 @@ dist-ssr
 *.sw?
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 mysql_data
 >>>>>>> origin/backend
+=======
+
+mysql_data
+>>>>>>> origin/dev

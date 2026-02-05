@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
 import { useAuth } from "../../context/AuthContext"; 
 
@@ -17,12 +17,10 @@ interface Props {
 }
 
 export const AuthContent: React.FC<Props> = ({ }) => {
-    const navigate = useNavigate();
     const { login } = useAuth(); 
 
     const handleGoogleClick = () => {
         login(); 
-        navigate("/profile");
     };
 
     return (
