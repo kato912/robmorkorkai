@@ -117,8 +117,6 @@ const ShopDetailPage: React.FC = () => {
         handleShowMore,
         totalFilteredCount: filteredReviews.length,
         onOpenReviewModal: handleOpenReviewModal,
-        
-        // ✅ ส่ง Props ใหม่ลงไป
         isOwner,
         isClaimable,
         onClaimShop: handleClaimShop,

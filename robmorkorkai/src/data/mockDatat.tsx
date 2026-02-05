@@ -39,7 +39,7 @@ export const ZONES = [
 
 // ✅ 3. ข้อมูล Categories
 export const CATEGORIES = [
-    { id: "cafe", label: "คาเฟ่", icon: Coffee },
+    { id: "ค่าเฟ่", label: "คาเฟ่", icon: Coffee },
     { id: "restaurant", label: "ร้านอาหาร", icon: Utensils },
     { id: "dessert", label: "ของหวาน", icon: Snowflake }, // เพิ่ม icon ให้ของหวาน
     { id: "study", label: "อ่านหนังสือ", icon: BookOpen },
@@ -53,7 +53,6 @@ export const FACILITIES = [
     { id: "24hr", label: "เปิด 24 ชม.", icon: Clock },
 ];
 
-// ✅ 5. Mock Data ร้านค้า (รวม 5 ร้านตัวอย่าง เพื่อทดสอบ Filter)
 export const MOCK_SHOPS: Shop[] = [
     {
         id: "1",

@@ -18,6 +18,8 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
 }) => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
+    // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
     const handleSearch = () => {
         if (searchQuery.trim()) {
             navigate('/search', { state: { startQuery: searchQuery } });
@@ -27,7 +29,7 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
         <div className="bg-light min-vh-100">
 
             {/* Navbar */}
-            {/* ✅ 2. ส่งค่าต่อไปให้ Navbar (เพิ่มแค่ 3 บรรทัดนี้) */}
+            {/* ส่งค่าต่อไปให้ Navbar (เพิ่มแค่ 3 บรรทัดนี้) */}
             <TopNavbar 
                 activePage="home" 
                 showSearchBar={true} 

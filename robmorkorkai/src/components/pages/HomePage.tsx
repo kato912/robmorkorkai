@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HomeMobileView from "../home/HomeMobileView";
 import HomeDesktopView from "../home/HomeDesktopView";
+
 import { ZONES as zones, CATEGORIES as categories, MOCK_SHOPS as shops, type Shop } from "../../data/mockDatat";
 
 export interface HomeViewProps {
