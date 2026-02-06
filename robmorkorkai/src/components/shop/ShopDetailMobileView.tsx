@@ -16,16 +16,16 @@ const ShopDetailMobileView: React.FC<ShopDetailProps> = ({
     onOpenReviewModal
 }) => {
     return (
-        <div className="bg-white min-vh-100" style={{ paddingBottom: '100px' }}>
+        <div className="min-vh-100" style={{ backgroundColor: '#DEE2E6', paddingBottom: '100px' }}>
             
-            {/* 1. Header Image */}
+            {/* Header Image */}
             <ShopMobileHeader shop={shop} />
 
             <div className="container py-3">
-                {/* 2. Shop Info & Description */}
+                {/* Shop Info & Description */}
                 <ShopMobileInfo shop={shop} />
 
-                {/* 3. Review List Section */}
+                {/* Review List Section */}
                 <ShopMobileReviewList 
                     reviews={reviews}
                     verifiedOnly={verifiedOnly}
@@ -36,7 +36,7 @@ const ShopDetailMobileView: React.FC<ShopDetailProps> = ({
                 />
             </div>
 
-            {/* 4. Fixed Bottom Button */}
+            {/* Bottom Button */}
             <ShopMobileBottomBar onOpenReviewModal={onOpenReviewModal} />
 
         </div>

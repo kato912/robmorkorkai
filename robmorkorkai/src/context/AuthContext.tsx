@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 interface User {
+    id: string;
     name?: string | null;
     email?: string | null;
     image?: string | null;
+    role?: string;
+    isVerifiedStudent?: boolean; 
 }
 
 interface AuthContextType {

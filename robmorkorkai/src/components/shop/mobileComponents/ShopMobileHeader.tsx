@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Share2, Heart, MapPin, Clock } from "lucide-react";
+import { ArrowLeft, Heart, MapPin, Clock } from "lucide-react";
+import { ShareButton } from "../../common/ShareButton";
 
 interface ShopMobileHeaderProps {
     shop: any;
@@ -25,9 +26,7 @@ export const ShopMobileHeader: React.FC<ShopMobileHeaderProps> = ({ shop }) => {
                     <ArrowLeft size={20} />
                 </Link>
                 <div className="d-flex gap-2">
-                    <button className="btn btn-dark bg-black bg-opacity-50 border-0 rounded-circle p-2 d-flex align-items-center justify-content-center text-white backdrop-blur" style={{ width: 40, height: 40 }}>
-                        <Share2 size={20} />
-                    </button>
+                    <ShareButton title={shop.name} className="btn btn-light rounded-circle p-2 shadow-sm d-flex align-items-center justify-content-center" iconSize={20} />
                     <button className="btn btn-dark bg-black bg-opacity-50 border-0 rounded-circle p-2 d-flex align-items-center justify-content-center text-white backdrop-blur" style={{ width: 40, height: 40 }}>
                         <Heart size={20} />
                     </button>

@@ -12,7 +12,6 @@ import AIPage from './components/pages/AIPage';
 import ShopDetailPage from './components/pages/ShopDetailPage';
 import ProfilePage from './components/pages/ProfilePage';
 import { AdminPage } from "./components/pages/AdminPage";
-import { AddShopPage } from "./components/pages/AddShopPage";
 import { SearchPage } from "./components/pages/SearchPage";
 
 // สร้าง Component Wrapper สำหรับ Route ที่ต้อง Login (Protected Route)
@@ -24,7 +23,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 const AppContent = () => {
   return (
     <Routes>
-      {/* ลบ Props isLoggedIn={...} ออกให้หมด เพราะข้างในจะไปเรียก useAuth เอง */}
+
       <Route path="/" element={<HomePage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path='/ai' element={<AIPage />} />
@@ -38,9 +37,6 @@ const AppContent = () => {
       {/* ใช้ ProtectedRoute แบบใหม่ สั้นและอ่านง่ายกว่า */}
       <Route path="/profile" element={
         <ProtectedRoute><ProfilePage /></ProtectedRoute>
-      } />
-      <Route path="/add-shop" element={
-        <ProtectedRoute><AddShopPage /></ProtectedRoute>
       } />
 
       <Route path="/admin" element={<AdminPage />} />

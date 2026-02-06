@@ -18,8 +18,8 @@ export const TopNavbar: React.FC<Props> = ({
     setSearchQuery,
     handleSearch
 }) => {
-    const { isLoggedIn } = useAuth(); 
-    const profileImage = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
+    const { isLoggedIn , user} = useAuth(); 
+    const profileImage = user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
     return (
         <nav className="bg-primary sticky-top shadow-sm" style={{ zIndex: 1020 }}>
             <div className="container py-3 d-flex align-items-center justify-content-between">
@@ -39,11 +39,11 @@ export const TopNavbar: React.FC<Props> = ({
                             placeholder="ค้นหาร้านอาหาร, คาเฟ่..." 
                             style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}
                             
-                            // ✅ Binding ค่า (เหมือนเดิม)
+                            // Binding ค่า
                             value={searchQuery || ""} 
                             onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
 
-                            // ✅ จุดสำคัญ: เช็คว่ากด Enter หรือไม่?
+                            //เช็คว่ากด Enter หรือไม่?
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && handleSearch) {
                                     handleSearch(); // ถ้ากด Enter ให้เรียกฟังก์ชันเปลี่ยนหน้าทันที
@@ -77,7 +77,8 @@ export const TopNavbar: React.FC<Props> = ({
                             <div className="position-relative">
                                 <img 
                                     src={profileImage}
-                                    alt="Profile"
+                                    alt={"Profile"}
+                                    referrerPolicy="no-referrer"
                                     className="rounded-circle border border-2 border-white"
                                     style={{ width: '40px', height: '40px', objectFit: 'cover' }}
                                 />

@@ -1,10 +1,13 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { MapPin } from "lucide-react";
-import { ProfileHeader } from "../profile/ProfileHeader";
-import { ProfileInfoCard } from "../profile/ProfileInfoCard";
-import { MyStoreList } from "../profile/MyStoreList";
-import { BottomNav } from "../layout/BottomNav";
+import React, { useState, useEffect } from "react";
+
+// Import Components ย่อย
+import { ProfileHeader } from "../../components/profile/ProfileHeader";
+import { ProfileInfoCard } from "../../components/profile/ProfileInfoCard";
+import { MyStoreList } from "../../components/profile/MyStoreList";
+import { BottomNav } from "../../components/layout/BottomNav"; 
+import { TopNavbar } from "../../components/layout/TopNavbar";
+
+//data
 import { useAuth } from "../../context/AuthContext";
 
 export interface ProfileData {
@@ -13,22 +16,41 @@ export interface ProfileData {
     phone: string;
     studentId: string;
     imageUrl: string;
+    role: string;
+    isVerifiedStudent: boolean;
 }
 
 const ProfilePage: React.FC = () => {
-    const navigate = useNavigate();
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+    // Initial State
     const [profile, setProfile] = useState<ProfileData>({
-        name: "สมชาย ใจดี",
-        email: "somchai@kkumail.com",
-        phone: "081-234-5678",
-        studentId: "643021001-2",
-        imageUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200"
+        name: user?.name || "ผู้ใช้งาน",
+        email: user?.email || "",
+        phone: "ยังไม่ระบุเบอร์โทร",
+        studentId: "-",
+        imageUrl: user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200",
+        role: user?.role || "USER",
+        isVerifiedStudent: user?.isVerifiedStudent || false
     });
 
+    // Sync Data with Auth Context
+    useEffect(() => {
+        if (user) {
+            setProfile(prev => ({
+                ...prev,
+                name: user.name || prev.name,
+                email: user.email || prev.email,
+                imageUrl: user.image || prev.imageUrl,
+                role: user.role || "USER",
+                isVerifiedStudent: user.isVerifiedStudent || false,
+            }));
+        }
+    }, [user]);
+
+    // Mock Data Store
     const myStores = [
         {
             id: "1",
@@ -53,37 +75,19 @@ const ProfilePage: React.FC = () => {
                 `}
             </style>
 
-            {/* --- Desktop Header --- */}
-            <header className="d-none d-lg-block bg-primary sticky-top text-white shadow-sm mb-4" style={{ zIndex: 1020 }}>
-                <div className="container py-3 d-flex align-items-center justify-content-between">
-                    <Link to="/" className="d-flex align-items-center gap-2 text-white text-decoration-none transition opacity-75 hover-opacity-100">
-                        <MapPin size={24} />
-                        <span className="h4 fw-bold m-0">robmorkorkai</span>
-                    </Link>
+            
+            <div className="d-none d-lg-block">
+                <TopNavbar activePage="profile" />
+            </div>
 
-                    <nav className="d-flex align-items-center gap-4">
-                        <Link to="/" className="text-white text-decoration-none opacity-75 hover-opacity-100 fw-medium">Home</Link>
-                        <Link to="/ai" className="text-white text-decoration-none opacity-75 hover-opacity-100 fw-medium">AI Helper</Link>
-                        <div className="border-start border-white border-opacity-25 ps-4">
-                            <img
-                                src={profile.imageUrl}
-                                alt="Profile"
-                                className="rounded-circle border border-2 border-white shadow-sm"
-                                style={{ width: '38px', height: '38px', objectFit: 'cover' }}
-                            />
-                        </div>
-                    </nav>
-                </div>
-            </header>
-
-            {/* Mobile Header */}
             <div className="d-lg-none">
-                <ProfileHeader />
+                <ProfileHeader  />
             </div>
 
             <div className="container">
                 <div className="row g-4 justify-content-center">
-                    {/* Profile Section */}
+                    
+                    {/* --- Profile Info Section (Component) --- */}
                     <div className="col-lg-4 pt-4">
                         <div style={{
                             opacity: isLoggingOut ? 0.6 : 1,
@@ -100,13 +104,14 @@ const ProfilePage: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Stores & Stats Section */}
+                    {/* --- Stores & Stats Section (Component) --- */}
                     <div className="col-lg-7 pt-lg-4">
                         <MyStoreList stores={myStores} />
                     </div>
                 </div>
             </div>
 
+            {/* Mobile Bottom Nav */}
             <div className="d-lg-none">
                 <BottomNav activePage="profile" />
             </div>

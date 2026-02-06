@@ -1,4 +1,6 @@
-import React from "react";
+// Show picture store
+
+import React from "react"; 
 
 interface ShopImageGalleryProps {
     image: string;

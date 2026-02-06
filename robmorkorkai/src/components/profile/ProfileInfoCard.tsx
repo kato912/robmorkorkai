@@ -4,18 +4,18 @@ import type { ProfileData } from "../pages/ProfilePage";
 
 interface Props {
     profile: ProfileData;
-    setProfile: (profile: ProfileData) => void;
+    setProfile: React.Dispatch<React.SetStateAction<ProfileData>>;
     isEditing: boolean;
-    setIsEditing: (isEditing: boolean) => void;
+    setIsEditing: (value: boolean) => void;
     onLogout: () => void;
 }
 
-export const ProfileInfoCard: React.FC<Props> = ({
-    profile,
-    setProfile,
-    isEditing,
-    setIsEditing,
-    onLogout
+export const ProfileInfoCard: React.FC<Props> = ({ 
+    profile, 
+    setProfile, 
+    isEditing, 
+    setIsEditing, 
+    onLogout 
 }) => {
     const cameraBtnStyle: React.CSSProperties = {
         width: '36px',   // กำหนดกว้าง
@@ -35,76 +35,100 @@ export const ProfileInfoCard: React.FC<Props> = ({
         zIndex: 10
     };
 
-    const renderField = (label: string, value: string, field: keyof ProfileData, icon: React.ReactNode) => (
-        <div className="mb-3">
-            <label className="text-secondary small mb-1 ms-1">{label}</label>
-            {isEditing ? (
-                <input
-                    type="text"
-                    className="form-control rounded-3"
-                    value={value}
-                    onChange={(e) => setProfile({ ...profile, [field]: e.target.value })}
-                />
-            ) : (
-                <div className="d-flex align-items-center gap-3 py-2 px-3 bg-light rounded-3 text-dark border-0">
-                    <span className="text-secondary opacity-50">{icon}</span>
-                    <span className="fw-medium">{value}</span>
-                </div>
-            )}
-        </div>
-    );
-
     return (
-        <div className="card border-0 shadow-sm rounded-4 p-4 position-relative bg-white shadow-hover">
-            <div className="text-center mb-4 mt-2">
-                <div className="position-relative d-inline-block mb-3">
+        <div className="card border-0 shadow-sm rounded-4 p-4 bg-white position-sticky" style={{ top: "100px" }}>
+            <div className="d-flex flex-column align-items-center mb-4">
+                {/* Profile Image */}
+                <div className="position-relative mb-3">
                     <img
                         src={profile.imageUrl}
                         alt="Profile"
-                        className="rounded-circle shadow-sm border border-4 border-white"
+                        referrerPolicy="no-referrer"
+                        className="rounded-circle border border-4 border-white shadow"
                         style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                     />
-                    <button className="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 end-0 p-2 border border-2 border-white shadow-sm" style={cameraBtnStyle} onClick={() => alert("ฟีเจอร์อัปโหลดรูปยังไม่เปิดใช้งาน")}>
+                    <button className="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 end-0 p-2 shadow-sm border border-white" style={cameraBtnStyle}>
                         <Camera size={14} />
                     </button>
                 </div>
 
-                <h5 className="fw-bold text-dark m-0 mb-2">{profile.name}</h5>
-                <span className="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-1 fw-medium">
-                    KKU Verified
-                </span>
+                <h5 className="fw-bold text-dark mb-1">{profile.name}</h5>
+
+                {/* Badges */}
+                <div className="d-flex gap-2 mt-1">
+                    {profile.isVerifiedStudent && (
+                        <span className="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-1">
+                            ✓ KKU Student
+                        </span>
+                    )}
+                    <span className="badge bg-light text-secondary border rounded-pill px-3 py-1">
+                        {profile.role}
+                    </span>
+                </div>
             </div>
 
-            <div className="d-flex flex-column gap-1">
-                <div className="d-flex justify-content-end mb-1">
-                    <button
-                        onClick={() => setIsEditing(!isEditing)}
-                        className="btn btn-link text-decoration-none p-0 text-primary small fw-bold"
-                        style={{ fontSize: '0.8rem' }}
-                    >
-                        {isEditing ? 'บันทึกข้อมูล' : 'แก้ไขโปรไฟล์'}
-                    </button>
+            {/* Forms */}
+            <div className="d-flex flex-column gap-3">
+                {/* Name */}
+                <div>
+                    <label className="small text-muted mb-1">ชื่อ-นามสกุล</label>
+                    {isEditing ? (
+                        <input
+                            type="text"
+                            className="form-control bg-light border-0"
+                            value={profile.name}
+                            onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                        />
+                    ) : (
+                        <div className="d-flex align-items-center gap-2 p-2 bg-light rounded-3 text-dark">
+                            <User size={16} className="text-muted" />
+                            <span>{profile.name}</span>
+                        </div>
+                    )}
                 </div>
 
-                {renderField("ชื่อ-นามสกุล", profile.name, "name", <User size={18} />)}
-                {renderField("อีเมล KKU", profile.email, "email", <Mail size={18} />)}
-                {renderField("เบอร์โทรศัพท์", profile.phone, "phone", <Phone size={18} />)}
-
-                <div className="mb-4">
-                    <label className="text-secondary small mb-1 ms-1">รหัสนักศึกษา</label>
-                    <div className="d-flex align-items-center gap-3 py-2 px-3 bg-light rounded-3 text-dark border-0">
-                        <span className="text-secondary opacity-50 small fw-bold">ID</span>
-                        <span className="fw-medium">{profile.studentId}</span>
+                {/* Email */}
+                <div>
+                    <label className="small text-muted mb-1">อีเมล</label>
+                    <div className="d-flex align-items-center gap-2 p-2 bg-light rounded-3 text-dark">
+                        <Mail size={16} className="text-muted" />
+                        <span className="text-truncate">{profile.email}</span>
                     </div>
                 </div>
 
-                {isEditing && (
-                    <button onClick={() => setIsEditing(false)} className="btn btn-primary w-100 py-2 mb-3 rounded-pill shadow-sm fw-bold">
-                        <Edit2 size={16} className="me-2" /> บันทึกการเปลี่ยนแปลง
-                    </button>
-                )}
+                {/* Phone */}
+                <div>
+                    <label className="small text-muted mb-1">เบอร์โทรศัพท์</label>
+                    {isEditing ? (
+                        <input
+                            type="text"
+                            className="form-control bg-light border-0"
+                            value={profile.phone}
+                            onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                        />
+                    ) : (
+                        <div className="d-flex align-items-center gap-2 p-2 bg-light rounded-3 text-dark">
+                            <Phone size={16} className="text-muted" />
+                            <span>{profile.phone}</span>
+                        </div>
+                    )}
+                </div>
 
-                <button onClick={onLogout} className="btn btn-outline-danger w-100 py-2 d-flex align-items-center justify-content-center gap-2 rounded-pill fw-bold border-2">
+                <hr className="text-muted opacity-25 my-1" />
+
+                {/* Buttons */}
+                <button
+                    onClick={() => setIsEditing(!isEditing)}
+                    className={`btn w-100 rounded-pill fw-bold d-flex align-items-center justify-content-center gap-2 ${isEditing ? 'btn-primary shadow' : 'btn-outline-primary'}`}
+                >
+                    <Edit2 size={16} />
+                    {isEditing ? "บันทึกข้อมูล" : "แก้ไขโปรไฟล์"}
+                </button>
+
+                <button
+                    onClick={onLogout}
+                    className="btn btn-light w-100 rounded-pill text-danger fw-bold d-flex align-items-center justify-content-center gap-2"
+                >
                     <LogOut size={16} /> ออกจากระบบ
                 </button>
             </div>

@@ -18,7 +18,7 @@ const ShopDetailDesktopView: React.FC<ShopDetailProps> = ({
     onOpenReviewModal
 }) => {
     return (
-        <div className="bg-light min-vh-100">
+        <div style={{ backgroundColor: '#DEE2E6', minHeight: '100vh' }}> {/* สีเทา Slate-200 ที่เข้มกว่าเดิม */}
             {/* Top Navbar */}
             <TopNavbar activePage="Shopdetail" />
 

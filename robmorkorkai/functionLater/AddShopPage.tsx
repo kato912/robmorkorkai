@@ -4,9 +4,9 @@ import {
     ArrowLeft, Camera, MapPin, Link2, FileText, Store, 
     X, CheckCircle, Clock 
 } from "lucide-react";
-import { TopNavbar } from "../layout/TopNavbar";
-import { BottomNav } from "../layout/BottomNav"; // ✅ เรียกใช้ BottomNav ที่มีอยู่แล้ว
-import { CustomDropdown } from "../addStore/CustomDropdown"; // ✅ เรียกใช้ CustomDropdown จากไฟล์แยก
+import { TopNavbar } from "../src/components/layout/TopNavbar";
+import { BottomNav } from "../src/components/layout/BottomNav";
+import { CustomDropdown } from "./addStore/CustomDropdown";
 
 export const AddShopPage: React.FC = () => {
     const navigate = useNavigate();
@@ -78,7 +78,7 @@ export const AddShopPage: React.FC = () => {
                 </div>
                 {/* Mobile Bottom Nav */}
                 <div className="d-lg-none mt-auto">
-                    <BottomNav />
+                    <BottomNav activePage="n"/>
                 </div>
             </div>
         );

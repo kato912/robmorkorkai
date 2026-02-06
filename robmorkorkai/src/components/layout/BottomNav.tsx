@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Home, Bot, User, LogIn } from "lucide-react";
-import { useAuth } from "../../context/AuthContext"; // ✅ Import Hook
+import { useAuth } from "../../context/AuthContext"; 
 
 interface Props {
     activePage: string;

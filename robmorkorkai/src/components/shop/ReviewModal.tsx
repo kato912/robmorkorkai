@@ -1,5 +1,8 @@
+// review box
+
 import React, { useState } from "react";
-import { Star, X, BadgeCheck } from "lucide-react";
+import { Star, X, BadgeCheck, User } from "lucide-react";
+import { useAuth } from "../../context/AuthContext"; 
 
 interface ReviewModalProps {
     isOpen: boolean;
@@ -12,6 +15,8 @@ interface ReviewModalProps {
 export const ReviewModal: React.FC<ReviewModalProps> = ({
     isOpen, onClose, onSubmit, shopName, shopImage
 }) => {
+    const { user } = useAuth();
+    
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
     const [comment, setComment] = useState("");
@@ -21,22 +26,25 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
     const handleSubmit = () => {
         if (rating > 0 && comment.trim()) {
             onSubmit(rating, comment);
-            // Reset form
             setRating(0);
             setComment("");
         }
     };
 
+    const userImage = user?.image || "https://via.placeholder.com/50";
+    const userName = user?.name || "ผู้ใช้งาน";
+    const isVerified = user?.isVerifiedStudent || false;
+
     return (
         <div 
             className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-3"
             style={{ zIndex: 1060, backgroundColor: 'rgba(0,0,0,0.5)' }}
-            onClick={onClose} // คลิกพื้นหลังเพื่อปิด
+            onClick={onClose}
         >
             <div 
                 className="bg-white rounded-4 shadow-lg w-100 overflow-hidden" 
                 style={{ maxWidth: '450px' }}
-                onClick={(e) => e.stopPropagation()} // คลิกในกล่องไม่ปิด
+                onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
                 <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
@@ -70,7 +78,6 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                             >
                                 <Star
                                     size={32}
-                                    // ✅ แก้ตรงนี้: ใส่สี fill โดยตรง เพื่อให้ดาวเป็นสีเหลืองทึบเวลาเลือก
                                     fill={star <= (hoverRating || rating) ? "#ffc107" : "none"} 
                                     className={`transition-colors ${star <= (hoverRating || rating)
                                             ? "text-warning"
@@ -94,10 +101,29 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                         />
                     </div>
 
-                    {/* User Info Mock */}
-                    <div className="d-flex align-items-center gap-2 mb-4 p-2 bg-success bg-opacity-10 rounded-3 border border-success border-opacity-25">
-                        <BadgeCheck size={16} className="text-success" />
-                        <small className="text-success fw-bold">รีวิวในนาม verified student</small>
+                    <div className={`d-flex align-items-center gap-3 mb-4 p-2 rounded-3 border ${isVerified ? 'bg-success bg-opacity-10 border-success border-opacity-25' : 'bg-light border-light'}`}>
+                        <img 
+                            src={userImage} 
+                            alt={userName} 
+                            referrerPolicy="no-referrer"
+                            className="rounded-circle border border-white shadow-sm"
+                            style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+                        />
+                        <div className="flex-grow-1 lh-1">
+                            <div className="small text-muted mb-1">รีวิวในนาม:</div>
+                            <div className={`fw-bold ${isVerified ? 'text-success' : 'text-dark'}`}>
+                                {userName}
+                            </div>
+                        </div>
+                        {isVerified ? (
+                            <div className="d-flex align-items-center gap-1 text-success small fw-bold">
+                                <BadgeCheck size={16} /> Verified
+                            </div>
+                        ) : (
+                            <div className="d-flex align-items-center gap-1 text-secondary small">
+                                <User size={16} /> General
+                            </div>
+                        )}
                     </div>
 
                     {/* Submit Button */}
