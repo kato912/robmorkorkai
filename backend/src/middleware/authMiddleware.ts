@@ -3,11 +3,13 @@ import { getSession } from "@auth/express";
 import { authConfig } from "../config/auth";
 
 export const  requireAuth = async (req: Request, res: Response, next: NextFunction) => {
-    try{
-        const session = await getSession(req,authConfig);
+    try {
+        console.log("1. Middleware started"); 
+        const session = await getSession(req, authConfig);
+        console.log("2. Session result:", session);
         if (!session || !session.user) {
+            console.log("3. No session found -> Sending 401");
             return res.status(401).json({ message: "Unauthorized Please Sign In" });
-            return;
         }
         res.locals.user = session.user;
         next();
