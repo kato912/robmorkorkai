@@ -60,13 +60,13 @@ export const AdminPage: React.FC = () => {
 
     return (
         <div className="font-sans" style={{ backgroundColor: theme.bgMain }}>
-            {/* 🖥️ Desktop View */}
+            {/* Desktop View */}
             <AdminDesktop {...viewProps} />
 
-            {/* 📱 Mobile View */}
+            {/* Mobile View */}
             <AdminMobile {...viewProps} />
 
-            {/* 🧩 Shared Modals */}
+            {/* Shared Modals */}
             {selectedShop && (
                 <ShopDetailModal 
                     shop={selectedShop} 
