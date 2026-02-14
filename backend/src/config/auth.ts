@@ -25,6 +25,7 @@ export const authConfig = {
             }
         }),
     ],
+
     events:{
         async signIn({user}: {user: any}){
             if(user.id){
