@@ -1,23 +1,29 @@
 import { ExpressAuth } from '@auth/express';
 import express from 'express';
+import cors from 'cors'; 
 import type { Express , Request, Response } from 'express';
 import { authConfig } from './config/auth';
 import userRoutes from "./routes/userRoutes.js";
-import { swaggerSpec } from './utils/swagger.js';
-import swaggerUi from "swagger-ui-express"
 
 const app: Express = express();
 const port: number = 3000;
 
+app.use(cors({
+    origin: 'http://localhost:5173', // อนุญาตเฉพาะ Frontend ของคุณ
+    credentials: true,               // อนุญาตให้ส่ง Cookies/Auth Header
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
+
 app.use("/api/auth",ExpressAuth(authConfig)); //signin / session
+
 app.use("/api/user", userRoutes);
 
 app.get("/api" , (req:Request , res:Response) => {
     res.send('api is running');
 });
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`)
