@@ -7,6 +7,8 @@ import { MOCK_SHOPS as shops } from "../../data/mockDatat";
 import ShopDetailMobileView from "../shop/ShopDetailMobileView";
 import ShopDetailDesktopView from "../shop/ShopDetailDesktop";
 import { ReviewModal } from "../shop/ReviewModal";
+// import Swal from 'sweetalert2';
+// import withReactContent from 'sweetalert2-react-content';
 
 const initialReviews = [
     { id: 1, userId: "u1", email: "student64@kkumail.com", rating: 5, comment: "บรรยากาศดีมาก แอร์เย็นเจี๊ยบ", verified: true, date: "2023-10-25" },

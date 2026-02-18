@@ -1,5 +1,5 @@
 import React from "react";
-import { Camera, User, Mail, Phone, Edit2, LogOut } from "lucide-react";
+import { Camera, User, Mail, Edit2, LogOut, Save } from "lucide-react"; // เพิ่ม icon Save
 import type { ProfileData } from "../pages/ProfilePage";
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
     isEditing: boolean;
     setIsEditing: (value: boolean) => void;
     onLogout: () => void;
+    onSave: () => void;
 }
 
 export const ProfileInfoCard: React.FC<Props> = ({ 
@@ -15,21 +16,22 @@ export const ProfileInfoCard: React.FC<Props> = ({
     setProfile, 
     isEditing, 
     setIsEditing, 
-    onLogout 
+    onLogout,
+    onSave
 }) => {
     const cameraBtnStyle: React.CSSProperties = {
-        width: '36px',   // กำหนดกว้าง
-        height: '36px',  // กำหนดสูงเท่ากัน
+        width: '36px',
+        height: '36px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 0,
-        borderRadius: '50%', // ทำเป็นวงกลม
+        borderRadius: '50%',
         position: 'absolute',
         bottom: '0',
         right: '0',
-        border: '3px solid white', // ขอบขาวตัดกับรูป
-        backgroundColor: '#0d6efd', // สีน้ำเงิน (Primary)
+        border: '3px solid white',
+        backgroundColor: '#0d6efd',
         color: 'white',
         cursor: 'pointer',
         zIndex: 10
@@ -47,7 +49,7 @@ export const ProfileInfoCard: React.FC<Props> = ({
                         className="rounded-circle border border-4 border-white shadow"
                         style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                     />
-                    <button className="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 end-0 p-2 shadow-sm border border-white" style={cameraBtnStyle}>
+                    <button className="shadow-sm" style={cameraBtnStyle}>
                         <Camera size={14} />
                     </button>
                 </div>
@@ -87,41 +89,32 @@ export const ProfileInfoCard: React.FC<Props> = ({
                     )}
                 </div>
 
-                {/* Email */}
+                {/* Email (Read only) */}
                 <div>
                     <label className="small text-muted mb-1">อีเมล</label>
-                    <div className="d-flex align-items-center gap-2 p-2 bg-light rounded-3 text-dark">
+                    <div className="d-flex align-items-center gap-2 p-2 bg-light rounded-3 text-dark opacity-75">
                         <Mail size={16} className="text-muted" />
                         <span className="text-truncate">{profile.email}</span>
                     </div>
                 </div>
 
-                {/* Phone */}
-                <div>
-                    <label className="small text-muted mb-1">เบอร์โทรศัพท์</label>
-                    {isEditing ? (
-                        <input
-                            type="text"
-                            className="form-control bg-light border-0"
-                            value={profile.phone}
-                            onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                        />
-                    ) : (
-                        <div className="d-flex align-items-center gap-2 p-2 bg-light rounded-3 text-dark">
-                            <Phone size={16} className="text-muted" />
-                            <span>{profile.phone}</span>
-                        </div>
-                    )}
-                </div>
 
                 <hr className="text-muted opacity-25 my-1" />
 
-                {/* Buttons */}
+                {/* ✅ 2. ปรับปุ่ม Action */}
                 <button
-                    onClick={() => setIsEditing(!isEditing)}
-                    className={`btn w-100 rounded-pill fw-bold d-flex align-items-center justify-content-center gap-2 ${isEditing ? 'btn-primary shadow' : 'btn-outline-primary'}`}
+                    onClick={() => {
+                        if (isEditing) {
+                            onSave(); // ถ้ากดตอนแก้ -> เรียก API บันทึก
+                        } else {
+                            setIsEditing(true); // ถ้ากดตอนปกติ -> เปิดโหมดแก้
+                        }
+                    }}
+                    className={`btn w-100 rounded-pill fw-bold d-flex align-items-center justify-content-center gap-2 transition ${
+                        isEditing ? 'btn-success text-white shadow' : 'btn-outline-primary'
+                    }`}
                 >
-                    <Edit2 size={16} />
+                    {isEditing ? <Save size={16} /> : <Edit2 size={16} />}
                     {isEditing ? "บันทึกข้อมูล" : "แก้ไขโปรไฟล์"}
                 </button>
 

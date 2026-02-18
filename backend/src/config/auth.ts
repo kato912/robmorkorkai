@@ -26,6 +26,17 @@ export const authConfig = {
         }),
     ],
 
+    callbacks: {
+        async session({ session, user }) {
+            // เอา ID และ Role จาก Database (user) ยัดกลับเข้าไปใน Session
+            if (session.user) {
+                session.user.id = user.id;
+                session.user.role = user.role; 
+                session.user.isVerifiedStudent = user.isVerifiedStudent;
+            }
+            return session;
+        }
+    },
     events:{
         async signIn({user}: {user: any}){
             if(user.id){
@@ -37,6 +48,6 @@ export const authConfig = {
             }
         },
     },
-
+    secret: process.env.AUTH_SECRET,
     trustHost: true,
 };
