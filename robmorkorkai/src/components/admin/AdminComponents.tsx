@@ -10,7 +10,17 @@ export const theme = adminTheme;
 // --- Sidebar & Navigation ---
 export const AdminSidebar = ({ activeTab, setActiveTab, logout }: any) => (
     <aside className="d-none d-lg-flex position-fixed h-100 flex-column" style={{ width: '260px', backgroundColor: theme.sidebarBg, zIndex: 1030 }}>
-        <div className="p-4 mb-2"><div className="d-flex align-items-center gap-3"><div className="bg-primary rounded-3 p-2 d-flex align-items-center justify-content-center"><Shield size={24} className="text-white" /></div><div><h6 className="fw-bold text-white m-0">Admin Panel</h6><small style={{ color: theme.textGray }}>robmorkorkai</small></div></div></div>
+        <div className="p-4 mb-2">
+            <div className="d-flex align-items-center gap-3">
+                <div className="bg-primary rounded-3 p-2 d-flex align-items-center justify-content-center">
+                    <Shield size={24} className="text-white" />
+                </div>
+                <div>
+                    <h6 className="fw-bold text-white m-0">Admin Panel</h6>
+                    <small style={{ color: theme.textGray }}>robmorkorkai</small>
+                </div>
+            </div>
+        </div>
         <nav className="px-3 flex-grow-1 d-flex flex-column gap-1">
             <SidebarItem id="overview" label="ภาพรวม" icon={BarChart3} activeTab={activeTab} onClick={setActiveTab} />
             <SidebarItem id="stores" label="จัดการร้านค้า" icon={Store} activeTab={activeTab} onClick={setActiveTab} />
@@ -64,7 +74,7 @@ export const StatCardMobile = ({ icon: Icon, value, label, bg, color }: any) => 
 );
 
 // --- Modals ---
-export const ShopDetailModal = ({ shop, onClose, onApprove, onReject, onDelete, onEdit }: any) => {
+export const ShopDetailModal = ({ shop, onClose, onDelete, onEdit }: any) => {
     if (!shop) return null;
     return (
         <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 2000 }} onClick={onClose}>
@@ -72,7 +82,6 @@ export const ShopDetailModal = ({ shop, onClose, onApprove, onReject, onDelete, 
                 <div className="position-relative bg-light" style={{ height: '200px' }}>
                     <img src={shop.image} alt={shop.name} className="w-100 h-100 object-fit-cover" />
                     <button onClick={onClose} className="btn btn-dark btn-sm rounded-circle position-absolute top-0 end-0 m-3 d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px' }}><X size={18} /></button>
-                    <span className={`badge position-absolute bottom-0 start-0 m-3 px-3 py-2 rounded-pill shadow-sm ${shop.status === 'approved' ? 'bg-success' : shop.status === 'pending' ? 'bg-warning text-dark' : 'bg-danger'}`}>{shop.status === 'approved' ? 'อนุมัติแล้ว' : shop.status === 'pending' ? 'รอตรวจสอบ' : 'ปฏิเสธ'}</span>
                 </div>
                 <div className="p-4 overflow-auto custom-scrollbar">
                     <div className="d-flex justify-content-between align-items-start mb-3">
@@ -87,17 +96,11 @@ export const ShopDetailModal = ({ shop, onClose, onApprove, onReject, onDelete, 
                         </div>
                     </div>
                     <div className="d-grid gap-2 d-flex justify-content-end border-top pt-3">
-                        {shop.status === 'pending' ? (
-                            <>
-                                <button onClick={() => { onReject(shop.id); onClose(); }} className="btn btn-outline-danger flex-grow-1">ปฏิเสธ</button>
-                                <button onClick={() => { onApprove(shop.id); onClose(); }} className="btn btn-success text-white flex-grow-1">อนุมัติร้านค้า</button>
-                            </>
-                        ) : (
                             <>
                                 <button onClick={() => { onDelete(shop.id); onClose(); }} className="btn btn-light text-danger border flex-grow-1">ลบร้านค้า</button>
                                 <button onClick={() => { onEdit(shop); onClose(); }} className="btn btn-light text-primary border flex-grow-1"><Edit size={16}/> แก้ไขข้อมูล</button>
                             </>
-                        )}
+                        
                     </div>
                 </div>
             </div>

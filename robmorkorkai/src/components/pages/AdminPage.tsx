@@ -30,14 +30,11 @@ export const AdminPage: React.FC = () => {
 
     const stats = {
         totalStores: storeRequests.length,
-        pendingStores: storeRequests.filter((s) => s.status === "pending").length,
         totalReviews: 1284,
         totalUsers: 2451,
     };
 
     // Actions
-    const handleApproveStore = (id: string) => { if (window.confirm("ยืนยันการอนุมัติ?")) { setStoreRequests(prev => prev.map(s => s.id === id ? { ...s, status: "approved" as StoreStatus } : s)); setSelectedShop(null); } };
-    const handleRejectStore = (id: string) => { if (window.confirm("ปฏิเสธคำขอ?")) { setStoreRequests(prev => prev.map(s => s.id === id ? { ...s, status: "rejected" as StoreStatus } : s)); setSelectedShop(null); } };
     const handleDeleteStore = (id: string) => { if (window.confirm("ยืนยันการลบ?")) { setStoreRequests(prev => prev.filter(s => s.id !== id)); setSelectedShop(null); } };
     const handleSaveEdit = (updatedShop: ShopRequest) => { setStoreRequests(prev => prev.map(s => s.id === updatedShop.id ? updatedShop : s)); setEditingShop(null); };
 
@@ -50,8 +47,6 @@ export const AdminPage: React.FC = () => {
         categories,
         isFilterDropdownOpen, setIsFilterDropdownOpen,
         stats,
-        onApprove: handleApproveStore,
-        onReject: handleRejectStore,
         onDelete: handleDeleteStore,
         onViewDetail: setSelectedShop,
         onEdit: setEditingShop,
@@ -71,8 +66,6 @@ export const AdminPage: React.FC = () => {
                 <ShopDetailModal 
                     shop={selectedShop} 
                     onClose={() => setSelectedShop(null)} 
-                    onApprove={handleApproveStore} 
-                    onReject={handleRejectStore} 
                     onDelete={handleDeleteStore}
                     onEdit={(shop: ShopRequest) => { setEditingShop(shop); setSelectedShop(null); }}
                 />

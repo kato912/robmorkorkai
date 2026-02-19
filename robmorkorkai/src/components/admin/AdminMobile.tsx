@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { 
-    Store, CheckCircle, XCircle, Clock, 
-    Search, Filter, Menu, X, Shield, 
-    BarChart3, MessageSquare, Trash2, Edit, Eye, User, LogOut 
+import {
+    Store,
+    Search, Menu, X, Shield,
+    BarChart3, MessageSquare, Trash2, Edit, Eye, User, LogOut
 } from "lucide-react";
 import { type AdminViewProps, adminTheme as theme } from "./types";
 import { StatCardMobile } from "./AdminComponents";
@@ -10,7 +10,7 @@ import { StatCardMobile } from "./AdminComponents";
 export const AdminMobile: React.FC<AdminViewProps> = ({
     activeTab, setActiveTab, filteredStores, stats,
     searchQuery, setSearchQuery, selectedCategory, setSelectedCategory,
-    categories, onApprove, onReject, onDelete, onViewDetail, onEdit, logout
+    categories, onDelete, onViewDetail, onEdit, logout
 }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -35,25 +35,29 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
                 {activeTab === 'overview' && (
                     <div className="d-flex flex-column gap-3">
                         <div className="row g-3">
-                            <div className="col-6"><StatCardMobile icon={Store} value={stats.totalStores} label="ร้านค้า" bg="#dbeafe" color="#2563eb" /></div>
-                            <div className="col-6"><StatCardMobile icon={Clock} value={stats.pendingStores} label="รออนุมัติ" bg="#ffedd5" color="#ea580c" /></div>
-                            <div className="col-6"><StatCardMobile icon={MessageSquare} value={stats.totalReviews} label="รีวิว" bg="#dcfce7" color="#16a34a" /></div>
-                            <div className="col-6"><StatCardMobile icon={User} value={stats.totalUsers} label="ผู้ใช้" bg="#f3e8ff" color="#9333ea" /></div>
+                            <div className="col-12">
+                                <StatCardMobile icon={Store} value={stats.totalStores} label="ร้านค้าทั้งหมด" bg="#dbeafe" color="#2563eb" />
+                            </div>
+                            <div className="col-6">
+                                <StatCardMobile icon={MessageSquare} value={stats.totalReviews} label="รีวิวทั้งหมด" bg="#dcfce7" color="#16a34a" />
+                            </div>
+                            <div className="col-6">
+                                <StatCardMobile icon={User} value={stats.totalUsers} label="ผู้ใช้งาน" bg="#f3e8ff" color="#9333ea" />
+                            </div>
                         </div>
                         <div className="card border-0 shadow-sm rounded-4 p-3 mt-2 bg-white">
-                            <h6 className="fw-bold mb-3" style={{ color: theme.sidebarBg }}>ร้านค้ารอการอนุมัติ</h6>
+                            <h6 className="fw-bold mb-3" style={{ color: theme.sidebarBg }}>ร้านค้า</h6>
                             <div className="d-flex flex-column gap-3">
-                                {filteredStores.filter(s => s.status === 'pending').map(store => (
+                                {filteredStores.slice(0, 5).map(store => (
                                     <div key={store.id} className="d-flex align-items-center justify-content-between p-2 border-bottom">
-                                        <div className="d-flex align-items-center gap-3"><img src={store.image} className="rounded-3 object-fit-cover" width="48" height="48" alt=""/><div><div className="fw-bold small text-dark">{store.name}</div><div className="small text-secondary" style={{fontSize: '0.75rem'}}>{store.owner}</div></div></div>
+                                        <div className="d-flex align-items-center gap-3"><img src={store.image} className="rounded-3 object-fit-cover" width="48" height="48" alt="" /><div><div className="fw-bold small text-dark">{store.name}</div><div className="small text-secondary" style={{ fontSize: '0.75rem' }}>{store.owner}</div></div></div>
                                         <div className="d-flex gap-2">
                                             <button onClick={() => onViewDetail(store)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#e2e8f0', color: '#475569' }}><Eye size={18} /></button>
-                                            <button onClick={() => onApprove(store.id)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#dcfce7', color: '#16a34a' }}><CheckCircle size={18} /></button>
-                                            <button onClick={() => onReject(store.id)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#fee2e2', color: '#ef4444' }}><X size={18} /></button>
+                                            <button onClick={() => onEdit(store)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#dcfce7', color: '#16a34a' }}><Edit size={18} /></button>
+                                            <button onClick={() => onDelete(store.id)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#fee2e2', color: '#ef4444' }}><Trash2 size={18} /></button>
                                         </div>
                                     </div>
                                 ))}
-                                {filteredStores.filter(s => s.status === 'pending').length === 0 && <div className="text-center text-muted small py-3">ไม่มีรายการรออนุมัติ</div>}
                             </div>
                         </div>
                     </div>
@@ -65,17 +69,23 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
                         <div className="d-flex gap-2 overflow-auto pb-2" style={{ whiteSpace: 'nowrap' }}>{categories.map(cat => (<button key={cat} onClick={() => setSelectedCategory(cat)} className={`btn btn-sm rounded-pill px-3 border-0 ${selectedCategory === cat ? 'bg-primary text-white' : 'bg-white text-secondary shadow-sm'}`}>{cat === 'all' ? 'ทั้งหมด' : cat}</button>))}</div>
                         {filteredStores.map(store => (
                             <div key={store.id} className="card border-0 shadow-sm p-3 rounded-4 bg-white">
-                                <div className="d-flex align-items-center gap-3 mb-2"><img src={store.image} className="rounded-3 object-fit-cover" width="56" height="56" alt="" /><div className="flex-grow-1"><div className="fw-bold small text-dark">{store.name}</div><div className="small text-secondary mb-1">{store.owner}</div><span className={`badge ${store.status === 'approved' ? 'bg-success' : store.status === 'pending' ? 'bg-warning' : 'bg-danger'} bg-opacity-10 text-dark border rounded-pill`} style={{ fontSize: '0.65rem' }}>{store.status}</span></div></div>
+                                <div className="d-flex align-items-center gap-3 mb-2">
+                                    <img src={store.image} className="rounded-3 object-fit-cover" width="56" height="56" alt="" />
+                                    <div className="flex-grow-1"><div className="fw-bold small text-dark">{store.name}</div>
+                                        <div className="small text-secondary mb-1">{store.owner}</div>
+                                    </div>
+                                </div>
                                 <div className="d-flex gap-2 mt-2 border-top pt-2">
                                     <button onClick={() => onViewDetail(store)} className="btn btn-light btn-sm text-secondary border flex-grow-1"><Eye size={16} /> ดู</button>
-                                    {store.status === 'pending' && <><button onClick={() => onApprove(store.id)} className="btn btn-success btn-sm flex-grow-1 text-white">อนุมัติ</button><button onClick={() => onReject(store.id)} className="btn btn-outline-danger btn-sm flex-grow-1">ปฏิเสธ</button></>}
-                                    {store.status === 'approved' && <><button onClick={() => onEdit(store)} className="btn btn-light btn-sm flex-grow-1 text-primary border"><Edit size={16} /> แก้ไข</button><button onClick={() => onDelete(store.id)} className="btn btn-light btn-sm text-secondary border"><Trash2 size={16} /></button></>}
+                                    <button onClick={() => onEdit(store)} className="btn btn-light btn-sm flex-grow-1 text-primary border"><Edit size={16} /> แก้ไข</button>
+                                    <button onClick={() => onDelete(store.id)} className="btn btn-light btn-sm text-secondary border" title="ลบร้านค้า"><Trash2 size={16} /></button>
                                 </div>
                             </div>
                         ))}
                     </div>
                 )}
             </main>
+
             <nav className="fixed-bottom bg-white border-top shadow-lg d-flex justify-content-around py-2" style={{ zIndex: 1060 }}>
                 <NavBtn icon={BarChart3} label="ภาพรวม" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
                 <NavBtn icon={Store} label="ร้านค้า" active={activeTab === 'stores'} onClick={() => setActiveTab('stores')} />

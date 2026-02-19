@@ -7,6 +7,7 @@ import { MOCK_SHOPS as shops } from "../../data/mockDatat";
 import ShopDetailMobileView from "../shop/ShopDetailMobileView";
 import ShopDetailDesktopView from "../shop/ShopDetailDesktop";
 import { ReviewModal } from "../shop/ReviewModal";
+import { AlertUtils } from "../../utils/alertUtils";
 // import Swal from 'sweetalert2';
 // import withReactContent from 'sweetalert2-react-content';
 
@@ -35,7 +36,7 @@ const ShopDetailPage: React.FC = () => {
     // 2. Event Handlers
     const handleOpenReviewModal = () => {
         if (!isLoggedIn) {
-            alert("กรุณาเข้าสู่ระบบก่อนเขียนรีวิว");
+            AlertUtils.error("กรุณาเข้าสู่ระบบเพื่อเขียนรีวิว");
             navigate("/login");
             return;
         }

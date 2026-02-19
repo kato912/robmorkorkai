@@ -23,12 +23,9 @@ export interface AdminViewProps {
     setIsFilterDropdownOpen: (open: boolean) => void;
     stats: {
         totalStores: number;
-        pendingStores: number;
         totalReviews: number;
         totalUsers: number;
     };
-    onApprove: (id: string) => void;
-    onReject: (id: string) => void;
     onDelete: (id: string) => void;
     onViewDetail: (shop: ShopRequest) => void;
     onEdit: (shop: ShopRequest) => void;
