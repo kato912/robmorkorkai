@@ -1,5 +1,7 @@
-// import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { MOCK_SHOPS } from './data/mockData'; // นำเข้าข้อมูล 30 ร้านที่คุณสร้างไว้
+import type { Shop } from './types/shop';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Context
@@ -8,7 +10,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 // Pages
 import Login from './components/pages/LoginPage';
 import HomePage from './components/pages/HomePage';
-import AIPage from './components/pages/AIPage';
+import { AIPage } from './components/pages/AIPage';
 import ShopDetailPage from './components/pages/ShopDetailPage';
 import ProfilePage from './components/pages/ProfilePage';
 import { AdminPage } from "./components/pages/AdminPage";
@@ -21,15 +23,22 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 const AppContent = () => {
+  const [shops, setShops] = useState<Shop[]>(MOCK_SHOPS);
+  const handleUpdateShop = (updatedShop: Shop) => {
+    setShops(prev => prev.map(s => s.id === updatedShop.id ? updatedShop : s));
+  };
+  const handleDeleteShop = (id: string) => {
+    setShops(prev => prev.filter(s => s.id !== id));
+  };
   return (
     <Routes>
 
-      <Route path="/" element={<HomePage />} />
-      <Route path="/search" element={<SearchPage />} />
+      <Route path="/" element={<HomePage shops={shops}/>} />
+      <Route path="/search" element={<SearchPage shops={shops}/>} />
       <Route path='/ai' element={<AIPage />} />
 
       {/* ShopDetailPage ก็ไม่ต้องส่ง Props แล้ว */}
-      <Route path="/shop/:id" element={<ShopDetailPage />} />
+      <Route path="/shop/:id" element={<ShopDetailPage shops={shops}/>} />
 
       {/* Login ไม่ต้องรับ onLogin แล้ว */}
       <Route path="/login" element={<Login />} />
@@ -39,7 +48,13 @@ const AppContent = () => {
         <ProtectedRoute><ProfilePage /></ProtectedRoute>
       } />
 
-      <Route path="/admin" element={<AdminPage />} />
+      <Route path="/admin" element={
+        <AdminPage 
+          shops={shops} 
+          onUpdateShop={handleUpdateShop} 
+          onDeleteShop={handleDeleteShop} 
+        />
+      } />
     </Routes>
   );
 }

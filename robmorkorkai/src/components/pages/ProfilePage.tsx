@@ -1,139 +1,97 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-// Import Components ย่อย
-import { ProfileHeader } from "../../components/profile/ProfileHeader";
-import { ProfileInfoCard } from "../../components/profile/ProfileInfoCard";
-import { MyStoreList } from "../../components/profile/MyStoreList";
-import { BottomNav } from "../../components/layout/BottomNav";
-import { TopNavbar } from "../../components/layout/TopNavbar";
-import { AlertUtils } from "../../utils/alertUtils";
-
-//data
 import { useAuth } from "../../context/AuthContext";
-import api from "../../services/api"; // <-- Add this line to import your api instance
+import { AlertUtils } from "../../utils/alertUtils";
+import api from "../../services/api";
 
-// Interface ตัด phone ออก
+// Components
+import { ProfileHeader } from "../profile/ProfileHeader";
+import { ProfileEditForm } from "../profile/ProfileInfoCard";
+import { MyStoreList } from "../profile/MyStoreList";
+import { BottomNav } from "../../components/layout/BottomNav";
+
 export interface ProfileData {
-    name: string;
-    email: string;
-    imageUrl: string;
-    role: string;
-    isVerifiedStudent: boolean;
+    name: string; email: string; imageUrl: string; role: string; phone?: string; isVerifiedStudent: boolean;
 }
 
-const ProfilePage: React.FC = () => {
-    const { user, logout, updateUser } = useAuth(); // ถ้ามี refreshUser ใน AuthContext ให้ดึงมาใช้ด้วยนะครับ
-    const [isEditing, setIsEditing] = useState(false);
-    const navigate = useNavigate();
+// --- Mock Data ---
+const myReviews = [
+    { id: "1", shopName: "Library Cafe KKU", shopImage: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=300&q=80", rating: 5, comment: "บรรยากาศดีมาก WiFi แรง เหมาะกับการนั่งทำงาน ปลั๊กไฟทุกโต๊ะ กาแฟอร่อยด้วย แนะนำ Dirty Latte", date: "2 วันก่อน", helpful: 12 },
+    { id: "2", shopName: "กังสดาล Coffee", shopImage: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=300&q=80", rating: 4, comment: "กาแฟอร่อย ราคานักศึกษา ชอบมาก บรรยากาศดี มีมุมนั่งทำงานแยกเงียบสงบ", date: "1 สัปดาห์ก่อน", helpful: 8 },
+];
 
-    // Initial State (ตัด phone ออก)
+const favoriteShops = [
+    { id: "1", name: "Library Cafe KKU", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=300&q=80", rating: 4.8, category: "คาเฟ่", zone: "กังสดาล", reviews: 128 },
+    { id: "2", name: "กังสดาล Coffee", image: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=300&q=80", rating: 4.6, category: "คาเฟ่", zone: "กังสดาล", reviews: 89 },
+];
+
+const ProfilePage: React.FC = () => {
+    const { user, logout, updateUser } = useAuth();
+    const navigate = useNavigate();
+    const [isEditing, setIsEditing] = useState(false);
+
     const [profile, setProfile] = useState<ProfileData>({
-        name: user?.name || "ผู้ใช้งาน",
-        email: user?.email || "",
-        imageUrl: user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200",
+        name: user?.name || "สมชาย ใจดี",
+        email: user?.email || "somchai@kkumail.com",
+        imageUrl: user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300",
         role: user?.role || "USER",
-        isVerifiedStudent: user?.isVerifiedStudent || false
+        phone: "081-234-5678",
+        isVerifiedStudent: user?.isVerifiedStudent || true
     });
 
-    // Sync Data with Auth Context (ตัด phone ออก)
     useEffect(() => {
         if (user) {
-            setProfile(prev => ({
-                ...prev,
-                name: user.name || prev.name,
-                email: user.email || prev.email,
-                imageUrl: user.image || prev.imageUrl,
-                role: user.role || "USER",
-                isVerifiedStudent: user.isVerifiedStudent || false,
-            }));
+            setProfile(prev => ({ ...prev, name: user.name || prev.name, email: user.email || prev.email, imageUrl: user.image || prev.imageUrl }));
         }
     }, [user]);
 
-    const handleSave = async () => {
-        try {
-            AlertUtils.loading("กำลังบันทึกข้อมูล...");
-            const response = await api.patch('/api/user/update', {
-                name: profile.name,
-            });
-
-            console.log("Update success:", response.data);
-            AlertUtils.success("บันทึกข้อมูลสำเร็จ!")
-            
-            updateUser(response.data);
-            // 2. ปิดโหมดแก้ไข (หน้าจอจะโชว์ชื่อใหม่ที่เราพิมพ์ไปแล้ว)
-            setIsEditing(false); 
-
-        } catch (error: any) {
-            AlertUtils.error("บันทึกข้อมูลไม่สำเร็จ!", "กรุณาลองใหม่อีกครั้ง");
-
-            // 3. เช็คดูว่า Error เพราะอะไร
-            if (error.response && error.response.status === 401) {
-                AlertUtils.error("Session หมดอายุ", "กรุณาเข้าสู่ระบบใหม่");
-                // ถ้า Backend บอกว่า 401 จริง แปลว่า Session หลุดตั้งแต่ตอนกดบันทึกแล้ว
-                logout(); 
-                navigate("/login");
-            } else {
-                AlertUtils.error("เกิดข้อผิดพลาด", "กรุณาลองใหม่อีกครั้ง");
-            }
-        }
-    };
-
     const handleLogout = () => {
-        AlertUtils.confirm("คุณต้องการออกจากระบบใช่หรือไม่?", "", "ยืนยัน", "ยกเลิก").then((confirmed) => {
-            if (confirmed) {
-                logout();
-                navigate("/login");
-            }
+        AlertUtils.confirm("คุณต้องการออกจากระบบใช่หรือไม่?", "", "ยืนยัน", "ยกเลิก").then((c) => {
+            if (c) { logout(); navigate("/login"); }
         });
     };
 
-    // Mock Data Store (เหมือนเดิม)
-    const myStores = [
-        {
-            id: "1",
-            name: "Coffee Corner KKU",
-            status: "verified",
-            image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=100",
-        },
-    ];
+    const handleSave = async () => {
+        if (!isEditing) { setIsEditing(true); return; }
+        try {
+            AlertUtils.loading("กำลังบันทึกข้อมูล...");
+            const response = await api.patch('/api/user/update', { name: profile.name });
+            AlertUtils.success("บันทึกข้อมูลสำเร็จ!");
+            updateUser(response.data);
+            setIsEditing(false);
+        } catch (error) {
+            AlertUtils.error("บันทึกข้อมูลไม่สำเร็จ!", "กรุณาลองใหม่อีกครั้ง");
+        }
+    };
 
     return (
-        <div className="min-vh-100 pb-5" style={{ backgroundColor: "#f8f9fa" }}>
+        <div className="min-vh-100 bg-white" style={{ fontFamily: 'Inter, sans-serif' }}>
 
-            <div className="d-none d-lg-block">
-                <TopNavbar activePage="profile" />
-            </div>
+            {/* 1. Header Section (Dark Mode) */}
+            <ProfileHeader
+                profile={profile}
+                isEditing={isEditing}
+                setIsEditing={(val) => { if (isEditing) handleSave(); else setIsEditing(val); }}
+                onLogout={handleLogout}
+                stats={{ reviews: myReviews.length, favorites: favoriteShops.length, helpful: 35 }}
+            />
 
-            <div className="d-lg-none">
-                <ProfileHeader />
-            </div>
+            {/* 2. Main Content Container */}
+            <main className="container" style={{ maxWidth: '900px', paddingBottom: '90px' }}>
 
-            <div className="container">
-                <div className="row g-4 justify-content-center">
+                {/* กล่องแก้ไขข้อมูล (แสดงเมื่อกด Edit) */}
+                {isEditing && <ProfileEditForm profile={profile} setProfile={setProfile} />}
 
-                    {/* --- Profile Info Section --- */}
-                    <div className="col-lg-4 pt-4">
-                        <ProfileInfoCard
-                            profile={profile}
-                            setProfile={setProfile}
-                            isEditing={isEditing}
-                            setIsEditing={setIsEditing}
-                            onLogout={handleLogout}
-                            onSave={handleSave} // ✅ ส่งฟังก์ชัน save ไปให้ Card
-                        />
-                    </div>
+                {/* รายการรีวิว และ ร้านโปรด */}
+                <MyStoreList reviews={myReviews} favorites={favoriteShops} />
 
-                    {/* --- Stores & Stats Section --- */}
-                    <div className="col-lg-7 pt-lg-4">
-                        <MyStoreList stores={myStores} />
-                    </div>
-                </div>
-            </div>
+            </main>
 
+            {/* 3. Bottom Nav (Mobile) */}
             <div className="d-lg-none">
                 <BottomNav activePage="profile" />
             </div>
+
         </div>
     );
 };

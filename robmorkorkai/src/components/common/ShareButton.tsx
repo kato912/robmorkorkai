@@ -15,8 +15,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
     text, 
     url, 
     className = "btn btn-light rounded-circle p-2 shadow-sm", // Default Style ตามหน้า Mobile
-    iconSize = 20,
-    style
+    iconSize = 20
 }) => {
     
     const handleShare = async () => {

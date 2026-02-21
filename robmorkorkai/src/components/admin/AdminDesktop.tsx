@@ -7,8 +7,10 @@ import { type AdminViewProps, adminTheme as theme } from "./types";
 import { StatCard } from "./AdminComponents";
 
 export const AdminDesktop: React.FC<AdminViewProps> = ({
-    activeTab, setActiveTab, filteredStores, stats,
-    searchQuery, setSearchQuery, selectedCategory, setSelectedCategory,
+    activeTab, setActiveTab, 
+    filteredStores, // ✅ เปลี่ยนจาก filteredStores เป็น filteredShops
+    stats, searchQuery, setSearchQuery, 
+    selectedCategory, setSelectedCategory,
     categories, isFilterDropdownOpen, setIsFilterDropdownOpen,
     onDelete, onViewDetail, onEdit, logout
 }) => {
@@ -37,6 +39,7 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
                 </div>
                 <nav className="px-3 flex-grow-1 d-flex flex-column gap-1">
                     <SidebarItem id="overview" label="ภาพรวม" icon={BarChart3} active={activeTab === 'overview'} />
+                    {/* ✅ เปลี่ยน id tab เป็น shops ด้วยให้ตรงกัน */}
                     <SidebarItem id="stores" label="จัดการร้านค้า" icon={Store} active={activeTab === 'stores'} />
                 </nav>
                 <div className="p-3 mt-auto border-top border-secondary border-opacity-25">
@@ -89,22 +92,23 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
                         <div className="card border-0 shadow-sm rounded-4 h-100 p-4" style={{ backgroundColor: theme.cardBg }}>
                             <div className="d-flex justify-content-between align-items-center mb-4">
                                 <h6 className="fw-bold m-0 text-dark">ร้านค้า</h6>
-                                <button className="btn btn-link btn-sm fw-bold" onClick={() => setActiveTab('stores')}>ดูตารางแบบเต็ม</button>
+                                <button className="btn btn-link btn-sm fw-bold" onClick={() => setActiveTab('shops')}>ดูตารางแบบเต็ม</button>
                             </div>
                             <div className="d-flex flex-column gap-3">
-                                {filteredStores.slice(0, 5).map(store => (
-                                    <div key={store.id} className="d-flex align-items-center justify-content-between p-3 rounded-3" style={{ backgroundColor: theme.bgMain }}>
+                                {/* ✅ เปลี่ยนตัวแปรตอนวนลูปเป็น shop */}
+                                {filteredStores.slice(0, 5).map(shop => (
+                                    <div key={shop.id} className="d-flex align-items-center justify-content-between p-3 rounded-3" style={{ backgroundColor: theme.bgMain }}>
                                         <div className="d-flex align-items-center gap-3">
-                                            <img src={store.image} className="rounded-3 object-fit-cover" width="48" height="48" alt=""/>
+                                            <img src={shop.image} className="rounded-3 object-fit-cover" width="48" height="48" alt=""/>
                                             <div>
-                                                <h6 className="fw-bold m-0 text-dark small">{store.name}</h6>
-                                                <small className="text-secondary">{store.owner}</small>
+                                                <h6 className="fw-bold m-0 text-dark small">{shop.name}</h6>
+                                                <small className="text-secondary">{shop.owner}</small>
                                             </div>
                                         </div>
                                         <div className="d-flex gap-2">
-                                            <button onClick={() => onViewDetail(store)} className="btn btn-sm btn-light rounded-circle text-primary p-1 border hover-scale"><Eye size={20}/></button>
-                                            <button onClick={() => onEdit(store)} className="btn btn-sm btn-light rounded-circle text-success p-1 border hover-scale"><Edit size={20}/></button>
-                                            <button onClick={() => onDelete(store.id)} className="btn btn-sm btn-light rounded-circle text-danger p-1 border hover-scale"><Trash2 size={20}/></button>
+                                            <button onClick={() => onViewDetail(shop)} className="btn btn-sm btn-light rounded-circle text-primary p-1 border hover-scale" title="ดูรายละเอียด"><Eye size={20}/></button>
+                                            <button onClick={() => onEdit(shop)} className="btn btn-sm btn-light rounded-circle text-success p-1 border hover-scale" title="แก้ไข"><Edit size={20}/></button>
+                                            <button onClick={() => onDelete(shop.id)} className="btn btn-sm btn-light rounded-circle text-danger p-1 border hover-scale" title="ลบ"><Trash2 size={20}/></button>
                                         </div>
                                     </div>
                                 ))}
@@ -127,28 +131,29 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredStores.map(store => (
-                                        <tr key={store.id}>
+                                    {/* ✅ เปลี่ยนตัวแปรตอนวนลูปเป็น shop */}
+                                    {filteredStores.map(shop => (
+                                        <tr key={shop.id}>
                                             <td className="px-4">
                                                 <div className="d-flex align-items-center gap-3">
-                                                    <img src={store.image} className="rounded-3" width="40" height="40" alt=""/>
+                                                    <img src={shop.image} className="rounded-3" width="40" height="40" alt=""/>
                                                     <div>
-                                                        <div className="fw-bold small">{store.name}</div>
-                                                        <div className="text-muted small">{store.owner}</div>
+                                                        <div className="fw-bold small">{shop.name}</div>
+                                                        <div className="text-muted small">{shop.owner}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-4"><div className="small text-dark">{store.zone}</div></td>
-                                            <td className="px-4"><div className ="small text-dark">{store.category}</div></td>
+                                            <td className="px-4"><div className="small text-dark">{shop.zone}</div></td>
+                                            <td className="px-4"><div className ="small text-dark">{shop.category}</div></td>
                                             <td className="px-4 text-end">
                                                 <div className="d-flex justify-content-end gap-2">
-                                                    <button onClick={() => onViewDetail(store)} className="btn btn-sm btn-light border text-secondary hover-scale">
+                                                    <button onClick={() => onViewDetail(shop)} className="btn btn-sm btn-light border text-secondary hover-scale">
                                                         <Eye size={14}/> ดู
                                                     </button>
-                                                    <button onClick={() => onEdit(store)} className="btn btn-sm btn-light border text-primary d-flex align-items-center gap-1 hover-scale">
+                                                    <button onClick={() => onEdit(shop)} className="btn btn-sm btn-light border text-primary d-flex align-items-center gap-1 hover-scale">
                                                         <Edit size={14}/> แก้ไข
                                                     </button>
-                                                    <button onClick={() => onDelete(store.id)} className="btn btn-sm btn-light border text-danger hover-scale">
+                                                    <button onClick={() => onDelete(shop.id)} className="btn btn-sm btn-light border text-danger hover-scale" title="ลบร้านค้า">
                                                         <Trash2 size={14}/>
                                                     </button>
                                                 </div>

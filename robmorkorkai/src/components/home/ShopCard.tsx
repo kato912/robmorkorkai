@@ -1,13 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Star } from "lucide-react";
-import type { Shop } from "../../data/mockDatat";
+import type { Shop } from "../../data/mockData";
 
 export const ShopCard: React.FC<{ shop: Shop }> = ({ shop }) => (
     <Link to={`/shop/${shop.id}`} className="text-decoration-none">
         <div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
             <div className="position-relative" style={{ height: "180px" }}>
-                <img src={shop.image} alt={shop.name} className="w-100 h-100 object-fit-cover" />
+                <img src={shop.image} 
+                loading="lazy"   
+                alt={shop.name} 
+                className="w-100 h-100 object-fit-cover" />
                 {shop.verified && <span className="position-absolute top-0 end-0 m-2 badge bg-success rounded-pill">VERIFIED</span>}
             </div>
             <div className="card-body">

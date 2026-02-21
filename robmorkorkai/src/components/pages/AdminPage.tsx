@@ -1,55 +1,78 @@
 import React, { useState, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { mockStoreRequests, type ShopRequest, type StoreStatus } from "../../data/mockAdminData";
 import { ShopDetailModal, EditShopModal, theme } from "../admin/AdminComponents";
 import { AdminDesktop } from "../admin/AdminDesktop";
 import { AdminMobile } from "../admin/AdminMobile";
 import type { TabType } from "../admin/types";
+import type { Shop } from "../../types/shop";
 
-export const AdminPage: React.FC = () => {
+interface AdminPageProps {
+    shops: Shop[];
+    onUpdateShop: (shop: Shop) => void;
+    onDeleteShop: (id: string) => void;
+}
+
+export const AdminPage: React.FC<AdminPageProps> = ({ shops, onUpdateShop, onDeleteShop }) => {
     const { logout } = useAuth();
     const [activeTab, setActiveTab] = useState<TabType>("overview");
-    const [storeRequests, setStoreRequests] = useState<ShopRequest[]>(mockStoreRequests);
     
     // UI State
-    const [selectedShop, setSelectedShop] = useState<ShopRequest | null>(null);
-    const [editingShop, setEditingShop] = useState<ShopRequest | null>(null);
+    const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
+    const [editingShop, setEditingShop] = useState<Shop | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
 
     // Logic
-    const categories = ["all", ...new Set(storeRequests.map(s => s.category))];
+    const categories = ["all", ...new Set(shops.map(s => s.category))];
     const filteredStores = useMemo(() => {
-        return storeRequests.filter(shop => {
-            const matchesSearch = shop.name.toLowerCase().includes(searchQuery.toLowerCase()) || shop.owner.toLowerCase().includes(searchQuery.toLowerCase());
+        return shops.filter(shop => {
+            const ownerName = shop.owner || ""; // เผื่อร้านไหนไม่มีชื่อเจ้าของ
+            const matchesSearch = shop.name.toLowerCase().includes(searchQuery.toLowerCase()) || ownerName.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesCategory = selectedCategory === "all" || shop.category === selectedCategory;
             return matchesSearch && matchesCategory;
         });
-    }, [storeRequests, searchQuery, selectedCategory]);
+    }, [shops, searchQuery, selectedCategory]);
 
+    // calculate stats for overview
     const stats = {
-        totalStores: storeRequests.length,
-        totalReviews: 1284,
-        totalUsers: 2451,
+        totalStores: shops.length,
+        totalReviews: shops.reduce((sum, shop) => sum + (shop.reviewCount || 0), 0), 
+        totalUsers: 2451, // mock data
     };
 
     // Actions
-    const handleDeleteStore = (id: string) => { if (window.confirm("ยืนยันการลบ?")) { setStoreRequests(prev => prev.filter(s => s.id !== id)); setSelectedShop(null); } };
-    const handleSaveEdit = (updatedShop: ShopRequest) => { setStoreRequests(prev => prev.map(s => s.id === updatedShop.id ? updatedShop : s)); setEditingShop(null); };
+    const handleDeleteStore = (id: string) => { 
+        if (window.confirm("ยืนยันการลบร้านค้านี้?")) { 
+            onDeleteShop(id);
+            setSelectedShop(null); 
+        } 
+    };
+    
+    const handleSaveEdit = (updatedShop: Shop) => { 
+        onUpdateShop(updatedShop);
+        setEditingShop(null); 
+    };
 
     // Common Props Bundle
     const viewProps = {
         activeTab, setActiveTab,
-        storeRequests, filteredStores,
+        storeRequests: filteredStores.map(shop => ({
+            ...shop,
+            status: "active"
+        })),
+        filteredStores: filteredStores.map(shop => ({
+            ...shop,
+            status: "active"
+        })),
         searchQuery, setSearchQuery,
         selectedCategory, setSelectedCategory,
         categories,
         isFilterDropdownOpen, setIsFilterDropdownOpen,
         stats,
         onDelete: handleDeleteStore,
-        onViewDetail: setSelectedShop,
-        onEdit: setEditingShop,
+        onViewDetail: (shop: any) => setSelectedShop(shop as Shop),
+        onEdit: (shop: any) => setEditingShop(shop as Shop),
         logout
     };
 
@@ -67,7 +90,7 @@ export const AdminPage: React.FC = () => {
                     shop={selectedShop} 
                     onClose={() => setSelectedShop(null)} 
                     onDelete={handleDeleteStore}
-                    onEdit={(shop: ShopRequest) => { setEditingShop(shop); setSelectedShop(null); }}
+                    onEdit={(shop: Shop) => { setEditingShop(shop); setSelectedShop(null); }}
                 />
             )}
             {editingShop && (

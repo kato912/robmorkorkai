@@ -1,7 +1,13 @@
 import React from "react";
 
+export interface CategoryItem {
+    id: string;
+    label: string;
+    // icon?: React.ReactNode; // ใส่เผื่อไว้ถ้าอนาคตอยากมีไอคอน
+}
+
 interface Props {
-    categories: any[];
+    categories: CategoryItem[];
     selectedCategory: string | null;
     setSelectedCategory: (id: string | null) => void;
 }
@@ -22,7 +28,7 @@ export const CategoryFilter: React.FC<Props> = ({ categories, selectedCategory, 
             </button>
 
             {/* ปุ่มหมวดหมู่ */}
-            {categories.map((cat) => (
+            {categories?.map((cat) => (
                 <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id === selectedCategory ? null : cat.id)}

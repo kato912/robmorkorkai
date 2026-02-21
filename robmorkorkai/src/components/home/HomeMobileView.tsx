@@ -12,18 +12,16 @@ import { useAuth } from "../../context/AuthContext";
 const HomeMobileView: React.FC<HomeViewProps> = ({
     selectedZone, setSelectedZone,
     selectedCategory, setSelectedCategory,
-    filteredShops, zones, categories
+    filteredShops, zone, categorie
 }) => {
     const navigate = useNavigate();
-    const { isLoggedIn } = useAuth(); 
+    const { isLoggedIn, user } = useAuth(); 
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [searchText, setSearchText] = useState(""); // State สำหรับรับค่า input
-    const profileImage = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
+    const [searchText, setSearchText] = useState("");
+    const profileImage = user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
 
-    // ✅ 3. ฟังก์ชันกด Enter แล้วไปหน้า Search
     const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            // ส่งค่าที่พิมพ์ไปด้วย (ถ้าหน้า Search รองรับการรับค่าผ่าน state หรือ url)
+        if (e.key === 'Enter' && searchText.trim() !== "") {
             navigate('/search', { state: { startQuery: searchText } });
         }
     };
@@ -32,68 +30,87 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
         <>
             <style>{`* { -webkit-tap-highlight-color: transparent; }`}</style>
 
-            <div className="bg-light min-vh-100" style={{ paddingBottom: '100px' }}>
-                {/* Header */}
-                <div className="bg-primary text-white p-4 pb-5 rounded-bottom-4 shadow-sm position-relative">
+            <div className="bg-light min-vh-100" style={{ paddingBottom: '90px' }}>
+                
+                {/* 🌟 Header สีขาวสไตล์มินิมอล */}
+                <div className="bg-white px-4 pb-4 pt-5 border-bottom">
                     <div className="d-flex justify-content-between align-items-center mb-4">
-                        <div className="d-flex align-items-center gap-2">
-                            <MapPin size={24} /> <span className="fw-bold fs-5">robmorkorkai</span>
+                        <div className="d-flex align-items-center gap-3">
+                            <div className="bg-dark rounded-3 p-2">
+                                <MapPin size={18} className="text-white" />
+                            </div>
+                            <div>
+                                <h6 className="fw-bold text-dark m-0" style={{ letterSpacing: '-0.5px' }}>robmorkorkai</h6>
+                                <small className="text-muted d-block" style={{ fontSize: '0.65rem' }}>Khon Kaen University</small>
+                            </div>
                         </div>
 
                         {isLoggedIn ? (
-                            <Link to="/profile" className="text-decoration-none">
-                                <img
-                                    src={profileImage}
-                                    alt="Profile"
-                                    className="rounded-circle border border-2 border-white"
-                                    style={{ width: '36px', height: '36px', objectFit: 'cover' }}
-                                />
+                            <Link to="/profile">
+                                <img src={profileImage} alt="Profile" className="rounded-circle object-fit-cover" style={{ width: '36px', height: '36px' }} />
                             </Link>
                         ) : (
-                            <button onClick={() => setMobileMenuOpen(true)} className="btn text-white p-0">
-                                <Menu size={28} />
-                            </button>
+                            <Link to="/login" className="btn btn-sm btn-dark rounded-pill px-4 fw-medium">เข้าสู่ระบบ</Link>
                         )}
                     </div>
 
                     <div className="position-relative">
-                        <Search className="position-absolute top-50 translate-middle-y ms-3 text-secondary" size={20} />
-                        {/* ✅ 4. Input ผูกกับ handleSearch */}
+                        <Search className="position-absolute top-50 translate-middle-y ms-3 text-muted" size={18} />
                         <input
-                            className="form-control rounded-pill ps-5 border-0 shadow-sm"
-                            placeholder="ค้นหาร้านอาหาร..."
+                            className="form-control rounded-pill ps-5 border-0 bg-light"
+                            placeholder="ค้นหาร้านอาหาร, คาเฟ่..."
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
-                            onKeyDown={handleSearch} // กด Enter แล้วไป
+                            onKeyDown={handleSearch}
+                            style={{ height: '48px', fontSize: '0.95rem' }}
                         />
                     </div>
                 </div>
 
+                {/* 🌟 Hero Section สำหรับ Mobile */}
+                <div className="px-3 mt-3">
+                    <div className="position-relative rounded-4 overflow-hidden mb-4" style={{ height: '160px' }}>
+                        <img src="https://scontent-bkk1-1.xx.fbcdn.net/v/t39.30808-6/510951362_24226257740301184_548725313018084601_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=b895b5&_nc_ohc=zxmR_0jHS-UQ7kNvwFnd18R&_nc_oc=AdkqGXUKWf9QafJJVNmRU5K4Ul06RheqdARDnpyjakEbmPAIyy1o_uHHX1rDHbwXFBM&_nc_zt=23&_nc_ht=scontent-bkk1-1.xx&_nc_gid=bYcfytKP6TknkNjVcLhzAA&oh=00_Afuu4kfHx9Pszt6IDVtcR7lPlt720NI9gW9NaBWbDlt27w&oe=699E45B7" alt="KKU Campus" className="w-100 h-100 object-fit-cover" />
+                        <div className="position-absolute inset-0 w-100 h-100" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}></div>
+                        <div className="position-absolute bottom-0 start-0 w-100 p-3">
+                            <h5 className="fw-bold text-white mb-1">ค้นหาร้านดีๆ รอบรั้ว มข.</h5>
+                            <p className="text-white-50 m-0" style={{ fontSize: '0.75rem' }}>รวมร้านอาหาร คาเฟ่ ที่อ่านหนังสือยอดนิยม</p>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Content */}
-                <div className="px-3 mt-4">
+                <div className="px-3">
                     <div className="mb-4">
                         <AIBanner />
                     </div>
 
-                    <div className="mb-3">
-                        <h6 className="fw-bold text-secondary mb-2 small">📍 โซน (Zone)</h6>
-                        <ZoneFilter zones={zones} selectedZone={selectedZone} setSelectedZone={setSelectedZone} isMobile />
+                    <div className="mb-4">
+                        <h6 className="text-muted text-uppercase fw-bold mb-3" style={{ fontSize: '0.75rem', letterSpacing: '1px' }}>โซน</h6>
+                        <ZoneFilter zones={zone} selectedZone={selectedZone} setSelectedZone={setSelectedZone} isMobile />
                     </div>
 
                     <div className="mb-4">
-                        <h6 className="fw-bold text-secondary mb-2 small">🍽️ หมวดหมู่ (Category)</h6>
-                        <CategoryFilter categories={categories} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+                        <h6 className="text-muted text-uppercase fw-bold mb-3" style={{ fontSize: '0.75rem', letterSpacing: '1px' }}>หมวดหมู่</h6>
+                        <CategoryFilter categories={categorie} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
                     </div>
 
-                    <div className="mb-5">
-                        <h6 className="fw-bold text-secondary mb-3">🔥 ร้านยอดฮิต</h6>
+                    <div className="mb-2">
+                        <div className="d-flex align-items-end justify-content-between mb-3">
+                            <div>
+                                <h5 className="fw-bold text-dark m-0">{searchText ? `ผลการค้นหา` : "ร้านยอดนิยม"}</h5>
+                                <p className="text-secondary small m-0 mt-1">{filteredShops.length} ร้านที่แนะนำ</p>
+                            </div>
+                        </div>
                         <div className="d-flex flex-column gap-3">
-                            {/* แสดงรายการตามปกติ (เหมือนเดิม) ไม่ต้องกรอง Local */}
                             {filteredShops.map((shop) => (
                                 <ShopCard key={shop.id} shop={shop} />
                             ))}
                             {filteredShops.length === 0 && (
-                                <div className="text-center py-5 text-muted small bg-white rounded-3">ไม่พบร้านที่คุณค้นหา</div>
+                                <div className="text-center py-5 bg-white rounded-4 border shadow-sm">
+                                    <Search size={32} className="text-muted opacity-25 mb-2" />
+                                    <p className="text-muted small m-0">ไม่พบร้านที่คุณค้นหา</p>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -101,21 +118,6 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
             </div>
 
             <BottomNav activePage="home" />
-
-            {/* Menu Overlay */}
-            {mobileMenuOpen && (
-                <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 z-3" onClick={() => setMobileMenuOpen(false)}>
-                    <div className="position-absolute top-0 end-0 bg-white h-100 p-4 shadow" style={{ width: '280px' }} onClick={e => e.stopPropagation()}>
-                        <div className="d-flex justify-content-between align-items-center mb-4">
-                            <h5 className="mb-0 fw-bold">เมนู</h5>
-                            <button className="btn p-0" onClick={() => setMobileMenuOpen(false)}><X /></button>
-                        </div>
-                        <div className="d-grid gap-2">
-                            <Link to="/login" className="btn btn-primary rounded-pill">เข้าสู่ระบบ</Link>
-                        </div>
-                    </div>
-                </div>
-            )}
         </>
     );
 };

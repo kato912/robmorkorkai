@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { MapPin, Search, LogIn } from "lucide-react";
+import { MapPin, Search, Home, Bot } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 interface Props {
@@ -12,82 +12,62 @@ interface Props {
 }
 
 export const TopNavbar: React.FC<Props> = ({ 
-    activePage, 
-    showSearchBar = false,
-    searchQuery,
-    setSearchQuery,
-    handleSearch
+    activePage, showSearchBar = false, searchQuery, setSearchQuery, handleSearch
 }) => {
     const { isLoggedIn , user} = useAuth(); 
     const profileImage = user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
+    
     return (
-        <nav className="bg-primary sticky-top shadow-sm" style={{ zIndex: 1020 }}>
+        <nav className="bg-white sticky-top border-bottom" style={{ zIndex: 1020 }}>
             <div className="container py-3 d-flex align-items-center justify-content-between">
                 
                 {/* Logo */}
-                <Link to="/" className="d-flex align-items-center gap-2 text-white text-decoration-none">
-                    <MapPin size={28} />
-                    <span className="h4 fw-bold m-0">robmorkorkai</span>
+                <Link to="/" className="d-flex align-items-center gap-2 text-dark text-decoration-none">
+                    <div className="bg-dark rounded-3 p-2 d-flex align-items-center justify-content-center">
+                        <MapPin size={20} className="text-white" />
+                    </div>
+                    <div>
+                        <h5 className="fw-bold text-dark m-0" style={{ letterSpacing: '-0.5px' }}>robmorkorkai</h5>
+                        <small className="text-muted d-block" style={{ fontSize: '0.65rem' }}>Khon Kaen University</small>
+                    </div>
                 </Link>
 
                 {/* Search Bar */}
                 {showSearchBar && (
-                    <div className="d-none d-md-block position-relative w-50 mx-4">
-                        <Search className="position-absolute top-50 translate-middle-y ms-3 text-secondary" size={20} />
+                    <div className="d-none d-md-block position-relative flex-grow-1 mx-5" style={{ maxWidth: '400px' }}>
+                        <Search className="position-absolute top-50 translate-middle-y ms-3 text-muted" size={16} />
                         <input 
-                            className="form-control rounded-pill ps-5 border-0 shadow-sm" 
-                            placeholder="ค้นหาร้านอาหาร, คาเฟ่..." 
-                            style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}
-                            
-                            // Binding ค่า
+                            className="form-control rounded-pill ps-5 border-0 bg-light" 
+                            placeholder="ค้นหาร้านอาหาร, คาเฟ่, ที่อ่านหนังสือ..." 
                             value={searchQuery || ""} 
                             onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
-
-                            //เช็คว่ากด Enter หรือไม่?
                             onKeyDown={(e) => {
-                                if (e.key === 'Enter' && handleSearch) {
-                                    handleSearch(); // ถ้ากด Enter ให้เรียกฟังก์ชันเปลี่ยนหน้าทันที
-                                }
+                                if (e.key === 'Enter' && handleSearch) handleSearch();
                             }}
+                            style={{ height: '42px', fontSize: '0.9rem' }}
                         />
                     </div>
                 )}
 
                 {/* Right Menu */}
-                <div className="d-flex align-items-center gap-4">
-                    {/* Home Link */}
-                    <Link 
-                        to="/" 
-                        className={`text-decoration-none ${activePage === 'home' ? 'text-white fw-bold' : 'text-white opacity-75 hover-opacity-100'}`}
-                    >
-                        Home
+                <div className="d-flex align-items-center gap-3">
+                    <Link to="/" className={`btn btn-sm rounded-pill px-3 d-flex align-items-center gap-2 ${activePage === 'home' ? 'text-dark fw-bold bg-light' : 'text-secondary border-0 hover-bg-light'}`}>
+                        <Home size={16} /> Home
                     </Link>
-
-                    {/* AI Helper Link */}
-                    <Link 
-                        to="/ai" 
-                        className={`text-decoration-none ${activePage === 'ai' ? 'text-white fw-bold' : 'text-white opacity-75 hover-opacity-100'}`}
-                    >
-                        AI Helper
+                    <Link to="/ai" className={`btn btn-sm rounded-pill px-3 d-flex align-items-center gap-2 ${activePage === 'ai' ? 'text-dark fw-bold bg-light' : 'text-secondary border-0 hover-bg-light'}`}>
+                        <Bot size={16} /> AI Helper
                     </Link>
+                    
+                    <div className="vr mx-1 text-muted"></div>
 
                     {/* Profile Section */}
                     {isLoggedIn ? (
-                        <Link to="/profile" className="d-flex align-items-center gap-2 text-decoration-none">
-                            <div className="position-relative">
-                                <img 
-                                    src={profileImage}
-                                    alt={"Profile"}
-                                    referrerPolicy="no-referrer"
-                                    className="rounded-circle border border-2 border-white"
-                                    style={{ width: '40px', height: '40px', objectFit: 'cover' }}
-                                />
-                                <span className="position-absolute bottom-0 end-0 bg-success border border-2 border-white rounded-circle" style={{ width: 12, height: 12 }}></span>
-                            </div>
+                        <Link to="/profile" className="d-flex align-items-center gap-2 text-decoration-none px-2 py-1 rounded-pill hover-bg-light transition-all">
+                            <img src={profileImage} alt="Profile" className="rounded-circle object-fit-cover" style={{ width: '32px', height: '32px' }} />
                         </Link>
                     ) : (
-                        <Link to="/login" className="btn btn-light rounded-pill px-4 d-flex align-items-center gap-2 text-primary fw-bold">
-                            <LogIn size={18} /> เข้าสู่ระบบ
+                        <Link to="/login" className="btn btn-dark rounded-pill px-4 fw-medium" style={{ fontSize: '0.9rem' }}>
+                            เข้าสู่ระบบ
                         </Link>
                     )}
                 </div>

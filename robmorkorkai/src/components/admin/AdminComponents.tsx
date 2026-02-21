@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { 
-    Shield, BarChart3, Store, LogOut, TrendingUp, Menu, X, 
-    Clock, FileText, User, MapPin, Edit, Save, Image as ImageIcon 
+import {
+    Shield, BarChart3, Store, LogOut, X,
+    Clock, FileText, User, MapPin, Edit, Save, Image as ImageIcon
 } from "lucide-react";
-import type { ShopRequest } from "../../data/mockAdminData";
+// import type { Shop } from "../../data/mockData";
+import type { Shop } from "../../types/shop"; // แก้ path ให้ตรงกับที่เก็บไฟล์ Interface ของคุณ
 import { adminTheme } from "./types";
 export const theme = adminTheme;
 
@@ -59,7 +60,7 @@ export const StatCard = ({ title, value, icon: Icon, color, subtext }: any) => {
     return (
         <div className="card border-0 shadow-sm rounded-4 h-100 p-4" style={{ backgroundColor: theme.cardBg }}>
             <div className="d-flex justify-content-between align-items-start">
-                <div><p className="mb-2" style={{ color: theme.textGray, fontSize: '0.9rem' }}>{title}</p><h2 className="fw-bold mb-2 text-dark">{value}</h2><small className="text-success fw-medium d-flex align-items-center gap-1"><TrendingUp size={14} /> {subtext}</small></div>
+                <div><p className="mb-2" style={{ color: theme.textGray, fontSize: '0.9rem' }}>{title}</p><h2 className="fw-bold mb-0 text-dark">{value}</h2></div>
                 <div className="rounded-circle d-flex align-items-center justify-content-center" style={{ width: '48px', height: '48px', backgroundColor: bgColors[color] }}><Icon size={24} style={{ color: textColors[color] }} /></div>
             </div>
         </div>
@@ -96,11 +97,9 @@ export const ShopDetailModal = ({ shop, onClose, onDelete, onEdit }: any) => {
                         </div>
                     </div>
                     <div className="d-grid gap-2 d-flex justify-content-end border-top pt-3">
-                            <>
-                                <button onClick={() => { onDelete(shop.id); onClose(); }} className="btn btn-light text-danger border flex-grow-1">ลบร้านค้า</button>
-                                <button onClick={() => { onEdit(shop); onClose(); }} className="btn btn-light text-primary border flex-grow-1"><Edit size={16}/> แก้ไขข้อมูล</button>
-                            </>
-                        
+
+                        <button onClick={() => { onDelete(shop.id); onClose(); }} className="btn btn-light text-danger border flex-grow-1">ลบร้านค้า</button>
+                        <button onClick={() => { onEdit(shop); onClose(); }} className="btn btn-light text-primary border flex-grow-1"><Edit size={16} /> แก้ไขข้อมูล</button>
                     </div>
                 </div>
             </div>
@@ -109,14 +108,14 @@ export const ShopDetailModal = ({ shop, onClose, onDelete, onEdit }: any) => {
 };
 
 export const EditShopModal = ({ shop, onClose, onSave }: any) => {
-    const [formData, setFormData] = useState<ShopRequest | null>(null);
+    const [formData, setFormData] = useState<Shop | null>(null);
 
     useEffect(() => { if (shop) setFormData({ ...shop }); }, [shop]);
 
     if (!formData) return null;
 
     // Handle Text Inputs
-    const handleChange = (field: keyof ShopRequest, value: string) => {
+    const handleChange = (field: keyof Shop, value: string) => {
         setFormData(prev => prev ? { ...prev, [field]: value } : null);
     };
 
@@ -133,25 +132,25 @@ export const EditShopModal = ({ shop, onClose, onSave }: any) => {
         <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 2050 }} onClick={onClose}>
             <div className="bg-white rounded-4 shadow-lg w-100 overflow-hidden d-flex flex-column animate-fade-in" style={{ maxWidth: '600px', maxHeight: '90vh' }} onClick={e => e.stopPropagation()}>
                 <div className="px-4 py-3 border-bottom d-flex justify-content-between align-items-center bg-light">
-                    <h5 className="fw-bold m-0 d-flex align-items-center gap-2"><Edit size={20}/> แก้ไขข้อมูลร้านค้า</h5>
-                    <button type="button" onClick={onClose} className="btn p-0 text-secondary hover-dark"><X size={24}/></button>
+                    <h5 className="fw-bold m-0 d-flex align-items-center gap-2"><Edit size={20} /> แก้ไขข้อมูลร้านค้า</h5>
+                    <button type="button" onClick={onClose} className="btn p-0 text-secondary hover-dark"><X size={24} /></button>
                 </div>
-                
+
                 <div className="p-4 overflow-auto custom-scrollbar">
                     <div className="mb-3">
                         <label className="form-label small fw-bold text-secondary">รูปภาพ (อัปโหลดไฟล์)</label>
                         <div className="input-group">
-                            <span className="input-group-text bg-white"><ImageIcon size={18}/></span>
-                            <input 
-                                type="file" 
-                                className="form-control" 
+                            <span className="input-group-text bg-white"><ImageIcon size={18} /></span>
+                            <input
+                                type="file"
+                                className="form-control"
                                 accept="image/png, image/jpeg, image/jpg"
-                                onChange={handleFileChange} 
+                                onChange={handleFileChange}
                             />
                         </div>
                         {formData.image && (
                             <div className="mt-2">
-                                <img src={formData.image} alt="Preview" className="rounded-3 object-fit-cover border" style={{width: '100px', height: '60px'}} />
+                                <img src={formData.image} alt="Preview" className="rounded-3 object-fit-cover border" style={{ width: '100px', height: '60px' }} />
                             </div>
                         )}
                     </div>
@@ -174,14 +173,14 @@ export const EditShopModal = ({ shop, onClose, onSave }: any) => {
                             </select>
                         </div>
                     </div>
-                    <div className="mb-3"><label className="form-label small fw-bold text-secondary">เวลาเปิด-ปิด</label><div className="input-group"><span className="input-group-text bg-white"><Clock size={18}/></span><input type="text" className="form-control" value={formData.openHours || ""} onChange={(e) => handleChange('openHours', e.target.value)} /></div></div>
-                    <div className="mb-3"><label className="form-label small fw-bold text-secondary">Google Maps Link</label><div className="input-group"><span className="input-group-text bg-white"><MapPin size={18}/></span><input type="text" className="form-control" value={formData.mapsLink || ""} onChange={(e) => handleChange('mapsLink', e.target.value)} /></div></div>
+                    <div className="mb-3"><label className="form-label small fw-bold text-secondary">เวลาเปิด-ปิด</label><div className="input-group"><span className="input-group-text bg-white"><Clock size={18} /></span><input type="text" className="form-control" value={formData.openHours || ""} onChange={(e) => handleChange('openHours', e.target.value)} /></div></div>
+                    <div className="mb-3"><label className="form-label small fw-bold text-secondary">Google Maps Link</label><div className="input-group"><span className="input-group-text bg-white"><MapPin size={18} /></span><input type="text" className="form-control" value={formData.mapsLink || ""} onChange={(e) => handleChange('mapsLink', e.target.value)} /></div></div>
                     <div className="mb-3"><label className="form-label small fw-bold text-secondary">รายละเอียดร้าน</label><textarea className="form-control" rows={3} value={formData.description || ""} onChange={(e) => handleChange('description', e.target.value)}></textarea></div>
                 </div>
 
                 <div className="p-3 border-top bg-light d-flex justify-content-end gap-2">
                     <button type="button" onClick={onClose} className="btn btn-outline-secondary">ยกเลิก</button>
-                    <button type="button" onClick={() => onSave(formData)} className="btn btn-primary d-flex align-items-center gap-1"><Save size={18}/> บันทึกการแก้ไข</button>
+                    <button type="button" onClick={() => onSave(formData)} className="btn btn-primary d-flex align-items-center gap-1"><Save size={18} /> บันทึกการแก้ไข</button>
                 </div>
             </div>
         </div>

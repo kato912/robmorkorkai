@@ -23,4 +23,6 @@ export interface Shop {
     zone: string; // โซน 
     openHours: string; // เวลาเปิดปิด
     googleMap: string; // link ggmap
+    owner: string; // เจ้าของร้าน
+    ownerEmail: string; // อีเมลเจ้าของร้าน
 }

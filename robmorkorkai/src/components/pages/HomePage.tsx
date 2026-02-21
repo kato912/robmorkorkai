@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState,useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import HomeMobileView from "../home/HomeMobileView";
 import HomeDesktopView from "../home/HomeDesktopView";
+import type { Shop } from "../../types/shop";
+import { ZONES as zones, CATEGORIES as categories } from "../../data/mockData";
 
-import { ZONES as zones, CATEGORIES as categories, MOCK_SHOPS as shops, type Shop } from "../../data/mockDatat";
+type HomePageProps = {
+    shops: Shop[];
+}
 
 export interface HomeViewProps {
     selectedZone: string | null; 
@@ -11,8 +15,8 @@ export interface HomeViewProps {
     selectedCategory: string | null; 
     setSelectedCategory: (id: string | null) => void; 
     filteredShops: Shop[];
-    zones: typeof zones;
-    categories: typeof categories;
+    zone: typeof zones;
+    categorie: typeof categories;
     openHours?: string;
     reviewCount?: number;
     
@@ -22,7 +26,7 @@ export interface HomeViewProps {
     handleSearch: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-const HomePage: React.FC = () => {
+const HomePage = ({ shops }: HomePageProps) => {
     const navigate = useNavigate();
     const [selectedZone, setSelectedZone] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -34,19 +38,19 @@ const HomePage: React.FC = () => {
         }
     };
 
-    const filteredShops = shops.filter((shop) => {
-        // 1. กรองโซน (เทียบ shop.zoneId กับ selectedZone)
-        const matchZone = (selectedZone && selectedZone !== "all")
-            ? shop.zoneId === selectedZone
-            : true;
+    const filteredShops = useMemo(() => {
+        return shops.filter((shop) => {
+            const matchZone = (selectedZone && selectedZone !== "all")
+                ? shop.zone === selectedZone
+                : true;
 
-        // 2. กรองหมวดหมู่ (เทียบ shop.category กับ selectedCategory)
-        const matchCategory = (selectedCategory && selectedCategory !== "all")
-            ? shop.category === selectedCategory
-            : true;
+            const matchCategory = (selectedCategory && selectedCategory !== "all")
+                ? shop.category === selectedCategory
+                : true;
 
-        return matchZone && matchCategory;
-    });
+            return matchZone && matchCategory;
+        });
+    }, [shops, selectedZone, selectedCategory]);
 
     const viewProps: HomeViewProps = {
         selectedZone,
@@ -54,8 +58,8 @@ const HomePage: React.FC = () => {
         selectedCategory,
         setSelectedCategory,
         filteredShops,
-        zones,       
-        categories,  
+        zone: zones,       
+        categorie: categories,  
         searchQuery,
         setSearchQuery,
         handleSearch
