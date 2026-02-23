@@ -6,7 +6,10 @@ import { authConfig } from './config/auth';
 import userRoutes from "./routes/userRoutes.js";
 import { swaggerSpec } from './utils/swagger.js';
 import swaggerUi from "swagger-ui-express"
+import shopRoutes from "./routes/shopRoutes";
+import reviewRoutes from "./routes/reviewRoutes";
 
+// ...
 const app: Express = express();
 const port: number = 3000;
 
@@ -21,6 +24,9 @@ app.use(cors({
 app.use(express.json());
 app.use("/api/auth",ExpressAuth(authConfig)); //signin / session
 app.use("/api/user", userRoutes);
+
+app.use("/api/shops", shopRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 app.get("/api" , (req:Request , res:Response) => {
     res.send('api is running');

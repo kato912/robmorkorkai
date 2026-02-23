@@ -37,16 +37,23 @@ model Shop {
   osmId         String   @unique  // ID จาก OpenStreetMap
   name          String
   type          String?  
+  
   address       String?
   
   // พิกัดสำหรับแสดงบนแผนที่ Leaflet
   latitude      Float
   longitude     Float
   
+  zone          String?
+
   coverImage    String?
   openHours     String?
   
   reviews       Review[]
+
+  ratingAvg     Float    @default(0)
+  reviewCount   Int      @default(0)
+
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
