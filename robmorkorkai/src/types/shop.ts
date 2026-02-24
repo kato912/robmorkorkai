@@ -13,11 +13,15 @@ export interface Review {
 }
 
 export interface Shop {
+    type: string;
     id: string; // id
     name: string; // ชื่อร้าน
     image: string; // รูปภาพ
+    images?: string[]; // รูปภาพเพิ่มเติม
     category: string;// หมวดหมู่
-    rating: number; // เรทคะแนน
+    latitude: number; // ละติจูด
+    longitude: number; // ลองจิจูด
+    ratingAvg?: number; // เรทคะแนน
     reviewCount: number; // จำนวนการรีวิว
     description: string; // คำอธิบายร้านค้า
     zone: string; // โซน 

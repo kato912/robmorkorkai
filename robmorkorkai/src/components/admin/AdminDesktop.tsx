@@ -8,7 +8,7 @@ import { StatCard } from "./AdminComponents";
 
 export const AdminDesktop: React.FC<AdminViewProps> = ({
     activeTab, setActiveTab, 
-    filteredStores, // ✅ เปลี่ยนจาก filteredStores เป็น filteredShops
+    filteredStores,
     stats, searchQuery, setSearchQuery, 
     selectedCategory, setSelectedCategory,
     categories, isFilterDropdownOpen, setIsFilterDropdownOpen,

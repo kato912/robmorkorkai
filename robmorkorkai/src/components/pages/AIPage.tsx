@@ -75,10 +75,15 @@ export const AIPage: React.FC = () => {
             `}</style>
 
             {/* Header */}
-            <div className="d-none d-lg-block sticky-top" style={{ zIndex: 1030 }}><TopNavbar activePage="ai" showSearchBar={true} /></div>
+            <div className="d-none d-lg-block sticky-top" style={{ zIndex: 1030 }}>
+                <TopNavbar activePage="ai" showSearchBar={true} />
+            </div>
+
             <header className="d-lg-none bg-white border-bottom sticky-top" style={{ zIndex: 1030, background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(8px)' }}>
                 <div className="d-flex align-items-center justify-content-between px-3" style={{ height: '56px' }}>
-                    <button onClick={() => window.history.back()} className="btn btn-link text-muted p-0"><ChevronLeft size={24} /></button>
+                    <button onClick={() => window.history.back()} className="btn btn-link text-muted p-0">
+                        <ChevronLeft size={24} />
+                    </button>
                     <div className="d-flex align-items-center gap-2">
                         <div className="bg-dark rounded-3 d-flex align-items-center justify-content-center" style={{ width: '26px', height: '26px' }}><Sparkles size={14} className="text-white" /></div>
                         <span className="fw-bold text-dark">AI Helper</span>
@@ -120,7 +125,9 @@ export const AIPage: React.FC = () => {
                                 <div className="d-flex align-items-start gap-2 max-w-75">
                                     <div className="bg-dark rounded-3 d-flex align-items-center justify-content-center flex-shrink-0 mt-1" style={{ width: '30px', height: '30px' }}><Sparkles size={14} className="text-white" /></div>
                                     <div className="chat-ai p-3 shadow-sm d-flex align-items-center gap-1" style={{ height: '46px' }}>
-                                        <div className="typing-dot"></div><div className="typing-dot"></div><div className="typing-dot"></div>
+                                        <div className="typing-dot"></div>
+                                        <div className="typing-dot"></div>
+                                        <div className="typing-dot"></div>
                                     </div>
                                 </div>
                             )}

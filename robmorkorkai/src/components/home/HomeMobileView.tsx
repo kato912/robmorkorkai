@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; 
-import { Search, MapPin, Menu, X } from "lucide-react";
+//import { Search, MapPin, Menu, X } from "lucide-react";
+import { Search, MapPin } from "lucide-react";
 import { AIBanner } from "./AIBanner";
 import { ShopCard } from "./ShopCard";
 import { ZoneFilter } from "./ZoneFilter";
@@ -16,7 +17,7 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
 }) => {
     const navigate = useNavigate();
     const { isLoggedIn, user } = useAuth(); 
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [searchText, setSearchText] = useState("");
     const profileImage = user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
 

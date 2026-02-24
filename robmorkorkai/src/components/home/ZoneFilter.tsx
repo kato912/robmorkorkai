@@ -22,7 +22,6 @@ export const ZoneFilter: React.FC<Props> = ({ zones = [], selectedZone, setSelec
             {/* --- ปุ่ม "ทั้งหมด" (All) --- */}
             <button
                 onClick={() => setSelectedZone(null)}
-                // ✅ เพิ่ม d-flex align-items-center justify-content-center เพื่อจัดกึ่งกลาง
                 className={`btn border px-3 text-nowrap d-flex align-items-center justify-content-center ${
                     isMobile ? 'rounded-pill' : 'text-start w-100 py-2 rounded-3'
                 } ${selectedZone === null

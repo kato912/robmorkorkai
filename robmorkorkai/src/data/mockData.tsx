@@ -9,9 +9,10 @@ export const CATEGORIES = [
 ];
 
 export const ZONES = [
-    { id: "กังสดาล", label: "กังสดาล", labelEn: "Kangsadan" },
+    { id: "kangsadang", label: "กังสดาล", labelEn: "Kangsadan" },
     { id: "หลังมอ", label: "หลังมอ", labelEn: "Behind Campus" },
-    { id: "ฝั่งบึง", label: "ฝั่งบึง", labelEn: "Beng Side" }
+    { id: "ฝั่งบึง", label: "ฝั่งบึง", labelEn: "Beng Side" },
+    { id: "KKU", label: "ในมหาวิทยาลัย", labelEn: "Inside University" },
 ];
 
 export const MOCK_SHOPS: Shop[] = [

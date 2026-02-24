@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Home, Search, Bot, User, LogIn } from "lucide-react";
+import { Home, Bot, User, LogIn } from "lucide-react";
 import { useAuth } from "../../context/AuthContext"; 
 
 interface Props {
@@ -17,11 +17,6 @@ export const BottomNav: React.FC<Props> = ({ activePage }) => {
                 <Link to="/" className="text-decoration-none d-flex flex-column align-items-center" style={{ color: activePage === 'home' ? '#212529' : '#adb5bd' }}>
                     <Home size={24} strokeWidth={activePage === 'home' ? 2.5 : 2} />
                     <span style={{ fontSize: '10px', marginTop: '4px', fontWeight: activePage === 'home' ? 'bold' : 'normal' }}>Home</span>
-                </Link>
-
-                <Link to="/search" className="text-decoration-none d-flex flex-column align-items-center" style={{ color: activePage === 'search' ? '#212529' : '#adb5bd' }}>
-                    <Search size={24} strokeWidth={activePage === 'search' ? 2.5 : 2} />
-                    <span style={{ fontSize: '10px', marginTop: '4px', fontWeight: activePage === 'search' ? 'bold' : 'normal' }}>Search</span>
                 </Link>
 
                 <Link to="/ai" className="text-decoration-none d-flex flex-column align-items-center" style={{ color: activePage === 'ai' ? '#212529' : '#adb5bd' }}>

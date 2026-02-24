@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Star, X, BadgeCheck, User } from "lucide-react";
+import { Star, X, BadgeCheck } from "lucide-react";
 import { useAuth } from "../../context/AuthContext"; 
 
 interface ReviewModalProps {

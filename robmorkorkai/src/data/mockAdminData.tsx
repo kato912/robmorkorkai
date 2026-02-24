@@ -15,7 +15,6 @@ export interface ShopRequest {
     openHours?: string;
 }
 
-// ✅ ใช้ชื่อนี้: mockStoreRequests
 export const mockStoreRequests: ShopRequest[] = [
     {
         id: "1", name: "Boba Tea House", owner: "วรรณา สุขใจ", ownerEmail: "wanna@kkumail.com",

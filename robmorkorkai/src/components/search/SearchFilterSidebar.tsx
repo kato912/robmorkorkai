@@ -1,5 +1,5 @@
 import React from "react";
-import { ZONES, CATEGORIES, FACILITIES } from "../../data/mockDatat";
+import { ZONES, CATEGORIES } from "../../data/mockDatat";
 
 interface Props {
     selectedZone: string;
@@ -14,7 +14,6 @@ interface Props {
 export const SearchFilterSidebar: React.FC<Props> = ({
     selectedZone, setSelectedZone,
     selectedCategory, setSelectedCategory,
-    selectedFacilities, toggleFacility,
     clearFilters
 }) => {
     return (
@@ -46,19 +45,6 @@ export const SearchFilterSidebar: React.FC<Props> = ({
                             className={`btn btn-sm border py-2 px-3 rounded-3 ${selectedCategory === c.id ? 'bg-primary text-white border-primary' : 'bg-white text-secondary'}`}>
                             {c.label}
                         </button>
-                    ))}
-                </div>
-            </div>
-
-            {/* Facilities */}
-            <div>
-                <label className="fw-bold small text-secondary mb-2">สิ่งอำนวยความสะดวก</label>
-                <div className="d-flex flex-column gap-2">
-                    {FACILITIES.map(f => (
-                        <div key={f.id} className="form-check cursor-pointer" onClick={() => toggleFacility(f.id)}>
-                            <input className="form-check-input" type="checkbox" checked={selectedFacilities.includes(f.id)} readOnly />
-                            <label className="form-check-label small cursor-pointer">{f.label}</label>
-                        </div>
                     ))}
                 </div>
             </div>

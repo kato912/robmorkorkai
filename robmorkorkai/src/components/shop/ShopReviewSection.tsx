@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Star, BadgeCheck, ThumbsUp, LogIn } from "lucide-react";
 
 interface ShopReviewSectionProps {
@@ -57,7 +56,7 @@ export const ShopReviewSection: React.FC<ShopReviewSectionProps> = ({
             {/* Filter */}
             <div className="d-flex align-items-center justify-content-between mb-4 p-3 rounded-4 border border-light-subtle">
                 <div className="d-flex align-items-center gap-3"><BadgeCheck size={20} className="text-dark" /><div><p className="fw-bold text-dark m-0 small">เฉพาะ Verified KKU</p><small className="text-muted" style={{ fontSize: '0.75rem' }}>รีวิวจากนักศึกษา มข. เท่านั้น</small></div></div>
-                <div className="form-check form-switch m-0"><input className="form-check-input cursor-pointer shadow-none" type="checkbox" checked={verifiedOnly} onChange={(e) => setVerifiedOnly(e.target.checked)} style={{ width: '40px', height: '20px' }} /></div>
+                <div className="form-check form-switch m-0"><input title="filterInput" className="form-check-input cursor-pointer shadow-none" type="checkbox" checked={verifiedOnly} onChange={(e) => setVerifiedOnly(e.target.checked)} style={{ width: '40px', height: '20px' }} /></div>
             </div>
 
             {/* Reviews List */}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Home, Bot, User, LogIn, Search } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Loader2, AlertCircle } from "lucide-react"; // เพิ่มไอคอน Loading/Error
 import { useAuth } from "../../context/AuthContext";
-import { useShopReviews } from "../../hooks/useShopReviews";
+import { useShopReviews } from "../../hooks/useShopReviews"; // Hook รีวิวเดิมของคุณ
 import { AlertUtils } from "../../utils/alertUtils";
 import type { Shop } from "../../types/shop";
 
@@ -13,34 +13,103 @@ import { ShopSidebar } from "../shop/ShopSidebar";
 import { ShopReviewSection } from "../shop/ShopReviewSection";
 import { ReviewModal } from "../shop/ReviewModal";
 
-// --- Mock Data ---
+// --- Mock Data รีวิว (ใช้เป็นค่าเริ่มต้นระหว่างรอ Backend รีวิวสมบูรณ์) ---
 const initialReviews = [
-    { id: 1, userId: "u1", email: "student64@kkumail.com", userName: "กมลชนก", rating: 5, comment: "บรรยากาศดีมากค่ะ เหมาะมาติวหนังสือ มีปลั๊กไฟทุกโต๊ะ WiFi แรง", verified: true, date: "2 วันที่แล้ว", helpful: 12 },
-    { id: 2, userId: "u2", email: "engineer_boy@kkumail.com", userName: "ธนพล", rating: 4, comment: "กาแฟอร่อย แต่แอร์หนาวไปนิดนึง ควรเอาเสื้อกันหนาวไปด้วย", verified: true, date: "1 สัปดาห์ที่แล้ว", helpful: 8 }
+    { id: 1, userId: "u1", email: "student64@kkumail.com", userName: "กมลชนก", rating: 5, comment: "บรรยากาศดีมากค่ะ", verified: true, date: "2 วันที่แล้ว", helpful: 12 },
+    { id: 2, userId: "u2", email: "engineer_boy@kkumail.com", userName: "ธนพล", rating: 4, comment: "กาแฟอร่อย", verified: true, date: "1 สัปดาห์ที่แล้ว", helpful: 8 }
 ];
 
-type ShopDetailProps = { shops: Shop[]; };
-
-export const ShopDetailPage: React.FC<ShopDetailProps> = ({ shops }) => {
+export const ShopDetailPage: React.FC = () => {
     const { isLoggedIn, user } = useAuth();
     const navigate = useNavigate();
-    const { id } = useParams<{ id: string }>();
+    const { id } = useParams<{ id: string }>(); // รับ id จาก URL
 
-    const { reviews, totalCount, verifiedOnly, setVerifiedOnly, hasMore, handleShowMore, addReview } = useShopReviews(initialReviews);
-    
+    // --- State สำหรับ API ---
+    const [shop, setShop] = useState<Shop | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // --- State สำหรับ UI ---
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [isFavorited, setIsFavorited] = useState(false);
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-    useEffect(() => { window.scrollTo(0, 0); }, []);
+    // Hook รีวิวเดิม (ในอนาคตคุณอาจต้องปรับ Hook นี้ให้ fetch จาก API ด้วย)
+    const { reviews, totalCount, verifiedOnly, setVerifiedOnly, hasMore, handleShowMore, addReview } = useShopReviews(initialReviews);
 
-    const shop = shops.find((s) => s.id === id);
-    if (!shop) return <div className="text-center mt-5 py-5 text-muted">ไม่พบข้อมูลร้านค้า</div>;
+    // ยิง API ไปหา Backend (Port 3000)xf
+    useEffect(() => {
+        const fetchShopData = async () => {
+            if (!id) return;
 
-    const displayImages = [shop.image, shop.image, shop.image, shop.image];
+            setIsLoading(true);
+            setError(null);
+
+            try {
+                // ยิงไปที่ Backend
+                const response = await fetch(`http://localhost:3000/api/shops/${id}`);
+
+                if (!response.ok) {
+                    throw new Error("ไม่พบข้อมูลร้านค้า หรือเกิดข้อผิดพลาด");
+                }
+
+                const data = await response.json();
+
+                console.log("🔥 ข้อมูลร้านนี้จาก Backend:", data);
+
+                setShop(data); // เก็บข้อมูลร้านลง State
+
+            } catch (err: any) {
+                console.error("Fetch Error:", err);
+                setError(err.message || "Something went wrong");
+            } finally {
+                setIsLoading(false); // ปิดสถานะโหลด
+            }
+        };
+
+        fetchShopData();
+        window.scrollTo(0, 0);
+    }, [id]);
+
+    // ส่วนแสดงผล Loading / Error
+    if (isLoading) {
+        return (
+            <div className="min-vh-100 d-flex flex-column align-items-center justify-content-center bg-white">
+                <Loader2 size={48} className="text-dark mb-3 animate-spin" /> {/* animate-spin ต้องมี css หรือใช้ style */}
+                <h5 className="fw-bold text-dark">กำลังโหลดข้อมูลร้าน...</h5>
+                <style>{`@keyframes spin { 100% { transform: rotate(360deg); } } .animate-spin { animation: spin 1s linear infinite; }`}</style>
+            </div>
+        );
+    }
+
+    if (error || !shop) {
+        return (
+            <div className="min-vh-100 d-flex flex-column align-items-center justify-content-center bg-light">
+                <div className="text-center p-5 bg-white rounded-4 shadow-sm border" style={{ maxWidth: '400px' }}>
+                    <div className="bg-danger bg-opacity-10 text-danger rounded-circle d-inline-flex p-3 mb-4"><AlertCircle size={40} /></div>
+                    <h4 className="fw-bold text-dark mb-2">เกิดข้อผิดพลาด</h4>
+                    <p className="text-muted mb-4">{error || "ไม่พบร้านค้านี้ในระบบ"}</p>
+                    <button onClick={() => navigate("/")} className="btn btn-dark rounded-pill px-4">กลับหน้าแรก</button>
+                </div>
+            </div>
+        );
+    }
+    const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80";
+
+    
+    // จัดการรูปภาพ (Fallback: ถ้า Backend ไม่มี array รูปภาพ ให้ใช้รูปหลักซ้ำๆ)
+    const displayImages = shop.images && shop.images.length > 0
+        ? shop.images
+        : [shop.image || DEFAULT_IMAGE, shop.image || DEFAULT_IMAGE, shop.image || DEFAULT_IMAGE, shop.image || DEFAULT_IMAGE];
+
+    // คำนวณ Rating (ใช้ข้อมูลจริงจาก DB ถ้ามี)
+    const averageRating = Number(shop.ratingAvg ?? 0).toFixed(1);
+
+    // กรองรีวิว (ใช้ Logic เดิม)
     const filteredReviews = verifiedOnly ? reviews.filter((r) => r.verified) : reviews;
-    const averageRating = shop.rating || (reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : "0.0");
+
+    // กราฟดาว (คำนวณจากรีวิวที่มี)
     const ratingDistribution = [5, 4, 3, 2, 1].map((star) => {
         const count = reviews.filter((r) => r.rating === star).length;
         const percentage = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
@@ -54,7 +123,8 @@ export const ShopDetailPage: React.FC<ShopDetailProps> = ({ shops }) => {
 
     return (
         <div className="min-vh-100 bg-white" style={{ fontFamily: 'Inter, sans-serif', paddingBottom: '70px', overflowX: 'hidden' }}>
-            
+
+            {/* CSS เฉพาะหน้า */}
             <style>{`
                 .hero-gradient { background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 50%, rgba(10,10,10,0.2) 100%); }
                 .hero-badge { background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 6px 16px; font-size: 0.8rem; }
@@ -67,19 +137,15 @@ export const ShopDetailPage: React.FC<ShopDetailProps> = ({ shops }) => {
                 .nav-link-hover:hover { background-color: rgba(255, 255, 255, 0.1); opacity: 1 !important; }
             `}</style>
 
-            <ShopHero 
-                shop={shop} 
-                displayImages={displayImages} 
-                activeImageIndex={activeImageIndex} 
-                setActiveImageIndex={setActiveImageIndex}
-                averageRating={averageRating} 
-                reviewsCount={totalCount} isLoggedIn={isLoggedIn} user={user}
+            {/* --- Components ที่แยกไว้ --- */}
+            <ShopHero
+                shop={shop} displayImages={displayImages} activeImageIndex={activeImageIndex} setActiveImageIndex={setActiveImageIndex}
+                averageRating={averageRating} reviewsCount={totalCount} isLoggedIn={isLoggedIn} user={user}
                 isFavorited={isFavorited} setIsFavorited={setIsFavorited}
             />
 
-            <ShopGallery 
-                displayImages={displayImages} 
-                activeImageIndex={activeImageIndex} setActiveImageIndex={setActiveImageIndex}
+            <ShopGallery
+                displayImages={displayImages} activeImageIndex={activeImageIndex} setActiveImageIndex={setActiveImageIndex}
                 isGalleryOpen={isGalleryOpen} setIsGalleryOpen={setIsGalleryOpen}
             />
 
@@ -87,47 +153,33 @@ export const ShopDetailPage: React.FC<ShopDetailProps> = ({ shops }) => {
                 <div className="row g-5">
                     <div className="col-12 col-lg-8">
 
-                        {/* คำอธิบายร้าน */}
-                        <section className="py-5 border-bottom border-light-subtle">
-                            <h6 className="text-muted fw-bold text-uppercase tracking-wider mb-4" style={{ fontSize: '0.75rem', letterSpacing: '2px' }}>เกี่ยวกับร้าน</h6>
+                        {/* Section: About & Amenities (Static ไว้ก่อน หรือดึงจาก DB ได้ถ้ามี field) */}
+                        <section className="py-1 border-bottom border-light-subtle">
+                            <h6 className="text-muted fw-bold text-uppercase tracking-wider mb-4" style={{ fontSize: '0.85rem', letterSpacing: '2px' }}>เกี่ยวกับร้าน</h6>
                             <p className="text-dark lh-lg m-0" style={{ fontSize: '1rem' }}>
-                                {shop.description || `${shop.name} เปิดให้บริการตั้งแต่ ${shop.openHours} เหมาะสำหรับการอ่านหนังสือและทำงาน มีปลั๊กไฟและ WiFi บริการ`}
+                                {shop.description || "ร้านนี้ยังไม่มีคำอธิบายเพิ่มเติม"}
                             </p>
                         </section>
 
-                        <ShopReviewSection 
+                        <ShopReviewSection
                             reviews={filteredReviews} averageRating={averageRating} reviewsCount={totalCount} ratingDistribution={ratingDistribution}
                             verifiedOnly={verifiedOnly} setVerifiedOnly={setVerifiedOnly} hasMore={hasMore} handleShowMore={handleShowMore}
                             isLoggedIn={isLoggedIn} onOpenReviewModal={handleOpenReviewModal}
                         />
                     </div>
 
-                    <ShopSidebar 
+                    <ShopSidebar
                         shop={shop} averageRating={averageRating} reviewsCount={totalCount} isLoggedIn={isLoggedIn}
                         isFavorited={isFavorited} setIsFavorited={setIsFavorited} onOpenReviewModal={handleOpenReviewModal}
                     />
                 </div>
             </main>
 
-            <ReviewModal 
-                isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} 
-                onSubmit={(r, c) => { addReview({ id: Date.now(), rating: r, comment: c, verified: user?.isVerifiedStudent, date: "เมื่อสักครู่" }); setIsReviewModalOpen(false); }} 
-                shopName={shop.name} shopImage={shop.image} 
+            <ReviewModal
+                isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)}
+                onSubmit={(r, c) => { addReview({ id: Date.now(), rating: r, comment: c, verified: user?.isVerifiedStudent, date: "เมื่อสักครู่" }); setIsReviewModalOpen(false); }}
+                shopName={shop.name} shopImage={shop.image}
             />
-
-            {/* Mobile Bottom Nav */}
-            <nav className="d-lg-none position-fixed bottom-0 start-0 w-100 bg-white border-top py-2 px-3" style={{ zIndex: 1040, backdropFilter: 'blur(12px)', backgroundColor: 'rgba(255,255,255,0.95)' }}>
-                <div className="d-flex justify-content-around align-items-center">
-                    <Link to="/" className="btn btn-link text-decoration-none text-muted d-flex flex-column align-items-center gap-1 p-1"><Home size={20} /><span style={{ fontSize: '10px', fontWeight: 500 }}>Home</span></Link>
-                    <Link to="/search" className="btn btn-link text-decoration-none text-muted d-flex flex-column align-items-center gap-1 p-1"><Search size={20} /><span style={{ fontSize: '10px', fontWeight: 500 }}>Search</span></Link>
-                    <Link to="/ai" className="btn btn-link text-decoration-none text-muted d-flex flex-column align-items-center gap-1 p-1"><Bot size={20} /><span style={{ fontSize: '10px', fontWeight: 500 }}>AI</span></Link>
-                    {isLoggedIn ? (
-                        <Link to="/profile" className="btn btn-link text-decoration-none text-dark d-flex flex-column align-items-center gap-1 p-1"><User size={20} /><span style={{ fontSize: '10px', fontWeight: 600 }}>Profile</span></Link>
-                    ) : (
-                        <Link to="/login" className="btn btn-link text-decoration-none text-muted d-flex flex-column align-items-center gap-1 p-1"><LogIn size={20} /><span style={{ fontSize: '10px', fontWeight: 500 }}>Login</span></Link>
-                    )}
-                </div>
-            </nav>
         </div>
     );
 };

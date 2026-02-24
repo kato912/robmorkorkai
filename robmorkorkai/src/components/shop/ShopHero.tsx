@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, Home, Search, Bot, User, BadgeCheck, Heart, Share2, Star, MapPin, Clock } from "lucide-react";
+import { ChevronLeft, Home, Search, Bot, Heart, Share2, Star, MapPin, Clock } from "lucide-react";
 import type { Shop } from "../../types/shop";
 
 interface ShopHeroProps {
@@ -63,13 +63,12 @@ export const ShopHero: React.FC<ShopHeroProps> = ({
             {/* Hero Content - Bottom */}
             <div className="position-absolute bottom-0 start-0 w-100 px-4 px-lg-5 pb-5" style={{ zIndex: 1010 }}>
                 <div className="d-flex flex-wrap align-items-center gap-3 mb-4">
-                    <span className="badge rounded-pill hero-badge d-flex align-items-center gap-2"><BadgeCheck size={14} /> Verified</span>
                     <span className="badge rounded-pill hero-badge">{shop.category}</span>
                     <span className="badge rounded-pill hero-badge-green">เปิดอยู่</span>
                 </div>
                 <h1 className="fw-bolder text-white mb-3 tracking-tight" style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', lineHeight: '1.1' }}>{shop.name}</h1>
                 <p className="text-white opacity-75 mb-4 lh-base fw-light" style={{ fontSize: 'clamp(0.95rem, 2vw, 1.1rem)', maxWidth: '650px' }}>
-                    {shop.description || "บรรยากาศอบอุ่น เงียบสงบ เหมาะแก่การอ่านหนังสือ ทำงาน และพักผ่อน"}
+                    {shop.description || "ไม่มีคำอธิบายร้านค้า แต่คุณสามารถดูรีวิวจากนักศึกษา มข. คนอื่นๆได้"}
                 </p>
                 <div className="d-flex flex-wrap align-items-center gap-3 gap-lg-4 text-white-50 small fw-medium" style={{ fontSize: '1rem' }}>
                     <div className="d-flex align-items-center gap-2 text-white">
@@ -78,7 +77,7 @@ export const ShopHero: React.FC<ShopHeroProps> = ({
                         <span className="opacity-75" style={{ fontSize: '0.9rem' }}>({reviewsCount} รีวิว)</span>
                     </div>
                     <div className="d-none d-sm-block" style={{ width: '1px', height: '20px', backgroundColor: 'rgba(255,255,255,0.3)' }}></div>
-                    <div className="d-flex align-items-center gap-2 text-white opacity-75"><MapPin size={18} /> <span>โซน{shop.zone}</span></div>
+                    <div className="d-flex align-items-center gap-2 text-white opacity-75"><MapPin size={18} /> <span>{shop.zone}</span></div>
                     <div className="d-none d-sm-block" style={{ width: '1px', height: '20px', backgroundColor: 'rgba(255,255,255,0.3)' }}></div>
                     <div className="d-none d-sm-flex align-items-center gap-2 text-white opacity-75"><Clock size={18} /> <span>{shop.openHours}</span></div>
                 </div>

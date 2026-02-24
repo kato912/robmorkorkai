@@ -3,7 +3,6 @@ import {
     Shield, BarChart3, Store, LogOut, X,
     Clock, FileText, User, MapPin, Edit, Save, Image as ImageIcon
 } from "lucide-react";
-// import type { Shop } from "../../data/mockData";
 import type { Shop } from "../../types/shop"; // แก้ path ให้ตรงกับที่เก็บไฟล์ Interface ของคุณ
 import { adminTheme } from "./types";
 export const theme = adminTheme;

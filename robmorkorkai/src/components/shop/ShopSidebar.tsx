@@ -16,6 +16,16 @@ interface ShopSidebarProps {
 export const ShopSidebar: React.FC<ShopSidebarProps> = ({
     shop, averageRating, reviewsCount, isLoggedIn, isFavorited, setIsFavorited, onOpenReviewModal
 }) => {
+    const handleOpenGoogleMaps = () => {
+        if (shop.latitude && shop.longitude) {
+            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${shop.latitude},${shop.longitude}`;
+            window.open(mapUrl, "_blank"); // คำสั่งเปิดแท็บใหม่
+        } else {
+            alert("ขออภัย ยังไม่มีข้อมูลพิกัดสำหรับร้านนี้ครับ");
+        }
+    };
+
+
     return (
         <aside className="col-12 col-lg-4 d-none d-lg-block">
             <div className="position-sticky d-flex flex-column gap-4" style={{ top: '30px' }}>
@@ -46,8 +56,8 @@ export const ShopSidebar: React.FC<ShopSidebarProps> = ({
                 <div className="card border-light-subtle rounded-4 overflow-hidden">
                     <div className="bg-light d-flex flex-column align-items-center justify-content-center text-muted" style={{ height: '160px' }}><MapPin size={32} className="opacity-25 mb-2" /><span className="small fw-medium">แผนที่</span></div>
                     <div className="p-3">
-                        <p className="fw-bold text-dark m-0 small">โซน{shop.zone}</p>
-                        <a href={shop.googleMap || "#"} target="_blank" rel="noreferrer" className="btn btn-outline-secondary btn-sm w-100 rounded-pill mt-3 d-flex justify-content-center align-items-center gap-1"><MapPin size={12} /> เปิดแผนที่ <ArrowUpRight size={12} /></a>
+                        <p className="fw-bold text-dark m-0 small">Zone {shop.zone}</p>
+                        <button onClick={handleOpenGoogleMaps} className="btn btn-outline-secondary btn-sm w-100 rounded-pill mt-3 d-flex justify-content-center align-items-center gap-1"><MapPin size={12} /> เปิดแผนที่ <ArrowUpRight size={12} /></button>
                     </div>
                 </div>
             </div>
