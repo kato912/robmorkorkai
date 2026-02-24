@@ -4,6 +4,7 @@
     "@auth/prisma-adapter": "^2.11.1",
     "@prisma/adapter-mariadb": "^7.3.0",
     "@prisma/client": "^7.3.0",
+    "axios": "^1.13.5",
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
