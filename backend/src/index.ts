@@ -2,12 +2,12 @@ import { ExpressAuth } from '@auth/express';
 import express from 'express';
 import type { Express , Request, Response } from 'express';
 import cors from 'cors';
-import { authConfig } from './config/auth';
+import { authConfig } from './config/auth.js';
 import userRoutes from "./routes/userRoutes.js";
 import { swaggerSpec } from './utils/swagger.js';
 import swaggerUi from "swagger-ui-express"
-import shopRoutes from "./routes/shopRoutes";
-import reviewRoutes from "./routes/reviewRoutes";
+import shopRoutes from "./routes/shopRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 
 // ...
 const app: Express = express();

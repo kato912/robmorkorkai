@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../utils/prisma";
+import { prisma } from "../utils/prisma.js";
 
 export const createReview = async (req: Request, res: Response) => {
     try {
@@ -46,7 +46,6 @@ export const createReview = async (req: Request, res: Response) => {
             });
             console.log("✅ Created new review for shop:", shopId);
         }
-
         // ---------------------------------------------------------
         // 📊 ส่วนที่ 2: Average Rating Logic (คำนวณคะแนนเฉลี่ยใหม่)
         // ---------------------------------------------------------
