@@ -3,13 +3,10 @@ import express from 'express';
 import cors from 'cors'; 
 import type { Express , Request, Response } from 'express';
 import { authConfig } from './config/auth.js';
-import userRoutes from "./routes/userRoutes";
-import { swaggerSpec } from './utils/swagger.js';
-import swaggerUi from "swagger-ui-express"
-import shopRoutes from "./routes/shopRoutes";
-import reviewRoutes from "./routes/reviewRoutes";
+import userRoutes from "./routes/userRoutes.js";
+import shopRoutes from "./routes/shopRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 
-// ...
 const app: Express = express();
 const port: number = 3000;
 

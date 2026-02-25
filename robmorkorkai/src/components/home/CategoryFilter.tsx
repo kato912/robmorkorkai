@@ -3,7 +3,7 @@ import React from "react";
 export interface CategoryItem {
     id: string;
     label: string;
-    // icon?: React.ReactNode; // ใส่เผื่อไว้ถ้าอนาคตอยากมีไอคอน
+    icon?: any; 
 }
 
 interface Props {
@@ -12,34 +12,49 @@ interface Props {
     setSelectedCategory: (id: string | null) => void;
 }
 
+const KKU_RED = "#8B0000";
+
 export const CategoryFilter: React.FC<Props> = ({ categories, selectedCategory, setSelectedCategory }) => {
     return (
-        <div className="d-flex gap-2 overflow-auto pb-2" style={{ scrollbarWidth: 'none' }}>
+        <div className="d-flex gap-2 overflow-auto pb-3 px-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
 
-            {/* ปุ่มทั้งหมด */}
+            {/* ปุ่ม "ทั้งหมด" */}
             <button
                 onClick={() => setSelectedCategory(null)}
-                className={`btn btn-sm rounded-pill px-3 text-nowrap transition-all ${selectedCategory === null
-                        ? "btn-dark text-white fw-bold shadow-sm"
-                        : "btn-white bg-white text-secondary border"
-                    }`}
+                className="btn rounded-pill px-3 d-flex align-items-center justify-content-center text-nowrap transition-all shadow-sm"
+                style={{
+                    fontSize: '0.85rem', // ลดขนาดฟอนต์ลงนิดนึง
+                    height: '36px',      // ล็อคความสูงให้ปุ่มดูเพรียวขึ้น
+                    ...(selectedCategory === null
+                        ? { backgroundColor: '#A73B24', opacity: 15, color: '#e8b94a', fontWeight: 'bold', border: `1px solid #c9943a` }
+                        : { backgroundColor: '#2d2320', color: '#c9943a', border: '1px solid #3d302a' })
+                }}
             >
                 ทั้งหมด
             </button>
 
-            {/* ปุ่มหมวดหมู่ */}
-            {categories?.map((cat) => (
-                <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(cat.id === selectedCategory ? null : cat.id)}
-                    className={`btn btn-sm rounded-pill px-3 text-nowrap transition-all ${selectedCategory === cat.id
-                            ? "btn-dark text-white fw-bold shadow-sm"
-                            : "btn-white bg-white text-secondary border"
-                        }`}
-                >
-                    {cat.label}
-                </button>
-            ))}
+            {/* ปุ่มหมวดหมู่ต่างๆ */}
+            {categories?.map((cat) => {
+                const Icon = cat.icon; // ดึง Icon ออกมา
+                return (
+                    <button
+                        key={cat.id}
+                        onClick={() => setSelectedCategory(cat.id === selectedCategory ? null : cat.id)}
+                        className="btn rounded-pill px-3 d-flex align-items-center justify-content-center gap-2 text-nowrap transition-all shadow-sm"
+                        style={{
+                            fontSize: '0.85rem',
+                            height: '36px',
+                            ...(selectedCategory === cat.id
+                                ? { backgroundColor: '#A73B24', opacity: 15, color: '#e8b94a', fontWeight: 'bold', border: `1px solid #c9943a` }
+                                : { backgroundColor: '#2d2320', color: '#c9943a', border: '1px solid #3d302a' })
+                        }}
+                    >
+                        {/* ถ้ามี Icon ให้แสดง Icon ด้วย */}
+                        {Icon && <Icon size={16} />}
+                        <span>{cat.label}</span>
+                    </button>
+                );
+            })}
         </div>
     );
 };

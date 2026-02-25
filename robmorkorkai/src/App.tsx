@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MOCK_SHOPS } from './data/mockData'; // นำเข้าข้อมูล 30 ร้านที่คุณสร้างไว้
 import type { Shop } from './types/shop';

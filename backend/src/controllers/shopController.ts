@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../utils/prisma";
+import { prisma } from "../utils/prisma.js";
 
 // 1. ดึงรายการร้านค้าทั้งหมด (รองรับการค้นหาและกรองโซน)
 export const getShops = async (req: Request, res: Response) => {

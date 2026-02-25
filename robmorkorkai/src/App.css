@@ -1,3 +1,9 @@
+:root {
+    --kku-red: #8B0000;
+    --kku-gold: #D4AF37;
+    --kku-bg: #1A1210;
+}
+
 * {
   margin: 0;
   padding: 0;

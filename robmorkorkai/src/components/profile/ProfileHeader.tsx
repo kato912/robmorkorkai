@@ -1,9 +1,10 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-    ChevronLeft, Camera, Edit2, LogOut, Check, BadgeCheck, Home, Search, Bot
+    ChevronLeft, Camera, Edit2, LogOut, Check, BadgeCheck, Home, Search, Bot,
+    User
 } from "lucide-react";
-import type { ProfileData } from "../../pages/ProfilePage";
+import type { ProfileData } from "../pages/ProfilePage";
 
 interface Props {
     profile: ProfileData;
@@ -121,11 +122,18 @@ export const ProfileHeader: React.FC<Props> = ({
                     <div className="flex-grow-1 text-center text-lg-start w-100">
 
                         {/* Name & Badge */}
+                        {/* Name & Badge */}
                         <div className="d-flex align-items-center justify-content-center justify-content-lg-start gap-3 mb-2">
                             <h1 className="fw-bold m-0 tracking-tight" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>{profile.name}</h1>
-                            {profile.isVerifiedStudent && (
+                            
+                            {/* เช็กว่าเป็นอีเมลของ มข. หรือไม่ */}
+                            {(profile.email?.endsWith('@kkumail.com') || profile.email?.endsWith('@kku.ac.th')) ? (
                                 <span className="badge rounded-pill d-flex align-items-center gap-1 fw-bold" style={{ backgroundColor: '#10b981', fontSize: '0.75rem', padding: '0.35rem 0.6rem' }}>
                                     <BadgeCheck size={14} /> KKU
+                                </span>
+                            ) : (
+                                <span className="badge rounded-pill d-flex align-items-center gap-1 fw-bold" style={{ backgroundColor: '#6b7280', fontSize: '0.75rem', padding: '0.35rem 0.6rem' }}>
+                                    <User size={14} /> USER
                                 </span>
                             )}
                         </div>

@@ -1,0 +1,44 @@
+/* search navbar focus */
+.custom-search::placeholder {
+    color: #ffff !important;
+    opacity: 1;
+}
+
+/* Search navbar focus */
+.custom-search:focus {
+    background-color: #4a3b33 !important; 
+    box-shadow: 0 0 0 2px rgba(232, 185, 74, 0.3) !important; 
+    color: #f5ebe4 !important;
+}
+
+/* nav barbutton */
+.custom-nav-link {
+    color: #f5ebe4 !important;
+    transition: all 0.2s ease-in-out;
+}
+
+/* navbar button hover */
+.custom-nav-link:hover {
+    background-color: #3d302a !important;
+    color: #e8b94a !important;
+}
+
+/* navbar button active */
+.custom-nav-link.active {
+    background-color: rgba(232, 185, 74, 0.1) !important;
+    color: #e8b94a !important;
+    font-weight: bold;
+}
+
+/* Hover ปุ่ม Login */
+.custom-login-btn {
+    background-color: #a73b24 !important;
+    border: none !important;
+    color: #f5ebe4 !important;
+    transition: all 0.2s ease;
+}
+.custom-login-btn:hover {
+    background-color: #8b2f1d !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

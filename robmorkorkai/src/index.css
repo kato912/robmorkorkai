@@ -1,14 +1,28 @@
-/* ปิดแถบสีเวลาแตะปุ่มบนมือถือ */
-button, a {
-    -webkit-tap-highlight-color: transparent !important;
-    outline: none !important;
+/* src/index.css */
+
+.form-control::placeholder {
+  color: #ffff !important; /* 👈 ใส่สีที่ต้องการตรงนี้ (เช่น สีเทาอมน้ำตาล) */
+  opacity: 1; /* 👈 ต้องใส่เสมอ เพื่อบังคับไม่ให้เบราว์เซอร์ทำสีจางลงเอง */
 }
 
-/* ป้องกันปุ่ม Danger ของ Bootstrap เปลี่ยนเป็นสีดำเข้มตอนกด */
-.btn-outline-danger:active, 
-.btn-outline-danger:focus {
-    background-color: #dc3545 !important;
-    color: white !important;
-    box-shadow: none !important;
-    border-color: #dc3545 !important;
+/* 1. บังคับเปลี่ยนสีพื้นหลังของทั้งเว็บไซต์ */
+body, html {
+  background-color: #1a1210 !important; /* สีเทาอ่อน (Slate 50) */
+  min-height: 100vh;
+}
+
+/* 2. เปลี่ยนสีของตัวแปร Bootstrap ให้เป็นสีแดง มข. */
+:root {
+  --bs-danger: #8B0000 !important;
+  --bs-danger-rgb: 139, 0, 0 !important;
+  --bs-primary: #1a1210 !important; /* เปลี่ยน Primary เป็นสีดำเข้ม */
+}
+
+/* 3. จัดการเรื่องสีแดงที่ปุ่มหรือพื้นหลังแบบเจาะจง */
+.bg-kku-red {
+  background-color: #8B0000 !important;
+}
+
+.text-kku-red {
+  color: #8B0000 !important;
 }

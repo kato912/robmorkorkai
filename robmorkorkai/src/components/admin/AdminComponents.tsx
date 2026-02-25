@@ -172,8 +172,20 @@ export const EditShopModal = ({ shop, onClose, onSave }: any) => {
                             </select>
                         </div>
                     </div>
-                    <div className="mb-3"><label className="form-label small fw-bold text-secondary">เวลาเปิด-ปิด</label><div className="input-group"><span className="input-group-text bg-white"><Clock size={18} /></span><input type="text" className="form-control" value={formData.openHours || ""} onChange={(e) => handleChange('openHours', e.target.value)} /></div></div>
-                    <div className="mb-3"><label className="form-label small fw-bold text-secondary">Google Maps Link</label><div className="input-group"><span className="input-group-text bg-white"><MapPin size={18} /></span><input type="text" className="form-control" value={formData.mapsLink || ""} onChange={(e) => handleChange('mapsLink', e.target.value)} /></div></div>
+                    <div className="mb-3">
+                        <label className="form-label small fw-bold text-secondary">เวลาเปิด-ปิด</label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-white"><Clock size={18} /></span>
+                            <input title="เวลาเปิด-ปิด" type="text" className="form-control" value={formData.openHours || ""} onChange={(e) => handleChange('openHours', e.target.value)} /></div>
+                        </div>
+                    <div className="mb-3">
+                        <label className="form-label small fw-bold text-secondary">Google Maps Link</label><div className="input-group">
+                            <span className="input-group-text bg-white">
+                                <MapPin size={18} />
+                            </span>
+                            <input title="Google Maps Link" type="text" className="form-control" value={formData.googleMap || ""} onChange={(e) => handleChange('googleMap', e.target.value)} />
+                    </div>
+                    </div>
                     <div className="mb-3"><label className="form-label small fw-bold text-secondary">รายละเอียดร้าน</label><textarea className="form-control" rows={3} value={formData.description || ""} onChange={(e) => handleChange('description', e.target.value)}></textarea></div>
                 </div>
 
