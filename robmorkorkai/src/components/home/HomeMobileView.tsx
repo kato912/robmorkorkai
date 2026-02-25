@@ -6,10 +6,19 @@ import { ShopCard } from "./ShopCard";
 import { ZoneFilter } from "./ZoneFilter";
 import { CategoryFilter } from "./CategoryFilter";
 import { BottomNav } from "../layout/BottomNav";
+import { RandomShopButton } from "./RandomShopButton";
+import { useTypingEffect } from "../../hooks/useTypingEffect";
 import type { HomeViewProps } from '../pages/HomePage'
 import { useAuth } from "../../context/AuthContext";
 import HeroImage from "../../assets/foe.jpeg"
 import '../../assets/css/Botnavbar.css'
+
+const TYPING_PHRASES = [
+    "หาชาบูเด็ดๆ หลังมอ...", 
+    "คาเฟ่อ่านหนังสือกังสดาล...", 
+    "ร้านนั่งชิลฟีลดีๆ...", 
+    "ไม่รู้จะกินอะไรดี?..."
+];
 
 const HomeMobileView: React.FC<HomeViewProps> = ({
     selectedZone, setSelectedZone,
@@ -19,6 +28,9 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
     const navigate = useNavigate();
     const { isLoggedIn, user } = useAuth(); 
     const [searchText, setSearchText] = useState("");
+
+    const placeholderText = useTypingEffect(TYPING_PHRASES);
+
     const profileImage = user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
 
     const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -29,7 +41,23 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
 
     return (
         <>
-            <div className="min-vh-100" style={{ paddingBottom: '90px', backgroundColor: '#1a1412' }}> {/* สีพื้นหลังหลัก */}
+            <style>
+                {`
+                    * { -webkit-tap-highlight-color: transparent; }
+                    
+                    @keyframes fadeUp {
+                        from { opacity: 0; transform: translateY(20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    .animate-fade-up { animation: fadeUp 0.6s ease-out forwards; }
+
+                    .custom-mobile-search::placeholder { color: #8a7b72 !important; opacity: 1; }
+                    .custom-mobile-search:focus { background-color: #4a3b33 !important; box-shadow: 0 0 0 2px rgba(232, 185, 74, 0.3) !important; color: #f5ebe4 !important; }
+                    .custom-mobile-login:hover { background-color: #8b2f1d !important; transform: translateY(-2px); }
+                `}
+            </style>
+
+            <div className="min-vh-100 animate-fade-up" style={{ paddingBottom: '90px', backgroundColor: '#1a1412' }}> 
                 
                 {/* Header */}
                 <div className="px-4 pb-4 pt-5" style={{ background: '#231c18', borderBottom: '1px solid rgba(201, 148, 58, 0.2)' }}>
@@ -46,28 +74,22 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
 
                         {isLoggedIn ? (
                             <Link to="/profile">
-                                <img src={profileImage} alt="Profile" className="rounded-circle object-fit-cover custom-mobile-profile" style={{ width: '36px', height: '36px' }} />
+                                <img src={profileImage} alt="Profile" className="rounded-circle object-fit-cover" style={{ width: '36px', height: '36px', border: '2px solid transparent' }} />
                             </Link>
                         ) : (
-                            <Link to="/login" className="btn btn-sm rounded-pill px-4 fw-medium custom-mobile-login">เข้าสู่ระบบ</Link>
+                            <Link to="/login" className="btn btn-sm rounded-pill px-4 fw-medium custom-mobile-login" style={{ backgroundColor: '#A73B24', color: '#f5ebe4' }}>เข้าสู่ระบบ</Link>
                         )}
                     </div>
 
                     <div className="position-relative">
                         <Search className="position-absolute top-50 translate-middle-y ms-3" size={18} style={{ color:'#c9943a'}}/>
                         <input
-                            /* 👇 ใส่คลาส custom-mobile-search และ shadow-none */
                             className="form-control custom-mobile-search rounded-pill ps-5 border-0 shadow-none"
-                            placeholder="ค้นหาร้านอาหาร, คาเฟ่..."
+                            placeholder={placeholderText || "ค้นหาร้าน..."} 
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
                             onKeyDown={handleSearch}
-                            style={{
-                                height: '48px',
-                                fontSize: '0.95rem',
-                                backgroundColor: '#3d302a',
-                                color: '#f5ebe4',
-                            }}
+                            style={{ height: '48px', fontSize: '0.95rem', backgroundColor: '#3d302a', color: '#f5ebe4' }}
                         />
                     </div>
                 </div>
@@ -107,12 +129,10 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
                                 <p className="small m-0 mt-1" style={{ color: '#9a8a7e' }}>{filteredShops.length} ร้านที่แนะนำ</p>
                             </div>
                         </div>
-                        <div className="d-flex flex-column gap-3">
+                        <div className="d-flex flex-column gap-3 pb-4">
                             {filteredShops.map((shop) => (
                                 <ShopCard key={shop.id} shop={shop} />
                             ))}
-                            
-                            {/* State: Not Found (แก้สีพื้นหลังและตัวหนังสือแล้ว) */}
                             {filteredShops.length === 0 && (
                                 <div className="text-center py-5 rounded-4 border shadow-sm" style={{ background: '#231c18', borderColor: '#3d302a' }}>
                                     <Search size={32} className="opacity-25 mb-2" style={{ color: '#f5ebe4' }} />
@@ -125,6 +145,7 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
             </div>
 
             <BottomNav activePage="home" />
+            <RandomShopButton shops={filteredShops} />
         </>
     );
 };

@@ -10,10 +10,11 @@ interface Props {
     searchQuery?: string;
     setSearchQuery?: (text: string) => void;
     handleSearch?: () => void;
+    placeholderText?: string;
 }
 
 export const TopNavbar: React.FC<Props> = ({
-    activePage, showSearchBar = false, searchQuery, setSearchQuery, handleSearch
+    activePage, showSearchBar = false, searchQuery, setSearchQuery, handleSearch, placeholderText
 }) => {
     const { isLoggedIn, user } = useAuth();
     const profileImage = user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
@@ -40,14 +41,13 @@ export const TopNavbar: React.FC<Props> = ({
                         <Search className="position-absolute top-50 translate-middle-y ms-3" size={16} style={{ color: '#e8b94a' }} />
                         <input
                             className="form-control custom-search rounded-pill ps-5 border-0 shadow-none"
-                            placeholder="ค้นหาร้านอาหาร, คาเฟ่, ที่อ่านหนังสือ..."
-                            value={searchQuery || ""}
+                            placeholder={placeholderText || "ค้นหาร้านอาหาร, คาเฟ่, ที่อ่านหนังสือ..."} value={searchQuery || ""}
                             onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && handleSearch) handleSearch();
                             }}
                             style={{
-                                 height: '42px',
+                                height: '42px',
                                 fontSize: '0.9rem',
                                 backgroundColor: '#3d302a',
                                 color: '#f5ebe4',

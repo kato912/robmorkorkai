@@ -1,4 +1,5 @@
 import React from "react";
+import { MapPin } from "lucide-react"; 
 
 interface Props {
     zones: any[];
@@ -12,26 +13,24 @@ export const ZoneFilter: React.FC<Props> = ({ zones = [], selectedZone, setSelec
 
     return (
         <div
-            className={isMobile ? "d-flex gap-2 overflow-auto pb-2" : "d-flex flex-column gap-2"}
-            style={isMobile ? { 
-                scrollbarWidth: 'none', 
-                msOverflowStyle: 'none',
-                paddingRight: '16px'
-            } : {}}
+            className={isMobile ? "d-flex gap-2 overflow-auto pb-2 px-1" : "d-flex flex-column gap-2"}
+            style={isMobile ? { scrollbarWidth: 'none', msOverflowStyle: 'none' } : {}}
         >
-            {/* --- ปุ่ม "ทั้งหมด" (All) --- */}
             <button
                 onClick={() => setSelectedZone(null)}
-                className={`btn border px-3 text-nowrap d-flex align-items-center justify-content-center ${
-                    isMobile ? 'rounded-pill' : 'text-start w-100 py-2 rounded-3'
-                } ${selectedZone === null
-                        ? "btn-dark text-white border-dark shadow-sm" 
-                        : "btn-white bg-white text-secondary border-light-subtle"
-                    }`}
-                style={{ height: isMobile ? '38px' : 'auto', fontSize: '14px' }}
+                className={`btn px-4 text-nowrap d-flex align-items-center justify-content-center shadow-sm ${
+                    isMobile ? 'rounded-pill' : 'text-start w-100 py-3 rounded-4'
+                }`}
+                style={{
+                    height: isMobile ? '38px' : 'auto', 
+                    fontSize: '14px',
+                    border: selectedZone === null ? 'none' : '1px solid #3d302a',
+                    backgroundColor: selectedZone === null ? '#A73B24' : '#2d2320', 
+                    color: selectedZone === null ? '#fff5f0' : '#f5ebe4', 
+                    fontWeight: selectedZone === null ? 'bold' : 'normal'
+                }}
             >
-                <span className="fw-bold">ทั้งหมด</span>
-                {!isMobile && <small className="ms-2 opacity-50 fw-normal">(All Zones)</small>}
+                <span>ทั้งหมด</span>
             </button>
 
             {/* --- ปุ่มโซนต่างๆ --- */}
@@ -39,19 +38,27 @@ export const ZoneFilter: React.FC<Props> = ({ zones = [], selectedZone, setSelec
                 <button
                     key={zone.id}
                     onClick={() => setSelectedZone(zone.id)}
-                    className={`btn border px-3 text-nowrap d-flex align-items-center justify-content-center ${
-                        isMobile ? 'rounded-pill' : 'text-start w-100 py-2 rounded-3'
-                    } ${selectedZone === zone.id
-                            ? "btn-primary text-white border-primary shadow-sm"
-                            : "btn-white bg-white text-secondary border-light-subtle"
-                        }`}
-                    style={{ height: isMobile ? '38px' : 'auto', fontSize: '14px' }}
+                    className={`btn px-4 text-nowrap d-flex align-items-center justify-content-center shadow-sm ${
+                        isMobile ? 'rounded-pill' : 'text-start w-100 py-3 rounded-4 d-flex justify-content-between'
+                    }`}
+                    style={{
+                        height: isMobile ? '38px' : 'auto', 
+                        fontSize: '14px',
+                        border: selectedZone === zone.id ? 'none' : '1px solid #3d302a',
+                        backgroundColor: selectedZone === zone.id ? '#A73B24' : '#2d2320',
+                        color: selectedZone === zone.id ? '#fff5f0' : '#f5ebe4',
+                        fontWeight: selectedZone === zone.id ? 'bold' : 'normal'
+                    }}
                 >
-                    <span className="fw-medium">{zone.label}</span>
+                    <div className="d-flex align-items-center gap-2">
+                        <MapPin size={16} style={{ color: selectedZone === zone.id ? '#fff5f0' : '#8a7b72' }} />
+                        <span>{zone.label.replace('📍', '').trim()}</span>
+                    </div>
+                    
                     {!isMobile && (
-                        <small className={`ms-2 fw-normal ${selectedZone === zone.id ? 'text-white-50' : 'text-muted opacity-50'}`}>
-                            ({zone.labelEn})
-                        </small>
+                        <span style={{ fontSize: '12px', fontWeight: 'bold', color: selectedZone === zone.id ? '#fff5f0' : '#8a7b72' }}>
+                            {zone.count || '0'}
+                        </span>
                     )}
                 </button>
             ))}
