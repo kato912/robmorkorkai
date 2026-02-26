@@ -8,9 +8,8 @@ import { AIBanner } from "./AIBanner";
 import { RandomShopButton } from "./RandomShopButton";
 import { useTypingEffect } from "../../hooks/useTypingEffect";
 import type { HomeViewProps } from "../pages/HomePage"
-import HeroImage from "../../assets/foe.jpeg"
+import HeroImage from "../../assets/hero-campus-life.jpg"
 
-// สร้างคำศัพท์สำหรับพิมพ์ดีดไว้ด้านนอก Component
 const TYPING_PHRASES = [
     "หาชาบูเด็ดๆ หลังมอ...", 
     "คาเฟ่อ่านหนังสือกังสดาล...", 
@@ -35,7 +34,7 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
     };
 
     return (
-        <div className="min-vh-100 pb-5">
+        <div className="min-vh-100 pb-5" style={{ backgroundColor: '#1a1412' }}>
             <style>
                 {`
                     @keyframes fadeUp {
@@ -45,6 +44,8 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
                     .animate-fade-up {
                         animation: fadeUp 0.6s ease-out forwards;
                     }
+                    .hover-scale { transition: transform 0.2s; }
+                    .hover-scale:hover { transform: scale(1.05); }
                 `}
             </style>
 
@@ -60,39 +61,67 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
             <div className="animate-fade-up">
                 <main className="container pt-4">
 
-                    {/* Hero Section */}
                     <div className="position-relative rounded-4 overflow-hidden mb-5 shadow-sm" style={{ height: '320px' }}>
-                        <img src={HeroImage} alt="KKU Campus" className="w-100 h-100 object-fit-cover" />
-                        <div className="position-absolute inset-0 w-100 h-100" style={{ background: 'linear-gradient(to right, rgba(26,18,16,0.95) 0%, rgba(26,18,16,0.6) 50%, transparent 100%)' }}></div>
-                        <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center px-5">
-                            <div style={{ maxWidth: '550px' }}>
-                                <small className="fw-bold text-uppercase" style={{ color: '#D4AF37', letterSpacing: '2px' }}>KKU Campus Guide</small>
-                                <h1 className="fw-bolder text-white mt-2 mb-3" style={{ fontSize: '3rem', lineHeight: '1.2' }}>ค้นหาร้านดีๆ<br />รอบรั้ว มข.</h1>
-                                <p className="text-white-50 fs-5 mb-4">รวมร้านอาหาร คาเฟ่ ที่อ่านหนังสือ ยอดนิยมใกล้มหาวิทยาลัยขอนแก่น</p>
+                        
+                        {/* Layer 1*/}
+                        <img 
+                            src={HeroImage} 
+                            alt="KKU Campus" 
+                            className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" 
+                        />
+                        
+                        {/* Layer 2 */}
+                        <div 
+                            className="position-absolute top-0 start-0 w-100 h-100" 
+                            style={{ background: 'linear-gradient(to right, rgba(26,18,16,0.9) 0%, rgba(26,18,16,0.6) 50%, transparent 100%)' }}
+                        ></div>
+                        
+                        {/* Layer 3 */}
+                        <div 
+                            className="position-absolute top-0 start-0 w-100 h-100" 
+                            style={{ background: 'linear-gradient(to right, rgba(167, 59, 36, 0.3) 0%, transparent 50%)' }}
+                        ></div>
+                        
+                        {/* Layer 4 */}
+                        <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center px-5" style={{ zIndex: 10 }}>
+                            <div style={{ maxWidth: '650px' }}>
+                                
+                                <div className="d-flex align-items-center gap-3 mb-3">
+                                    <div style={{ width: '40px', height: '1.5px', backgroundColor: '#c9943a' }}></div>
+                                    <small className="fw-bold text-uppercase m-0" style={{ color: '#c9943a', letterSpacing: '2px' }}>KKU Campus Guide</small>
+                                </div>
+                                
+                                <h1 className="fw-bolder text-white mb-3" style={{ fontSize: '3rem', letterSpacing: '-1px' }}>
+                                    ค้นหาร้านดีๆ รอบรั้ว มข.
+                                </h1>
+                                
+                                <p className="fs-5 mb-4" style={{ color: '#e8ebe4' }}>
+                                    รวมร้านอาหาร คาเฟ่ ที่อ่านหนังสือ ยอดนิยมใกล้มหาวิทยาลัยขอนแก่น
+                                </p>
+                                
                                 <div className="d-flex gap-3">
                                     <button onClick={() => document.getElementById('main-content')?.scrollIntoView({ behavior: 'smooth' })}
-                                        className="btn text-white rounded-pill px-4 py-2 fw-bold d-flex align-items-center gap-2 border-0"
-                                        style={{ backgroundColor: '#8B0000' }}>
+                                        className="btn rounded-pill px-4 py-2 fw-bold d-flex align-items-center gap-2 border-0 hover-scale shadow-sm"
+                                        style={{ backgroundColor: '#A73B24', color: '#fff5f0' }}>
                                         <Search size={18} /> ค้นหาร้าน
                                     </button>
-                                    <Link to="/ai" className="btn btn-outline-light rounded-pill px-4 py-2 fw-bold d-flex align-items-center gap-2 text-decoration-none">
+                                    
+                                    <Link to="/ai" 
+                                        className="btn rounded-pill px-4 py-2 fw-bold d-flex align-items-center gap-2 text-decoration-none hover-scale"
+                                        style={{ backgroundColor: 'rgba(61, 48, 42, 0.4)', border: '1px solid #c9943a', color: '#e8b94a', backdropFilter: 'blur(4px)' }}>
                                         <Bot size={18} /> ถาม AI
                                     </Link>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {/* 👆 จบ Hero Section */}
 
                     <div className="row g-5" id="main-content">
-
                         {/* Sidebar Left: AI & Zones */}
                         <div className="col-lg-3">
                             <div className="sticky-top" style={{ top: '90px', zIndex: 10 }}>
-
-
                                 <AIBanner />
-
-                                {/* Zone Filter (โค้ดเดิมของคุณ) */}
                                 <div>
                                     <h6 className="text-uppercase fw-bold mb-3" style={{color: "#c9943a", fontSize: '0.9rem', letterSpacing: '1px' }}>โซน</h6>
                                     <div className="d-flex flex-column gap-2">
@@ -116,7 +145,6 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
                             <div className="mb-4">
                                 <CategoryFilter categories={categorie} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
                             </div>
-                            {/* Section Header */}
                             <div className="d-flex align-items-end justify-content-between mb-4 mt-2">
                                 <div>
                                     <h4 className="fw-bold m-0" style={{ color: '#f5ebe4' }}>{searchQuery ? `ผลการค้นหา "${searchQuery}"` : "ร้านยอดนิยม"}</h4>

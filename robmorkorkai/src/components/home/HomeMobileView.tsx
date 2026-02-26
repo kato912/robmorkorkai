@@ -10,7 +10,7 @@ import { RandomShopButton } from "./RandomShopButton";
 import { useTypingEffect } from "../../hooks/useTypingEffect";
 import type { HomeViewProps } from '../pages/HomePage'
 import { useAuth } from "../../context/AuthContext";
-import HeroImage from "../../assets/foe.jpeg"
+import HeroImage from "../../assets/hero-campus-life.jpg"
 import '../../assets/css/Botnavbar.css'
 
 const TYPING_PHRASES = [
@@ -94,17 +94,40 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
                     </div>
                 </div>
 
-                {/* Hero Section */}
+                {/* 👇 Hero Section */}
                 <div className="px-3 mt-3">
-                    <div className="position-relative rounded-4 overflow-hidden mb-4 shadow-sm" style={{ height: '160px' }}>
-                        <img src={HeroImage} alt="KKU Campus" className="w-100 h-100 object-fit-cover" />
-                        <div className="position-absolute inset-0 w-100 h-100" style={{ background: 'linear-gradient(to top, rgba(26,18,16,0.9), transparent)' }}></div>
-                        <div className="position-absolute bottom-0 start-0 w-100 p-3">
-                            <h5 className="fw-bold text-white mb-1">ค้นหาร้านดีๆ รอบรั้ว มข.</h5>
-                            <p className="m-0" style={{ fontSize: '0.75rem', color: '#e8b94a' }}>รวมร้านอาหาร คาเฟ่ ที่อ่านหนังสือยอดนิยม</p>
+                    <div className="position-relative rounded-4 overflow-hidden mb-4 shadow-sm" style={{ height: '180px' }}>
+                        
+                        {/* Layer 1: */}
+                        <img src={HeroImage} alt="KKU Campus" className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" />
+                        
+                        {/* Layer 2: */}
+                        <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: 'linear-gradient(to top, rgba(26,18,16,0.95) 0%, rgba(26,18,16,0.2) 60%, transparent 100%)' }}></div>
+                        
+                        {/* Layer 3: */}
+                        <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: 'linear-gradient(to top, rgba(167, 59, 36, 0.4) 0%, transparent 60%)' }}></div>
+                        
+                        {/* Layer 4: */}
+                        <div className="position-absolute bottom-0 start-0 w-100 p-3" style={{ zIndex: 10 }}>
+                            
+                            <div className="d-flex align-items-center gap-2 mb-1">
+                                <div style={{ width: '20px', height: '1.5px', backgroundColor: '#c9943a' }}></div>
+                                <small className="fw-bold text-uppercase m-0" style={{ color: '#c9943a', fontSize: '0.65rem', letterSpacing: '1px' }}>KKU Campus Guide</small>
+                            </div>
+
+                            {/* หัวข้อ */}
+                            <h5 className="fw-bolder text-white mb-1" style={{ letterSpacing: '-0.5px' }}>
+                                ค้นหาร้านดีๆ รอบรั้ว มข.
+                            </h5>
+                            
+                            {/* คำอธิบาย */}
+                            <p className="m-0" style={{ fontSize: '0.75rem', color: '#e8ebe4' }}>
+                                รวมร้านอาหาร คาเฟ่ ที่อ่านหนังสือยอดนิยม
+                            </p>
                         </div>
                     </div>
                 </div>
+                {/* 👆 จบ Hero Section */}
 
                 {/* Content */}
                 <div className="px-3">

@@ -38,10 +38,10 @@ export const ShopHero: React.FC<ShopHeroProps> = ({
 
                 {/* Desktop Nav */}
                 <nav className="d-none d-lg-flex align-items-center gap-4">
-                    <Link to="/" className="text-white-50 hover-text-white text-decoration-none d-flex align-items-center gap-2 small fw-medium transition-colors nav-link-hover px-4 py-2 rounded-pill"><Home size={18} /> Home</Link>
-                    <Link to="/search" className="text-white-50 hover-text-white text-decoration-none d-flex align-items-center gap-2 small fw-medium transition-colors nav-link-hover px-4 py-2 rounded-pill"><Search size={18} /> Search</Link>
-                    <Link to="/ai" className="text-white-50 hover-text-white text-decoration-none d-flex align-items-center gap-2 small fw-medium transition-colors nav-link-hover px-4 py-2 rounded-pill"><Bot size={18} /> AI</Link>
-                    <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(255,255,255,0.2)' }}></div>
+                    <Link to="/" className="text-decoration-none d-flex align-items-center gap-2 small fw-medium transition-colors nav-link-hover px-4 py-2 rounded-pill" style={{ color: '#fff5f0'}}><Home size={18} /> Home</Link>
+                    <Link to="/search" className="text-decoration-none d-flex align-items-center gap-2 small fw-medium transition-colors nav-link-hover px-4 py-2 rounded-pill" style={{ color: '#fff5f0'}}><Search size={18} /> Search</Link>
+                    <Link to="/ai" className="text-decoration-none d-flex align-items-center gap-2 small fw-medium transition-colors nav-link-hover px-4 py-2 rounded-pill" style={{ color: '#fff5f0'}}><Bot size={18} /> AI</Link>
+                    <div style={{ width: '1px', height: '24px', backgroundColor: '#fff5f0' }}></div>
                     {isLoggedIn ? (
                         <Link to="/profile">
                             <img src={user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100"} className="rounded-circle border border-2 border-white opacity-90 hover-opacity-100 transition-all object-fit-cover" width="36" height="36" alt="Profile" />
