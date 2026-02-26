@@ -1,0 +1,12 @@
+.filter-zone-btn:hover {
+    background-color: #3d302a !important;
+    border-color: #c9943a !important;
+    color: #f5ebe4 !important;
+    transform: translateX(4px); /* เลื่อนขวานิดๆ */
+}
+.filter-cat-btn:hover {
+    background-color: #3d302a !important;
+    border-color: #c9943a !important;
+    color: #f5ebe4 !important;
+    transform: translateY(-2px); /* เด้งขึ้นบน */
+}

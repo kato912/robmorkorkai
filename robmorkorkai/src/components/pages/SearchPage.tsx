@@ -15,7 +15,6 @@ import { MOCK_SHOPS } from "../../data/mockDatat";
 type SortOption = "rating" | "reviews" | "name";
 
 export const SearchPage: React.FC = () => {
-    // --- State ---
     const location = useLocation();
     const startQuery = location.state?.startQuery || "";
     const [searchQuery, setSearchQuery] = useState(startQuery);
@@ -24,7 +23,6 @@ export const SearchPage: React.FC = () => {
     const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
     const [sortBy, setSortBy] = useState<SortOption>("rating");
 
-    // --- Logic: Filtering ---
     const filteredShops = useMemo(() => {
         let results = MOCK_SHOPS.filter((shop) => {
             const matchesZone = selectedZone === "all" || shop.zoneId === selectedZone;
@@ -51,7 +49,6 @@ export const SearchPage: React.FC = () => {
         return results;
     }, [searchQuery, selectedZone, selectedCategory, selectedFacilities, sortBy]);
 
-    // --- Handlers ---
     const toggleFacility = (id: string) => {
         setSelectedFacilities(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
     };
@@ -63,21 +60,23 @@ export const SearchPage: React.FC = () => {
         setSearchQuery("");
     };
 
-    // --- Helper UI ---
     const SortButton = ({ type, label, icon: Icon }: { type: SortOption, label: string, icon?: any }) => (
         <button
             onClick={() => setSortBy(type)}
-            className={`btn btn-sm rounded-pill text-nowrap px-3 border transition d-flex align-items-center gap-1 
-            ${sortBy === type ? 'btn-dark text-white shadow-sm' : 'btn-white text-secondary hover-bg-light'}`}
+            className={`btn btn-sm rounded-pill text-nowrap px-3 transition d-flex align-items-center gap-1`}
+            style={{
+                backgroundColor: sortBy === type ? '#A73B24' : '#231c18',
+                color: sortBy === type ? '#f5ebe4' : '#9a8a7e',
+                border: `1px solid ${sortBy === type ? '#A73B24' : '#3d302a'}`
+            }}
         >
             {Icon && <Icon size={14} />} {label}
         </button>
     );
 
     return (
-        <div className="bg-light min-vh-100 pb-5">
+        <div className="min-vh-100 pb-5" style={{ backgroundColor: '#1a1412' }}>
 
-            {/* Desktop Header */}
             <div className="d-none d-lg-block">
                 <TopNavbar
                     activePage="search"
@@ -88,7 +87,6 @@ export const SearchPage: React.FC = () => {
                 />
             </div>
 
-            {/* Mobile Header */}
             <MobileSearchHeader 
                 searchQuery={searchQuery} setSearchQuery={setSearchQuery}
                 selectedZone={selectedZone} setSelectedZone={setSelectedZone}
@@ -98,10 +96,8 @@ export const SearchPage: React.FC = () => {
                 clearFilters={clearFilters}
             />
 
-            {/* ✅ Main Content */}
             <div className="container py-4">
                 <div className="row g-4">
-                    {/* Sidebar (Desktop) */}
                     <div className="col-lg-3 d-none d-lg-block">
                         <SearchFilterSidebar
                             selectedZone={selectedZone} setSelectedZone={setSelectedZone}
@@ -111,17 +107,16 @@ export const SearchPage: React.FC = () => {
                         />
                     </div>
 
-                    {/* Results */}
                     <div className="col-lg-9">
                         <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
                             <div className="mb-3 mb-md-0">
-                                <h4 className="fw-bold m-0 d-none d-lg-block">ร้านทั้งหมด</h4>
-                                <h5 className="fw-bold m-0 d-lg-none">ร้านทั้งหมด</h5>
-                                <small className="te xt-secondary">พบ {filteredShops.length} ร้าน</small>
+                                <h4 className="fw-bold m-0 d-none d-lg-block" style={{ color: '#f5ebe4' }}>ร้านทั้งหมด</h4>
+                                <h5 className="fw-bold m-0 d-lg-none" style={{ color: '#f5ebe4' }}>ร้านทั้งหมด</h5>
+                                <small style={{ color: '#9a8a7e' }}>พบ {filteredShops.length} ร้าน</small>
                             </div>
 
                             <div className="d-flex align-items-center gap-2 overflow-auto no-scrollbar pb-1">
-                                <span className="text-secondary small text-nowrap d-none d-md-inline me-1">เรียงตาม:</span>
+                                <span className="small text-nowrap d-none d-md-inline me-1" style={{ color: '#8a7b72' }}>เรียงตาม:</span>
                                 <SortButton type="rating" label="คะแนนสูงสุด" icon={Star} />
                                 <SortButton type="reviews" label="รีวิวมากสุด" />
                                 <SortButton type="name" label="ชื่อ ก-ฮ" icon={ArrowUpAz} />
@@ -138,18 +133,18 @@ export const SearchPage: React.FC = () => {
 
                         {filteredShops.length === 0 && (
                             <div className="text-center py-5">
-                                <div className="bg-white rounded-circle p-3 d-inline-block shadow-sm mb-3">
-                                    <Search size={24} className="text-secondary opacity-50" />
+                                <div className="rounded-circle p-3 d-inline-block shadow-sm mb-3" style={{ backgroundColor: '#2d2320' }}>
+                                    <Search size={24} className="opacity-50" style={{ color: '#8a7b72' }} />
                                 </div>
-                                <p className="text-muted mb-2">ไม่พบร้านที่คุณค้นหา</p>
-                                <button onClick={clearFilters} className="btn btn-outline-primary btn-sm rounded-pill px-3">ล้างตัวกรอง</button>
+                                <p className="mb-2" style={{ color: '#9a8a7e' }}>ไม่พบร้านที่คุณค้นหา</p>
+                                <button onClick={clearFilters} className="btn btn-sm rounded-pill px-3" style={{ border: '1px solid #A73B24', color: '#A73B24', backgroundColor: 'transparent' }}>ล้างตัวกรอง</button>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
 
-            <div className="d-lg-none"><BottomNav activePage="home" /></div>
+            <div className="d-lg-none"><BottomNav activePage="search" /></div>
         </div>
     );
 };

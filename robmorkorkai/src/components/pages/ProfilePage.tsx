@@ -65,9 +65,7 @@ const ProfilePage: React.FC = () => {
     };
 
     return (
-        <div className="min-vh-100 bg-white" style={{ fontFamily: 'Inter, sans-serif' }}>
-
-            {/* 1. Header Section (Dark Mode) */}
+        <div className="min-vh-100" style={{ backgroundColor: '#1a1412', fontFamily: 'Inter, sans-serif' }}>
             <ProfileHeader
                 profile={profile}
                 isEditing={isEditing}
@@ -75,23 +73,13 @@ const ProfilePage: React.FC = () => {
                 onLogout={handleLogout}
                 stats={{ reviews: myReviews.length, favorites: favoriteShops.length, helpful: 35 }}
             />
-
-            {/* 2. Main Content Container */}
             <main className="container" style={{ maxWidth: '900px', paddingBottom: '90px' }}>
-
-                {/* กล่องแก้ไขข้อมูล (แสดงเมื่อกด Edit) */}
                 {isEditing && <ProfileEditForm profile={profile} setProfile={setProfile} />}
-
-                {/* รายการรีวิว และ ร้านโปรด */}
                 <MyStoreList reviews={myReviews} favorites={favoriteShops} />
-
             </main>
-
-            {/* 3. Bottom Nav (Mobile) */}
             <div className="d-lg-none">
                 <BottomNav activePage="profile" />
             </div>
-
         </div>
     );
 };

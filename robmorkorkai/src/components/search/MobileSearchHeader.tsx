@@ -32,58 +32,86 @@ export const MobileSearchHeader: React.FC<Props> = ({
     }, []);
 
     return (
-        <div className="d-lg-none bg-white sticky-top shadow-sm transition" style={{ zIndex: 1020 }}>
-            {/* Top Bar (เหมือนเดิม) */}
+        <div className="d-lg-none sticky-top shadow-sm transition" style={{ zIndex: 1020, backgroundColor: '#1a1412', borderBottom: '1px solid #3d302a' }}>
             <div className="pt-3 px-3 pb-2">
                 <div className="d-flex align-items-center gap-3">
-                    <Link to="/" className="text-secondary"><Home size={24} strokeWidth={2} /></Link>
+                    <Link to="/" style={{ color: '#9a8a7e' }}><Home size={24} strokeWidth={2} /></Link>
                     <div className="position-relative flex-grow-1">
-                        <Search className="position-absolute text-muted" style={{ top: '10px', left: '12px' }} size={18} />
-                        <input className="form-control rounded-4 border-0 bg-light ps-5" placeholder="ค้นหา..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                        <Search className="position-absolute" style={{ top: '10px', left: '12px', color: '#8a7b72' }} size={18} />
+                        <input 
+                            className="form-control rounded-4 border-0 ps-5 shadow-none" 
+                            placeholder="ค้นหา..." 
+                            value={searchQuery} 
+                            onChange={(e) => setSearchQuery(e.target.value)} 
+                            style={{ backgroundColor: '#231c18', color: '#f5ebe4' }}
+                        />
                     </div>
-                    <button className={`btn border-0 rounded-3 p-2 transition ${showFilters ? 'bg-primary text-white shadow-sm' : 'bg-light text-secondary'}`} onClick={() => setShowFilters(!showFilters)}>
+                    <button 
+                        className="btn border-0 rounded-3 p-2 transition shadow-sm" 
+                        onClick={() => setShowFilters(!showFilters)}
+                        style={{ 
+                            backgroundColor: showFilters ? '#A73B24' : '#231c18',
+                            color: showFilters ? '#fff5f0' : '#9a8a7e'
+                        }}
+                    >
                         {showFilters ? <X size={20} /> : <SlidersHorizontal size={20} />}
                     </button>
                 </div>
             </div>
 
-            {/* Filter Panel */}
             {showFilters && (
-                <div className="px-3 pb-3 border-top pt-3 animate-fade-in bg-white">
-                    {/* Zone Filter (เหมือนเดิม) */}
+                <div className="px-3 pb-3 pt-3 animate-fade-in" style={{ backgroundColor: '#1a1412', borderTop: '1px solid #3d302a' }}>
                     <div className="mb-3">
-                        <small className="text-secondary fw-bold mb-2 d-block" style={{ fontSize: '0.8rem' }}>โซน</small>
+                        <small className="fw-bold mb-2 d-block" style={{ fontSize: '0.8rem', color: '#c9943a' }}>โซน</small>
                         <div className="d-flex flex-wrap gap-2">
                             {ZONES.map(z => (
-                                <button key={z.id} onClick={() => setSelectedZone(z.id)} className={`btn btn-sm rounded-pill px-3 ${selectedZone === z.id ? 'btn-primary' : 'btn-light border-0 text-secondary'}`}>{z.label}</button>
+                                <button key={z.id} onClick={() => setSelectedZone(z.id)} 
+                                    className="btn btn-sm rounded-pill px-3"
+                                    style={{ 
+                                        backgroundColor: selectedZone === z.id ? '#A73B24' : '#2d2320',
+                                        color: selectedZone === z.id ? '#f5ebe4' : '#9a8a7e',
+                                        border: 'none'
+                                    }}>
+                                    {z.label}
+                                </button>
                             ))}
                         </div>
                     </div>
 
-                    {/* Category Filter */}
                     <div className="mb-3">
-                        <small className="text-secondary fw-bold mb-2 d-block" style={{ fontSize: '0.8rem' }}>หมวดหมู่</small>
+                        <small className="fw-bold mb-2 d-block" style={{ fontSize: '0.8rem', color: '#c9943a' }}>หมวดหมู่</small>
                         <div className="d-flex flex-wrap gap-2">
                             {CATEGORIES.map(c => {
                                 const Icon = c.icon || Coffee;
-                                return <button key={c.id} onClick={() => setSelectedCategory(c.id)} className={`btn btn-sm rounded-pill px-3 d-flex gap-1 align-items-center ${selectedCategory === c.id ? 'btn-primary' : 'btn-light border-0 text-secondary'}`}><Icon size={14} /> {c.label}</button>
+                                return (
+                                    <button key={c.id} onClick={() => setSelectedCategory(c.id)} 
+                                        className="btn btn-sm rounded-pill px-3 d-flex gap-1 align-items-center"
+                                        style={{ 
+                                            backgroundColor: selectedCategory === c.id ? '#A73B24' : '#2d2320',
+                                            color: selectedCategory === c.id ? '#f5ebe4' : '#9a8a7e',
+                                            border: 'none'
+                                        }}>
+                                        <Icon size={14} /> {c.label}
+                                    </button>
+                                );
                             })}
                         </div>
                     </div>
 
-                    {/* Facility Filter */}
                     <div className="mb-3">
-                        <small className="text-secondary fw-bold mb-2 d-block" style={{ fontSize: '0.8rem' }}>สิ่งอำนวยความสะดวก</small>
+                        <small className="fw-bold mb-2 d-block" style={{ fontSize: '0.8rem', color: '#c9943a' }}>สิ่งอำนวยความสะดวก</small>
                         <div className="d-flex flex-wrap gap-2">
                             {FACILITIES.map(f => {
                                 const Icon = f.icon;
                                 const isSelected = selectedFacilities.includes(f.id);
                                 return (
-                                    <button 
-                                        key={f.id} 
-                                        onClick={() => toggleFacility(f.id)} 
-                                        className={`btn btn-sm rounded-pill px-3 d-flex gap-1 align-items-center ${isSelected ? 'btn-primary' : 'btn-light border-0 text-secondary'}`}
-                                    >
+                                    <button key={f.id} onClick={() => toggleFacility(f.id)} 
+                                        className="btn btn-sm rounded-pill px-3 d-flex gap-1 align-items-center"
+                                        style={{ 
+                                            backgroundColor: isSelected ? '#A73B24' : '#2d2320',
+                                            color: isSelected ? '#f5ebe4' : '#9a8a7e',
+                                            border: 'none'
+                                        }}>
                                         <Icon size={14} /> {f.label}
                                     </button>
                                 );
@@ -91,20 +119,28 @@ export const MobileSearchHeader: React.FC<Props> = ({
                         </div>
                     </div>
 
-                    {/* Clear Button */}
                     {(selectedZone !== 'all' || selectedCategory !== 'all' || selectedFacilities.length > 0) && (
-                        <div className="text-end mt-2 pt-2 border-top">
-                            <button onClick={clearFilters} className="btn btn-link text-danger p-0 small text-decoration-none">ล้างตัวกรองทั้งหมด</button>
+                        <div className="text-end mt-2 pt-2" style={{ borderTop: '1px solid #3d302a' }}>
+                            <button onClick={clearFilters} className="btn btn-link p-0 small text-decoration-none" style={{ color: '#c9943a' }}>ล้างตัวกรองทั้งหมด</button>
                         </div>
                     )}
                 </div>
             )}
 
-            {/* Quick Filter Slide */}
-            <div className="overflow-hidden transition-all bg-white border-top" style={{ maxHeight: (isScrolled && !showFilters) ? '60px' : '0px', opacity: (isScrolled && !showFilters) ? 1 : 0 }}>
+            <div className="overflow-hidden transition-all" style={{ backgroundColor: '#1a1412', borderTop: '1px solid #3d302a', maxHeight: (isScrolled && !showFilters) ? '60px' : '0px', opacity: (isScrolled && !showFilters) ? 1 : 0 }}>
                 <div className="d-flex align-items-center gap-2 px-3 py-2 overflow-auto no-scrollbar">
-                    <span className="text-muted small text-nowrap me-1"><MapPin size={12} /> โซน:</span>
-                    {ZONES.map(z => (<button key={z.id} onClick={() => setSelectedZone(z.id)} className={`btn btn-sm rounded-pill text-nowrap px-3 ${selectedZone === z.id ? 'btn-primary' : 'btn-light border-0 text-secondary'}`}>{z.label}</button>))}
+                    <span className="small text-nowrap me-1" style={{ color: '#8a7b72' }}><MapPin size={12} /> โซน:</span>
+                    {ZONES.map(z => (
+                        <button key={z.id} onClick={() => setSelectedZone(z.id)} 
+                            className="btn btn-sm rounded-pill text-nowrap px-3"
+                            style={{ 
+                                backgroundColor: selectedZone === z.id ? '#A73B24' : '#2d2320',
+                                color: selectedZone === z.id ? '#f5ebe4' : '#9a8a7e',
+                                border: 'none'
+                            }}>
+                            {z.label}
+                        </button>
+                    ))}
                 </div>
             </div>
         </div>

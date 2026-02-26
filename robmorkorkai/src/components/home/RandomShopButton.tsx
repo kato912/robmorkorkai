@@ -33,13 +33,13 @@ export const RandomShopButton: React.FC<Props> = ({ shops }) => {
                         border: 2px solid #e8b94a;
                         transition: all 0.2s;
                         animation: bounce 2s infinite;
-                        bottom: 90px;
+                        bottom: 110px;
                         right: 20px;
                     }
 
                     @media (min-width: 992px) {
                         .gacha-btn {
-                            bottom: 50px; 
+                            bottom: 40px; 
                             right: 2.5%;
                         }
                     }

@@ -7,6 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import { AIResultCard } from "../ai/AIResultCard";
 import { AIEmptyState } from "../ai/AIEmptyState";
 import { AIChatInput } from "../ai/AIChatInput";
+import '../../assets/css/AIStyles.css'
 
 // --- Mock Data ---
 const mockResults = [
@@ -61,32 +62,25 @@ export const AIPage: React.FC = () => {
     const hasMessages = messages.length > 0;
 
     return (
-        <div className="d-flex flex-column min-vh-100" style={{ backgroundColor: '#ffffff' }}>
+        <div className="d-flex flex-column min-vh-100" style={{ backgroundColor: '#1a1412' }}>
             
-            <style>{`
-                .typing-dot { width: 6px; height: 6px; background-color: #adb5bd; border-radius: 50%; display: inline-block; animation: typing 1.4s infinite ease-in-out both; }
-                .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-                .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-                @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-                .chat-user { background-color: #111827; color: white; border-radius: 1.25rem 1.25rem 0.25rem 1.25rem; }
-                .chat-ai { background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 1.25rem 1.25rem 1.25rem 0.25rem; }
-                .chat-container::-webkit-scrollbar { display: none; }
-                .chat-container { -ms-overflow-style: none; scrollbar-width: none; }
-            `}</style>
+            
 
             {/* Header */}
             <div className="d-none d-lg-block sticky-top" style={{ zIndex: 1030 }}>
                 <TopNavbar activePage="ai" showSearchBar={true} />
             </div>
 
-            <header className="d-lg-none bg-white border-bottom sticky-top" style={{ zIndex: 1030, background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(8px)' }}>
+            <header className="d-lg-none border-bottom sticky-top" style={{ zIndex: 1030, background: 'rgba(26, 20, 18, 0.9)', backdropFilter: 'blur(8px)', borderColor: '#3d302a' }}>
                 <div className="d-flex align-items-center justify-content-between px-3" style={{ height: '56px' }}>
-                    <button onClick={() => window.history.back()} className="btn btn-link text-muted p-0">
+                    <button onClick={() => window.history.back()} className="btn btn-link p-0" style={{ color: '#9a8a7e' }}>
                         <ChevronLeft size={24} />
                     </button>
                     <div className="d-flex align-items-center gap-2">
-                        <div className="bg-dark rounded-3 d-flex align-items-center justify-content-center" style={{ width: '26px', height: '26px' }}><Sparkles size={14} className="text-white" /></div>
-                        <span className="fw-bold text-dark">AI Helper</span>
+                        <div className="rounded-3 d-flex align-items-center justify-content-center" style={{ width: '26px', height: '26px', backgroundColor: '#2d2320', border: '1px solid #c9943a' }}>
+                            <Sparkles size={14} style={{ color: '#e8b94a' }} />
+                        </div>
+                        <span className="fw-bold" style={{ color: '#f5ebe4' }}>AI Helper</span>
                     </div>
                     <div style={{ width: '24px' }}></div>
                 </div>
@@ -104,7 +98,9 @@ export const AIPage: React.FC = () => {
                                 <div key={i} className={`d-flex flex-column ${msg.role === 'user' ? 'align-items-end' : 'align-items-start'}`}>
                                     <div className="d-flex gap-2" style={{ maxWidth: '85%' }}>
                                         {msg.role === 'ai' && (
-                                            <div className="bg-dark rounded-3 d-flex align-items-center justify-content-center flex-shrink-0 mt-1" style={{ width: '30px', height: '30px' }}><Sparkles size={14} className="text-white" /></div>
+                                            <div className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0 mt-1" style={{ width: '30px', height: '30px', backgroundColor: '#2d2320', border: '1px solid #c9943a' }}>
+                                                <Sparkles size={14} style={{ color: '#e8b94a' }} />
+                                            </div>
                                         )}
                                         <div className={`p-3 shadow-sm ${msg.role === 'user' ? 'chat-user' : 'chat-ai'}`}>
                                             <p className="m-0" style={{ fontSize: '0.9rem', lineHeight: '1.6' }}>{msg.content}</p>
@@ -123,7 +119,9 @@ export const AIPage: React.FC = () => {
 
                             {isTyping && (
                                 <div className="d-flex align-items-start gap-2 max-w-75">
-                                    <div className="bg-dark rounded-3 d-flex align-items-center justify-content-center flex-shrink-0 mt-1" style={{ width: '30px', height: '30px' }}><Sparkles size={14} className="text-white" /></div>
+                                    <div className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0 mt-1" style={{ width: '30px', height: '30px', backgroundColor: '#2d2320', border: '1px solid #c9943a' }}>
+                                        <Sparkles size={14} style={{ color: '#e8b94a' }} />
+                                    </div>
                                     <div className="chat-ai p-3 shadow-sm d-flex align-items-center gap-1" style={{ height: '46px' }}>
                                         <div className="typing-dot"></div>
                                         <div className="typing-dot"></div>
