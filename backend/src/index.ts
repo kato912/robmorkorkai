@@ -15,8 +15,8 @@ const port: number = 3000;
 
 
 app.use(cors({
-    origin: 'http://localhost:5173', // อนุญาตเฉพาะ Frontend ของคุณ
-    credentials: true,               // อนุญาตให้ส่ง Cookies/Auth Header
+    origin: 'http://localhost:5173', 
+    credentials: true,              
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
