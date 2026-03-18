@@ -91,3 +91,38 @@ export const createReview = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+// Get all reviews by shop ID with user information
+export const getReviewsByShopId = async (req: Request, res: Response) => {
+    try {
+        const { shopId } = req.params;
+
+        if (!shopId) {
+            return res.status(400).json({ message: "Missing shopId parameter" });
+        }
+
+        const reviews = await prisma.review.findMany({
+            where: { shopId: shopId },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        image: true
+                    }
+                }
+            },
+            orderBy: { createdAt: 'desc' } // Most recent reviews first
+        });
+
+        res.json({
+            shopId: shopId,
+            count: reviews.length,
+            reviews: reviews
+        });
+    } catch (error) {
+        console.error("Error fetching reviews by shop ID:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};

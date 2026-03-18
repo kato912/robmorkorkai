@@ -1,6 +1,6 @@
 import { Request, Response , NextFunction } from "express";
 import { getSession } from "@auth/express";
-import { authConfig } from "../config/auth";
+import { authConfig } from "../config/auth.js";
 
 export const  requireAuth = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -18,6 +18,7 @@ export const  requireAuth = async (req: Request, res: Response, next: NextFuncti
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
 
 export async function requireAdmin(req: Request, res: Response, next: NextFunction) {
     // เรียกใช้ requireAuth ก่อนเพื่อให้แน่ใจว่า Login แล้ว (หรือจะเรียกซ้อนกันใน Route ก็ได้)
