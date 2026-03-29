@@ -13,11 +13,6 @@ import { ShopReviewSection } from "../shop/ShopReviewSection";
 import { ReviewModal } from "../shop/ReviewModal";
 import { ScrollToTopButton } from "../common/ScrollToTopButton";
 
-const initialReviews = [
-    { id: 1, userId: "u1", email: "student64@kkumail.com", userName: "กมลชนก", rating: 5, comment: "บรรยากาศดีมากค่ะ", verified: true, date: "2 วันที่แล้ว", helpful: 12 },
-    { id: 2, userId: "u2", email: "engineer_boy@kkumail.com", userName: "ธนพล", rating: 4, comment: "กาแฟอร่อย", verified: true, date: "1 สัปดาห์ที่แล้ว", helpful: 8 }
-];
-
 export const ShopDetailPage: React.FC = () => {
     const { isLoggedIn, user } = useAuth();
     const navigate = useNavigate();
@@ -32,14 +27,23 @@ export const ShopDetailPage: React.FC = () => {
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-    const { reviews, totalCount, verifiedOnly, setVerifiedOnly, hasMore, handleShowMore, addReview } = useShopReviews(initialReviews);
+    const {
+        reviews,
+        totalCount,
+        verifiedOnly,
+        setVerifiedOnly,
+        hasMore,
+        handleShowMore,
+        isSubmitting,
+        submitReview
+    } = useShopReviews(id);
 
     useEffect(() => {
         const fetchShopData = async () => {
             if (!id) return;
             setIsLoading(true); setError(null);
             try {
-                const response = await fetch(`http://localhost:3000/api/shops/${id}`);
+                const response = await fetch(`/api/shops/${id}`);
                 if (!response.ok) throw new Error("ไม่พบข้อมูลร้านค้า หรือเกิดข้อผิดพลาด");
                 const data = await response.json();
                 setShop(data); 
@@ -73,7 +77,6 @@ export const ShopDetailPage: React.FC = () => {
     const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80";
     const displayImages = shop.images && shop.images.length > 0 ? shop.images : [shop.image || DEFAULT_IMAGE, shop.image || DEFAULT_IMAGE, shop.image || DEFAULT_IMAGE, shop.image || DEFAULT_IMAGE];
     const averageRating = Number(shop.ratingAvg ?? 0).toFixed(1);
-    const filteredReviews = verifiedOnly ? reviews.filter((r) => r.verified) : reviews;
     const ratingDistribution = [5, 4, 3, 2, 1].map((star) => {
         const count = reviews.filter((r) => r.rating === star).length;
         const percentage = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
@@ -123,7 +126,7 @@ export const ShopDetailPage: React.FC = () => {
                         </div>
 
                         {/* รีวิว */}
-                        <ShopReviewSection reviews={filteredReviews} averageRating={averageRating} reviewsCount={totalCount} ratingDistribution={ratingDistribution} verifiedOnly={verifiedOnly} setVerifiedOnly={setVerifiedOnly} hasMore={hasMore} handleShowMore={handleShowMore} isLoggedIn={isLoggedIn} onOpenReviewModal={handleOpenReviewModal} />
+                        <ShopReviewSection reviews={reviews} averageRating={averageRating} reviewsCount={totalCount} ratingDistribution={ratingDistribution} verifiedOnly={verifiedOnly} setVerifiedOnly={setVerifiedOnly} hasMore={hasMore} handleShowMore={handleShowMore} isLoggedIn={isLoggedIn} onOpenReviewModal={handleOpenReviewModal} />
                     </div>
 
                     {/* Sidebar (โชว์เฉพาะจอคอม) */}
@@ -131,7 +134,31 @@ export const ShopDetailPage: React.FC = () => {
                 </div>
             </main>
 
-            <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={(r, c) => { addReview({ id: Date.now(), rating: r, comment: c, verified: user?.isVerifiedStudent, date: "เมื่อสักครู่" }); setIsReviewModalOpen(false); }} shopName={shop.name} shopImage={shop.image} />
+            <ReviewModal
+                isOpen={isReviewModalOpen}
+                onClose={() => setIsReviewModalOpen(false)}
+                onSubmit={async (rating, comment) => {
+                    try {
+                        const result = await submitReview(rating, comment);
+                        setShop((prev) => {
+                            if (!prev) return prev;
+                            return {
+                                ...prev,
+                                ratingAvg: result.shopSummary.newRatingAvg,
+                                reviewCount: result.shopSummary.totalReviews
+                            };
+                        });
+                        setIsReviewModalOpen(false);
+                        AlertUtils.success("ส่งรีวิวสำเร็จ");
+                    } catch (err) {
+                        const message = err instanceof Error ? err.message : "ส่งรีวิวไม่สำเร็จ";
+                        AlertUtils.error("ส่งรีวิวไม่สำเร็จ", message);
+                    }
+                }}
+                shopName={shop.name}
+                shopImage={shop.image}
+                isSubmitting={isSubmitting}
+            />
 
             <ScrollToTopButton />    
         </div>

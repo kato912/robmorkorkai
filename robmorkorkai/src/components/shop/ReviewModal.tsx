@@ -5,13 +5,14 @@ import { useAuth } from "../../context/AuthContext";
 interface ReviewModalProps {
     isOpen: boolean; 
     onClose: () => void; 
-    onSubmit: (rating: number, comment: string) => void;
+    onSubmit: (rating: number, comment: string) => Promise<void> | void;
     shopName: string; 
     shopImage: string;
+    isSubmitting?: boolean;
 }
 
 export const ReviewModal: React.FC<ReviewModalProps> = ({
-    isOpen, onClose, onSubmit, shopName, shopImage
+    isOpen, onClose, onSubmit, shopName, shopImage, isSubmitting = false
 }) => {
     const { user } = useAuth();
     const [rating, setRating] = useState(0);
@@ -20,9 +21,9 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
     if (!isOpen) return null;
 
-    const handleSubmit = () => {
-        if (rating > 0 && comment.trim()) {
-            onSubmit(rating, comment); 
+    const handleSubmit = async () => {
+        if (!isSubmitting && rating > 0 && comment.trim()) {
+            await onSubmit(rating, comment); 
             setRating(0); 
             setComment("");
         }
@@ -59,7 +60,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                 {/* Header */}
                 <div className="d-flex justify-content-between align-items-center p-4" style={{ borderBottom: '1px solid rgba(201, 148, 58, 0.2)' }}>
                     <h5 className="fw-bolder m-0" style={{ color: '#c9943a' }}>เขียนรีวิว</h5>
-                    <button onClick={onClose} className="btn rounded-circle p-2 d-flex align-items-center hover-scale" style={{ backgroundColor: 'rgba(201, 148, 58, 0.1)', color: '#e8b94a' }}>
+                    <button title="ปิด" onClick={onClose} className="btn rounded-circle p-2 d-flex align-items-center hover-scale" style={{ backgroundColor: 'rgba(201, 148, 58, 0.1)', color: '#e8b94a' }}>
                         <X size={20} />
                     </button>
                 </div>
@@ -80,7 +81,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                     <div className="text-center mb-4 pb-2">
                         <div className="d-flex justify-content-center gap-2 mb-2">
                             {[1, 2, 3, 4, 5].map((star) => (
-                                <button key={star} onClick={() => setRating(star)} onMouseEnter={() => setHoverRating(star)} onMouseLeave={() => setHoverRating(0)} className="btn p-0 border-0 transition-all hover-scale" type="button">
+                                <button title={`ให้ ${star} ดาว`} key={star} onClick={() => setRating(star)} onMouseEnter={() => setHoverRating(star)} onMouseLeave={() => setHoverRating(0)} className="btn p-0 border-0 transition-all hover-scale" type="button">
                                     <Star 
                                         size={48} 
                                         fill={star <= (hoverRating || rating) ? "#e8b94a" : "transparent"} 
@@ -116,15 +117,15 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                     {/* ปุ่มส่งรีวิว */}
                     <button 
                         onClick={handleSubmit} 
-                        disabled={rating === 0 || !comment.trim()} 
+                        disabled={isSubmitting || rating === 0 || !comment.trim()} 
                         className="btn w-100 rounded-pill py-3 fw-bold shadow-sm mb-3 transition-all hover-scale"
                         style={{ 
-                            backgroundColor: (rating === 0 || !comment.trim()) ? '#3d302a' : '#A73B24', 
-                            color: (rating === 0 || !comment.trim()) ? '#8a7b72' : '#fff5f0',
+                            backgroundColor: (isSubmitting || rating === 0 || !comment.trim()) ? '#3d302a' : '#A73B24', 
+                            color: (isSubmitting || rating === 0 || !comment.trim()) ? '#8a7b72' : '#fff5f0',
                             border: 'none'
                         }}
                     >
-                        ส่งรีวิว
+                        {isSubmitting ? "กำลังส่ง..." : "ส่งรีวิว"}
                     </button>
                 </div>
             </div>

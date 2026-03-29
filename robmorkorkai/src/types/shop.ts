@@ -1,7 +1,7 @@
 
 
 export interface Review {
-    id: number;
+    id: string;
     userId: string;
     userName?: string | null; 
     userImage?: string | null;
@@ -10,6 +10,7 @@ export interface Review {
     comment: string;
     verified: boolean;
     date: string;
+    createdAt?: string;
 }
 
 export interface Shop {
