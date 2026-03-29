@@ -12,6 +12,11 @@ export const getShops = async (req: Request, res: Response) => {
                 zone: zone ? { equals: String(zone) } : undefined,
                 type: type ? { equals: String(type) } : undefined,
             },
+            include: {
+                images: {
+                    orderBy: { order: 'asc' }
+                }
+            },
             // เรียงตามร้านที่มีรีวิวเยอะสุดขึ้นก่อน (เผื่ออนาคตเอาไว้จัดอันดับ)
             orderBy: { reviews: { _count: 'desc' } }, 
             take: 50, // จำกัดการดึงข้อมูลเพื่อไม่ให้แอปค้าง
@@ -36,6 +41,9 @@ export const getShopById = async (req: Request, res: Response) => {
                 reviews: {
                     include: { user: { select: { name: true, image: true } } },
                     orderBy: { createdAt: 'desc' } // รีวิวใหม่ล่าสุดขึ้นก่อน
+                },
+                images: {
+                    orderBy: { order: 'asc' }
                 }
             }
         });
