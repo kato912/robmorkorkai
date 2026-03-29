@@ -2,8 +2,5 @@
 docker compose up -d
 npx prisma generate
 npx prisma db push 
-npx prisma generate
-
-npx tsx src/scripts/seedShops.ts
-
+npx tsx src/scripts/seedShopsFromJSON.ts
 npm run dev

@@ -34,11 +34,11 @@ model User {
 // --- 2. Shop (รองรับ OpenStreetMap) ---
 model Shop {
   id            String   @id @default(uuid())
-  osmId         String   @unique  // ID จาก OpenStreetMap
   name          String
   type          String?  
   
   address       String?
+  googleMapsUrl String?   @db.VarChar(512)  // URL ของ Google Maps
   
   // พิกัดสำหรับแสดงบนแผนที่ Leaflet
   latitude      Float
@@ -46,11 +46,10 @@ model Shop {
   
   zone          String?
 
-  coverImage    String?
+  coverImage    String?   @db.VarChar(512)  // URL ของ Google Drive image
   openHours     String?
   
   reviews       Review[]
-  images        ShopImage[]
 
   ratingAvg     Float    @default(0)
   reviewCount   Int      @default(0)
@@ -109,19 +108,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-model ShopImage {
-  id        String   @id @default(uuid())
-  url       String   @db.Text
-  alt       String?  @db.Text
-  order     Int      @default(0)
-  
-  shopId    String
-  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 enum Role {

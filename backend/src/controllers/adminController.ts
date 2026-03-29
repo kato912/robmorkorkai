@@ -62,30 +62,21 @@ export const getShopsAdmin = async (req: Request, res: Response) => {
 // สร้างร้านค้าใหม่ (Admin only)
 export const createShopAdmin = async (req: Request, res: Response) => {
     try {
-        const { osmId, name, type, address, latitude, longitude, zone, coverImage, openHours } = req.body;
+        const { name, type, address, googleMapsUrl, latitude, longitude, zone, coverImage, openHours } = req.body;
 
         // ตรวจสอบข้อมูลที่จำเป็น
-        if (!osmId || !name || latitude === undefined || longitude === undefined) {
+        if (!name || latitude === undefined || longitude === undefined) {
             return res.status(400).json({ 
-                message: "Missing required fields: osmId, name, latitude, longitude" 
+                message: "Missing required fields: name, latitude, longitude" 
             });
-        }
-
-        // ตรวจสอบว่า osmId มีอยู่แล้วหรือไม่
-        const existingShop = await prisma.shop.findUnique({
-            where: { osmId }
-        });
-
-        if (existingShop) {
-            return res.status(409).json({ message: "Shop with this osmId already exists" });
         }
 
         const newShop = await prisma.shop.create({
             data: {
-                osmId,
                 name,
                 type: type || null,
                 address: address || null,
+                googleMapsUrl: googleMapsUrl || null,
                 latitude,
                 longitude,
                 zone: zone || null,
@@ -123,6 +114,7 @@ export const updateShopAdmin = async (req: Request, res: Response) => {
                 ...(name && { name }),
                 ...(type && { type }),
                 ...(address && { address }),
+                ...(googleMapsUrl && { googleMapsUrl }),
                 ...(latitude !== undefined && { latitude }),
                 ...(longitude !== undefined && { longitude }),
                 ...(zone && { zone }),
@@ -180,9 +172,6 @@ export const getShopByIdAdmin = async (req: Request, res: Response) => {
                     },
                     orderBy: { createdAt: 'desc' }
                 },
-                images: {
-                    orderBy: { order: 'asc' }
-                },
                 _count: {
                     select: { reviews: true }
                 }
@@ -196,152 +185,6 @@ export const getShopByIdAdmin = async (req: Request, res: Response) => {
         res.json(shop);
     } catch (error) {
         console.error("Error fetching shop details:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
-
-// ==================== SHOP IMAGES ====================
-
-// ดึงรูปภาพทั้งหมดของร้านค้า
-export const getShopImages = async (req: Request, res: Response) => {
-    try {
-        const { shopId } = req.params;
-
-        // ตรวจสอบว่าร้านค้ามีอยู่หรือไม่
-        const shop = await prisma.shop.findUnique({
-            where: { id: shopId }
-        });
-
-        if (!shop) {
-            return res.status(404).json({ message: "Shop not found" });
-        }
-
-        const images = await prisma.shopImage.findMany({
-            where: { shopId },
-            orderBy: { order: 'asc' }
-        });
-
-        res.json(images);
-    } catch (error) {
-        console.error("Error fetching shop images:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
-
-// เพิ่มรูปภาพให้ร้านค้า
-export const addShopImage = async (req: Request, res: Response) => {
-    try {
-        const { shopId } = req.params;
-        const { url, alt } = req.body;
-
-        // ตรวจสอบข้อมูลที่จำเป็น
-        if (!url) {
-            return res.status(400).json({ message: "Missing required field: url" });
-        }
-
-        // ตรวจสอบว่าร้านค้ามีอยู่หรือไม่
-        const shop = await prisma.shop.findUnique({
-            where: { id: shopId }
-        });
-
-        if (!shop) {
-            return res.status(404).json({ message: "Shop not found" });
-        }
-
-        // หาลำดับใหม่ (order อันถัดไป)
-        const lastImage = await prisma.shopImage.findFirst({
-            where: { shopId },
-            orderBy: { order: 'desc' }
-        });
-
-        const newOrder = (lastImage?.order ?? -1) + 1;
-
-        const newImage = await prisma.shopImage.create({
-            data: {
-                url,
-                alt: alt || null,
-                order: newOrder,
-                shopId
-            }
-        });
-
-        res.status(201).json(newImage);
-    } catch (error) {
-        console.error("Error adding shop image:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
-
-// อัพเดตรูปภาพ
-export const updateShopImage = async (req: Request, res: Response) => {
-    try {
-        const { shopId, imageId } = req.params;
-        const { url, alt, order } = req.body;
-
-        // ตรวจสอบว่าร้านค้ามีอยู่หรือไม่
-        const shop = await prisma.shop.findUnique({
-            where: { id: shopId }
-        });
-
-        if (!shop) {
-            return res.status(404).json({ message: "Shop not found" });
-        }
-
-        // ตรวจสอบว่ารูปมีอยู่หรือไม่
-        const image = await prisma.shopImage.findUnique({
-            where: { id: imageId }
-        });
-
-        if (!image || image.shopId !== shopId) {
-            return res.status(404).json({ message: "Image not found" });
-        }
-
-        const updatedImage = await prisma.shopImage.update({
-            where: { id: imageId },
-            data: {
-                ...(url && { url }),
-                ...(alt !== undefined && { alt }),
-                ...(order !== undefined && { order })
-            }
-        });
-
-        res.json(updatedImage);
-    } catch (error) {
-        console.error("Error updating shop image:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
-
-// ลบรูปภาพ
-export const deleteShopImage = async (req: Request, res: Response) => {
-    try {
-        const { shopId, imageId } = req.params;
-
-        // ตรวจสอบว่าร้านค้ามีอยู่หรือไม่
-        const shop = await prisma.shop.findUnique({
-            where: { id: shopId }
-        });
-
-        if (!shop) {
-            return res.status(404).json({ message: "Shop not found" });
-        }
-
-        // ตรวจสอบว่ารูปมีอยู่หรือไม่
-        const image = await prisma.shopImage.findUnique({
-            where: { id: imageId }
-        });
-
-        if (!image || image.shopId !== shopId) {
-            return res.status(404).json({ message: "Image not found" });
-        }
-
-        await prisma.shopImage.delete({
-            where: { id: imageId }
-        });
-
-        res.json({ message: "Image deleted successfully" });
-    } catch (error) {
-        console.error("Error deleting shop image:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
