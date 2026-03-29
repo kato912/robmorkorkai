@@ -7,6 +7,6 @@ const router = express.Router();
 router.get("/:shopId", getReviewsByShopId); // GET /api/reviews/:shopId (public)
 
 router.use(requireAuth);
-router.post("/", createReview); 
+router.post("/", createReview);
 
 export default router;

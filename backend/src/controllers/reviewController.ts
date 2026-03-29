@@ -109,7 +109,9 @@ export const getReviewsByShopId = async (req: Request, res: Response) => {
                         id: true,
                         name: true,
                         email: true,
-                        image: true
+                        image: true,
+                        isVerifiedStudent: true
+                        
                     }
                 }
             },
