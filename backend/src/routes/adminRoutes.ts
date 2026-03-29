@@ -1,0 +1,29 @@
+import express from "express";
+import { requireAuth, requireAdmin } from "../middleware/authMiddleware.js";
+import {
+    getDashboardStats,
+    getShopsAdmin,
+    createShopAdmin,
+    updateShopAdmin,
+    deleteShopAdmin,
+    getShopByIdAdmin,
+} from "../controllers/adminController.js";
+
+const router = express.Router();
+
+// ============ MIDDLEWARE ============
+// ทุก route ต้อง login (requireAuth) และเป็น admin (requireAdmin)
+router.use(requireAuth);
+router.use(requireAdmin);
+
+// ============ STATS ============
+router.get("/stats", getDashboardStats); // GET /api/admin/stats
+
+// ============ SHOPS CRUD ============
+router.get("/shops", getShopsAdmin); // GET /api/admin/shops
+router.get("/shops/:id", getShopByIdAdmin); // GET /api/admin/shops/:id
+router.post("/shops", createShopAdmin); // POST /api/admin/shops
+router.put("/shops/:id", updateShopAdmin); // PUT /api/admin/shops/:id
+router.delete("/shops/:id", deleteShopAdmin); // DELETE /api/admin/shops/:id
+
+export default router;

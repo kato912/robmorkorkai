@@ -21,13 +21,19 @@ export const  requireAuth = async (req: Request, res: Response, next: NextFuncti
 
 
 export async function requireAdmin(req: Request, res: Response, next: NextFunction) {
-    // เรียกใช้ requireAuth ก่อนเพื่อให้แน่ใจว่า Login แล้ว (หรือจะเรียกซ้อนกันใน Route ก็ได้)
-    const session = await getSession(req, authConfig);
+    try {
+        // เรียกใช้ requireAuth ก่อนเพื่อให้แน่ใจว่า Login แล้ว (หรือจะเรียกซ้อนกันใน Route ก็ได้)
+        const session = await getSession(req, authConfig);
 
-    if (!session || session.user?.role !== "ADMIN") {
-        res.status(403).json({ message: "Forbidden: Admins only" });
-        return;
+        if (!session || session.user?.role !== "ADMIN") {
+            res.status(403).json({ message: "Forbidden: Admins only" });
+            return;
+        }
+
+        res.locals.user = session.user;
+        next();
+    } catch (error) {
+        console.error("Admin Middleware Error:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
-
-    next();
 }

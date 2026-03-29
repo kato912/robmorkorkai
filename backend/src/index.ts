@@ -8,6 +8,7 @@ import { swaggerSpec } from './utils/swagger.js';
 import swaggerUi from "swagger-ui-express"
 import shopRoutes from "./routes/shopRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 // ...
 const app: Express = express();
@@ -27,6 +28,7 @@ app.use("/api/user", userRoutes);
 
 app.use("/api/shops", shopRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/api" , (req:Request , res:Response) => {
     res.send('api is running');
