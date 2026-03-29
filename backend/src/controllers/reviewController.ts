@@ -1,6 +1,42 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma.js";
 
+export const getReviewsByShop = async (req: Request, res: Response) => {
+    try {
+        const { shopId } = req.params;
+
+        if (!shopId) {
+            return res.status(400).json({ message: "Missing shopId" });
+        }
+
+        const reviews = await prisma.review.findMany({
+            where: {
+                shopId,
+                isFlagged: false
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        image: true,
+                        email: true,
+                        isVerifiedStudent: true
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: "desc"
+            }
+        });
+
+        res.status(200).json({ reviews });
+    } catch (error) {
+        console.error("Error fetching reviews:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
 export const createReview = async (req: Request, res: Response) => {
     try {
         const userId = res.locals.user?.id;
@@ -9,11 +45,12 @@ export const createReview = async (req: Request, res: Response) => {
         }
 
         const { shopId, rating, comment } = req.body;
+        const numericRating = Number(rating);
 
         if (!shopId || !rating || !comment) {
             return res.status(400).json({ message: "Missing required fields (shopId, rating, comment)" });
         }
-        if (rating < 1 || rating > 5) {
+        if (!Number.isFinite(numericRating) || numericRating < 1 || numericRating > 5) {
             return res.status(400).json({ message: "Rating must be between 1 and 5" });
         }
 
@@ -31,14 +68,14 @@ export const createReview = async (req: Request, res: Response) => {
             // 2A. ถ้าเคยรีวิวแล้ว -> ให้ "อัปเดต" รีวิวเดิม (ห้ามสร้างใหม่)
             review = await prisma.review.update({
                 where: { id: existingReview.id },
-                data: { rating: Number(rating), comment: comment }
+                data: { rating: numericRating, comment: comment }
             });
             console.log("🔄 Updated existing review for shop:", shopId);
         } else {
             // 2B. ถ้ายังไม่เคย -> "สร้าง" รีวิวใหม่ได้เลย
             review = await prisma.review.create({
                 data: {
-                    rating: Number(rating),
+                    rating: numericRating,
                     comment: comment,
                     userId: userId,
                     shopId: shopId,
@@ -74,7 +111,17 @@ export const createReview = async (req: Request, res: Response) => {
         // ดึงข้อมูลรีวิวล่าสุดพร้อมหน้าตาคนรีวิวส่งกลับไปให้ Frontend
         const finalReview = await prisma.review.findUnique({
             where: { id: review.id },
-            include: { user: { select: { name: true, image: true } } }
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        image: true,
+                        email: true,
+                        isVerifiedStudent: true
+                    }
+                }
+            }
         });
 
         res.status(200).json({
