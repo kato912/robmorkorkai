@@ -9,7 +9,7 @@ const RADIUS = 2000;
 
 const ZONES = [
     {
-        name: "langmo",
+        name: "หลังมอ",
         polygon: [
             [102.818401717553, 16.4798121813824],
             [102.81892278833368, 16.48028554770208],
@@ -126,7 +126,7 @@ try {
         );
 
         if (!response.data || !response.data.elements) {
-            console.error("❌ API ไม่ได้ส่งข้อมูลร้านกลับมา! ลองดูข้อมูลดิบที่ได้มาด้านล่างครับ:");
+            console.error("❌ API You haven't sent back the store information! Please check the raw data received below:");
             console.log(response.data); // ปริ้นต์ดูว่ามันคือ HTML Error หรือเปล่า
             return; // หยุดการทำงานของฟังก์ชัน
         }
