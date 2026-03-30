@@ -9,12 +9,12 @@ interface ShopSidebarProps {
     reviewsCount: number;
     isLoggedIn: boolean;
     isFavorited: boolean;
-    setIsFavorited: (val: boolean) => void;
+    onToggleFavorite: () => void;
     onOpenReviewModal: () => void;
 }
 
 export const ShopSidebar: React.FC<ShopSidebarProps> = ({
-    shop, averageRating, reviewsCount, isLoggedIn, isFavorited, setIsFavorited, onOpenReviewModal
+    shop, averageRating, reviewsCount, isLoggedIn, isFavorited, onToggleFavorite, onOpenReviewModal
 }) => {
     const handleOpenGoogleMaps = () => {
         if (shop.latitude && shop.longitude) {
@@ -79,7 +79,7 @@ export const ShopSidebar: React.FC<ShopSidebarProps> = ({
                         </button>
                         <div className="d-flex gap-2">
                             <button 
-                                onClick={() => setIsFavorited(!isFavorited)} 
+                                onClick={onToggleFavorite} 
                                 className="btn flex-grow-1 rounded-pill py-3 fw-medium d-flex justify-content-center align-items-center gap-2 transition-all hover-scale"
                                 style={{ 
                                     backgroundColor: isFavorited ? 'rgba(167, 59, 36, 0.15)' : '#2d2320', 

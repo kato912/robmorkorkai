@@ -4,6 +4,7 @@ import { Loader2, AlertCircle, MapPin, ArrowUpRight } from "lucide-react"; // �
 import { useAuth } from "../../context/AuthContext";
 import { useShopReviews } from "../../hooks/useShopReviews";
 import { AlertUtils } from "../../utils/alertUtils";
+import api from "../../services/api";
 import type { Shop } from "../../types/shop";
 
 import { ShopHero } from "../shop/ShopHero";
@@ -23,6 +24,7 @@ export const ShopDetailPage: React.FC = () => {
 
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [isFavorited, setIsFavorited] = useState(false);
+    const [isFavoritesLoading, setIsFavoritesLoading] = useState(false);
 
     const {
         reviews,
@@ -35,15 +37,14 @@ export const ShopDetailPage: React.FC = () => {
         submitReview
     } = useShopReviews(id);
 
+    // ดึงข้อมูลร้านจาก API
     useEffect(() => {
         const fetchShopData = async () => {
             if (!id) return;
             setIsLoading(true); setError(null);
             try {
-                const response = await fetch(`/api/shops/${id}`);
-                if (!response.ok) throw new Error("ไม่พบข้อมูลร้านค้า หรือเกิดข้อผิดพลาด");
-                const data = await response.json();
-                setShop(data); 
+                const response = await api.get(`/api/shops/${id}`);
+                setShop(response.data); 
             } catch (err: any) {
                 setError(err.message || "Something went wrong");
             } finally {
@@ -53,6 +54,63 @@ export const ShopDetailPage: React.FC = () => {
         fetchShopData();
         window.scrollTo(0, 0);
     }, [id]);
+
+    // ตรวจสอบว่าร้านนี้เป็น favorite ของ user หรือไม่
+    useEffect(() => {
+        if (!isLoggedIn || !id) {
+            setIsFavorited(false);
+            return;
+        }
+
+        const checkFavoriteStatus = async () => {
+            try {
+                setIsFavoritesLoading(true);
+                const response = await api.get("/api/user/favorites");
+                const favoriteShops = response.data;
+                const isFav = favoriteShops.some((fav: any) => fav.id === id);
+                setIsFavorited(isFav);
+            } catch (error) {
+                console.error("Error checking favorite status:", error);
+                setIsFavorited(false);
+            } finally {
+                setIsFavoritesLoading(false);
+            }
+        };
+
+        checkFavoriteStatus();
+    }, [isLoggedIn, id]);
+
+    // จัดการการเพิ่ม/ลบ favorite
+    const handleToggleFavorite = async () => {
+        if (!isLoggedIn) {
+            AlertUtils.error("กรุณาเข้าสู่ระบบเพื่อบันทึกร้านโปรด");
+            navigate("/login");
+            return;
+        }
+
+        if (!id) return;
+
+        try {
+            setIsFavoritesLoading(true);
+
+            if (isFavorited) {
+                // ลบออกจาก favorites
+                await api.delete(`/api/user/favorites/${id}`);
+                setIsFavorited(false);
+                AlertUtils.success("ลบออกจากร้านโปรดเรียบร้อยแล้ว");
+            } else {
+                // เพิ่มเข้า favorites
+                await api.post(`/api/user/favorites/${id}`);
+                setIsFavorited(true);
+                AlertUtils.success("เพิ่มเข้าร้านโปรดเรียบร้อยแล้ว");
+            }
+        } catch (error) {
+            console.error("Error toggling favorite:", error);
+            AlertUtils.error("เกิดข้อผิดพลาดในการบันทึกร้านโปรด");
+        } finally {
+            setIsFavoritesLoading(false);
+        }
+    };
 
     const handleOpenReviewModal = () => {
         if (!isLoggedIn) { AlertUtils.error("กรุณาเข้าสู่ระบบเพื่อเขียนรีวิว"); navigate("/login"); return; }
@@ -92,7 +150,7 @@ export const ShopDetailPage: React.FC = () => {
                 }
             .hero-gradient { background: linear-gradient(to top, #1a1412 0%, rgba(26, 20, 18, 0.6) 50%, rgba(26, 20, 18, 0.2) 100%); } .hero-badge { background: rgba(35, 28, 24, 0.6); backdrop-filter: blur(8px); border: 1px solid rgba(201, 148, 58, 0.3); color: #e8b94a; padding: 6px 16px; font-size: 0.8rem; } .hero-badge-green { background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 6px 16px; font-size: 0.8rem; border: 1px solid rgba(16, 185, 129, 0.3); } .gallery-thumb { transition: all 0.3s ease; border: 2px solid transparent; } .gallery-thumb:hover { opacity: 1 !important; transform: scale(1.05); border-color: #A73B24; } .hover-scale { transition: transform 0.2s; } .hover-scale:hover { transform: scale(1.05); }`}</style>
 
-            <ShopHero shop={shop} averageRating={averageRating} reviewsCount={totalCount} isLoggedIn={isLoggedIn} user={user} isFavorited={isFavorited} setIsFavorited={setIsFavorited} />
+            <ShopHero shop={shop} averageRating={averageRating} reviewsCount={totalCount} isLoggedIn={isLoggedIn} user={user} isFavorited={isFavorited} onToggleFavorite={handleToggleFavorite} />
 
 
 <main className="container py-0 py-lg-5 animate-fade-up" style={{ maxWidth: '1100px' }}>                <div className="row g-5">

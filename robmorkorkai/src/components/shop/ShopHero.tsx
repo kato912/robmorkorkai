@@ -10,11 +10,11 @@ interface ShopHeroProps {
     isLoggedIn: boolean;
     user: any;
     isFavorited: boolean;
-    setIsFavorited: (val: boolean) => void;
+    onToggleFavorite: () => void;
 }
 
 export const ShopHero: React.FC<ShopHeroProps> = ({
-    shop, averageRating, reviewsCount, isLoggedIn, user, isFavorited, setIsFavorited
+    shop, averageRating, reviewsCount, isLoggedIn, user, isFavorited, onToggleFavorite
 }) => {
     const navigate = useNavigate();
 
@@ -49,7 +49,7 @@ export const ShopHero: React.FC<ShopHeroProps> = ({
 
                 {/* Mobile Actions */}
                 <div className="d-lg-none d-flex gap-2">
-                    <button onClick={() => setIsFavorited(!isFavorited)} className="btn rounded-circle p-2 d-flex align-items-center justify-content-center text-white" style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }} title={isFavorited ? "Remove from favorites" : "Add to favorites"} aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}>
+                    <button onClick={onToggleFavorite} className="btn rounded-circle p-2 d-flex align-items-center justify-content-center text-white" style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }} title={isFavorited ? "Remove from favorites" : "Add to favorites"} aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}>
                         <Heart size={20} className={isFavorited ? "fill-danger text-danger" : ""} />
                     </button>
                     <button className="btn rounded-circle p-2 d-flex align-items-center justify-content-center text-white" style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }} title="Share" aria-label="Share"><Share2 size={20} /></button>

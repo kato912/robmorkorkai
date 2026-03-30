@@ -79,7 +79,7 @@ export const MyStoreList: React.FC<Props> = ({ reviews, favorites }) => {
                             <Link to={`/shop/${shop.id}`} className="text-decoration-none">
                                 <div className="card rounded-4 overflow-hidden h-100 hover-shadow transition-all group" style={{ backgroundColor: '#231c18', border: '1px solid #3d302a' }}>
                                     <div className="position-relative" style={{ height: '160px' }}>
-                                        <img src={shop.image} alt={shop.name} className="w-100 h-100 object-fit-cover transition-transform group-hover-scale" />
+                                        <img src={shop.image} alt={shop.shopName} className="w-100 h-100 object-fit-cover transition-transform group-hover-scale" />
                                         <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: 'linear-gradient(to top, rgba(26,20,18,0.8), transparent)' }}></div>
                                         <div className="position-absolute top-0 end-0 m-3"><Heart size={20} className="fill-danger" style={{ color: '#A73B24' }} /></div>
                                         <div className="position-absolute bottom-0 start-0 m-3">
@@ -87,7 +87,7 @@ export const MyStoreList: React.FC<Props> = ({ reviews, favorites }) => {
                                         </div>
                                     </div>
                                     <div className="card-body p-4" style={{ backgroundColor: '#231c18' }}>
-                                        <h6 className="fw-bold mb-2 text-truncate" style={{ fontSize: '1rem', color: '#f5ebe4' }}>{shop.name}</h6>
+                                        <h6 className="fw-bold mb-2 text-truncate" style={{ fontSize: '1rem', color: '#f5ebe4' }}>{shop.shopName}</h6>
                                         <div className="d-flex align-items-center gap-2" style={{ fontSize: '0.75rem', color: '#9a8a7e' }}>
                                             <span className="d-flex align-items-center gap-1"><MapPin size={12} /> {shop.zone}</span> • <span>{shop.category}</span> • <span>{shop.reviews} รีวิว</span>
                                         </div>
