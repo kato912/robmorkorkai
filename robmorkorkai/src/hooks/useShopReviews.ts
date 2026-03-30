@@ -71,14 +71,14 @@ export const useShopReviews = (shopId?: string) => {
             setError(null);
 
             try {
-                const response = await fetch(`/api/reviews/shop/${shopId}`);
+                const response = await fetch(`/api/reviews/${shopId}`);
                 if (!response.ok) {
                     throw new Error("โหลดรีวิวไม่สำเร็จ");
                 }
 
                 const data = await response.json();
-                const mapped = Array.isArray(data.reviews)
-                    ? data.reviews.map((review: BackendReview) => mapBackendReview(review))
+                const mapped = Array.isArray(data)
+                    ? data.map((review: BackendReview) => mapBackendReview(review))
                     : [];
 
                 setAllReviews(mapped);

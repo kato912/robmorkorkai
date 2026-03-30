@@ -14,6 +14,7 @@ export interface Review {
 }
 
 export interface Shop {
+    coverImage: string;
     type: string;
     id: string; // id
     name: string; // ชื่อร้าน

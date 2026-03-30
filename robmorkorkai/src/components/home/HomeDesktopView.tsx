@@ -132,7 +132,7 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
                                                     <MapPin size={18} style={{ color: selectedZone === z.id ? '#fff5f0' : '#f5ebe4' }} />
                                                     {z.label.replace('📍', '').trim()}
                                                 </div>
-                                                <span style={{ fontSize: '12px', fontWeight: 'bold', color: selectedZone === z.id ? '#fff5f0' : '#f5ebe4' }}>{z.count || '0'}</span>
+                                                <span style={{ fontSize: '12px', fontWeight: 'bold', color: selectedZone === z.id ? '#fff5f0' : '#f5ebe4' }}>{ z.count || 0}</span>
                                             </button>
                                         ))}
                                     </div>

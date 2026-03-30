@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
+import api from "../../services/api";
 import { ShopDetailModal, EditShopModal, theme } from "../admin/AdminComponents";
 import { AdminDesktop } from "../admin/AdminDesktop";
 import { AdminMobile } from "../admin/AdminMobile";
@@ -21,17 +22,30 @@ export const AdminPage: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
 
+    useEffect(() => {
+        // ตรวจสอบ user info
+        const userStr = localStorage.getItem('user');
+        const user = userStr ? JSON.parse(userStr) : null;
+        console.log("📋 Current user:", user);
+        console.log("📋 User role:", user?.role);
+    }, []);
+
     // ดึงข้อมูลร้านค้า (GET)
     // ==========================================
     const fetchShops = async () => {
         try {
             setIsLoading(true);
-            const res = await fetch("http://localhost:3000/api/shops");
-            const data = await res.json();
-            setShops(data);
-        } catch (err) {
-            console.error("Fetch Error:", err);
+            console.log("🔄 ดึงข้อมูลร้านค้า...");
+            const res = await api.get("/api/admin/shops");
+            const data = res.data || [];
+            console.log("✅ ดึงร้านค้าได้:", Array.isArray(data) ? data.length : 0, "ร้าน");
+            setShops(Array.isArray(data) ? data : []);
+        } catch (err: any) {
+            console.error("❌ Fetch Error:", err.message);
+            console.error("❌ Status:", err.response?.status);
+            console.error("❌ Data:", err.response?.data);
             alert("ไม่สามารถดึงข้อมูลร้านค้าได้");
+            setShops([]);
         } finally {
             setIsLoading(false);
         }
@@ -46,18 +60,10 @@ export const AdminPage: React.FC = () => {
         if (!window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบร้านค้านี้?")) return;
 
         try {
-            const res = await fetch(`http://localhost:3000/api/shops/${id}`, {
-                method: "DELETE",
-            });
-
-            if (res.ok) {
-                // อัปเดต State ลบร้านนั้นออก โดยไม่ต้อง fetch ใหม่
-                setShops(prevShops => prevShops.filter(shop => shop.id !== id));
-                setSelectedShop(null);
-                alert("ลบร้านค้าเรียบร้อยแล้ว");
-            } else {
-                throw new Error("ลบไม่สำเร็จ");
-            }
+            await api.delete(`/api/admin/shops/${id}`);
+            setShops(prevShops => prevShops.filter(shop => shop.id !== id));
+            setSelectedShop(null);
+            alert("ลบร้านค้าเรียบร้อยแล้ว");
         } catch (err) {
             console.error("Delete Error:", err);
             alert("เกิดข้อผิดพลาดในการลบร้านค้า");
@@ -67,26 +73,36 @@ export const AdminPage: React.FC = () => {
     // แก้ไขข้อมูลร้านค้า (PUT)
     const handleSaveEdit = async (updatedShop: Shop) => {
         try {
-            const res = await fetch(`http://localhost:3000/api/shops/${updatedShop.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updatedShop)
-            });
+            const payload = {
+                name: updatedShop.name,
+                type: updatedShop.category,
+                zone: updatedShop.zone,
+                coverImage: updatedShop.coverImage,
+                openHours: updatedShop.openHours,
+            };
 
-            if (res.ok) {
-                const savedShop = await res.json();
-                // อัปเดตข้อมูลร้านใน State ให้เป็นข้อมูลใหม่
-                setShops(prevShops => prevShops.map(shop =>
-                    shop.id === savedShop.id ? savedShop : shop
-                ));
-                setEditingShop(null);
-                alert("บันทึกการแก้ไขเรียบร้อยแล้ว");
-            } else {
-                throw new Error("บันทึกไม่สำเร็จ");
-            }
-        } catch (err) {
+            const res = await api.put(`/api/admin/shops/${updatedShop.id}`, payload);
+            const savedShop = res.data;
+
+            const normalizedShop = {
+                ...updatedShop,
+                ...savedShop,
+                category: savedShop.type || updatedShop.category,
+            };
+
+            setShops(prevShops => prevShops.map(shop =>
+                shop.id === normalizedShop.id ? normalizedShop : shop
+            ));
+
+            setEditingShop(null);
+            alert("บันทึกการแก้ไขเรียบร้อยแล้ว");
+
+            // รีเฟตช์
+            setTimeout(() => fetchShops(), 500);
+
+        } catch (err: any) {
             console.error("Update Error:", err);
-            alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+            alert(err.response?.data?.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล");
         }
     };
 

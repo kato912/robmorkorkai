@@ -8,10 +8,11 @@ export const ShopCard: React.FC<{ shop: Shop }> = ({ shop }) => (
         <div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden" style={{ background: '#231c18'}}>
             <div className="position-relative" style={{ height: "180px" }}>
                 <img
-                    src={shop.image || "https://images.unsplash.com/photo-1554118811-1e0d58224f24"}
+                    src={shop.coverImage || shop.image || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect fill='%23e5e7eb' width='180' height='180'/%3E%3C/svg%3E"}
                     loading="lazy"
                     alt={shop.name}
-                    className="w-100 h-100 object-fit-cover" />
+                    className="w-100 h-100 object-fit-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect fill='%23e5e7eb' width='180' height='180'/%3E%3C/svg%3E"; }} />
             </div>
 
             <div className="card-body">

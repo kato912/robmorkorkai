@@ -23,6 +23,7 @@ model User {
   role              Role      @default(USER)
   
   reviews           Review[]
+  favorites         Favorite[]
   accounts          Account[] // [เพิ่ม] เชื่อมกับตาราง Account
   sessions          Session[] // [เพิ่ม] เชื่อมกับตาราง Session
 
@@ -34,11 +35,11 @@ model User {
 // --- 2. Shop (รองรับ OpenStreetMap) ---
 model Shop {
   id            String   @id @default(uuid())
-  osmId         String   @unique  // ID จาก OpenStreetMap
   name          String
   type          String?  
   
   address       String?
+  googleMapsUrl String?   @db.VarChar(512)  // URL ของ Google Maps
   
   // พิกัดสำหรับแสดงบนแผนที่ Leaflet
   latitude      Float
@@ -46,11 +47,11 @@ model Shop {
   
   zone          String?
 
-  coverImage    String?
+  coverImage    String?   @db.VarChar(512)  // URL ของ Google Drive image
   openHours     String?
   
   reviews       Review[]
-  images        ShopImage[]
+  favorites     Favorite[]
 
   ratingAvg     Float    @default(0)
   reviewCount   Int      @default(0)
@@ -111,17 +112,17 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model ShopImage {
+model Favorite {
   id        String   @id @default(uuid())
-  url       String   @db.Text
-  alt       String?  @db.Text
-  order     Int      @default(0)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   shopId    String
   shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
-
+  
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  @@unique([userId, shopId])
 }
 
 enum Role {
