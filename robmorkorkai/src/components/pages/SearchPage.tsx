@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Search, Star, ArrowUpAz } from "lucide-react";
+import { Search, Star, ArrowUpAz, Loader2 } from "lucide-react";
 
 // Components
 import { TopNavbar } from "../layout/TopNavbar";
@@ -9,8 +9,26 @@ import { SearchShopCard } from "../search/SearchShopCard";
 import { SearchFilterSidebar } from "../search/SearchFilterSidebar";
 import { MobileSearchHeader } from "../search/MobileSearchHeader"; 
 
-// Data
-import { MOCK_SHOPS } from "../../data/mockDatat";
+// Types & Constants
+import type { Shop } from "../../types/shop";
+import { ZONES as zones, CATEGORIES } from "../../utils/constants";
+
+// Helper Functions
+const cleanText = (text: string): string => {
+    if (!text) return "";
+    return text
+        .normalize("NFD")
+        .replace(/[\u0E31\u0E33\u0E34-\u0E3A\u0E47-\u0E4E]/g, "")
+        .toLowerCase()
+        .trim();
+};
+
+const ZONE_ID_MAP: Record<string, string[]> = {
+    "lang-mor": ["หลังมอ"],
+    "nai-mor": ["ในมอ"],
+    "muang": ["เมือง"],
+    "khlong-san": ["คลองซัน"],
+};
 
 type SortOption = "rating" | "reviews" | "name";
 
@@ -18,44 +36,122 @@ export const SearchPage: React.FC = () => {
     const location = useLocation();
     const startQuery = location.state?.startQuery || "";
     const [searchQuery, setSearchQuery] = useState(startQuery);
-    const [selectedZone, setSelectedZone] = useState("all");
-    const [selectedCategory, setSelectedCategory] = useState("all");
+    const [selectedZone, setSelectedZone] = useState<string | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
     const [sortBy, setSortBy] = useState<SortOption>("rating");
+    const [shops, setShops] = useState<Shop[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // ดึงข้อมูลร้านจาก API
+    useEffect(() => {
+        const fetchShops = async () => {
+            try {
+                setIsLoading(true);
+                const response = await fetch("http://localhost:3000/api/shops?limit=1000");
+                if (!response.ok) throw new Error("Failed to fetch shops");
+                const data = await response.json();
+                setShops(data);
+            } catch (error) {
+                console.error("Error fetching shops:", error);
+                setShops([]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchShops();
+    }, []);
+
+    // คำนวณจำนวนร้านต่อโซน
+    const zonesWithCount = useMemo(() => {
+        return zones.map(z => {
+            const count = shops.filter(shop => {
+                const shopZone = shop.zone || "";
+                const zoneId = z.id;
+                const zoneLabel = z.label.replace('📍', '').trim();
+
+                // Logic 1: ตรวจสอบ ID ตรง
+                if (cleanText(shopZone) === cleanText(zoneId)) return true;
+
+                // Logic 2: ตรวจสอบ Label ตรง
+                if (cleanText(shopZone) === cleanText(zoneLabel)) return true;
+
+                // Logic 3: ตรวจสอบ Manual Map
+                const mappedLabels = ZONE_ID_MAP[zoneId] || [];
+                if (mappedLabels.some(label => cleanText(shopZone) === cleanText(label))) {
+                    return true;
+                }
+
+                // Logic 4: เทียบ cleanText
+                const cleanShopZone = cleanText(shopZone);
+                const cleanZoneId = cleanText(zoneId);
+                const cleanZoneLabel = cleanText(zoneLabel);
+
+                return cleanShopZone === cleanZoneId ||
+                    cleanShopZone === cleanZoneLabel ||
+                    cleanShopZone.includes(cleanZoneId) ||
+                    cleanZoneId.includes(cleanShopZone);
+            }).length;
+            return { ...z, count };
+        });
+    }, [shops]);
 
     const filteredShops = useMemo(() => {
-        let results = MOCK_SHOPS.filter((shop) => {
-            const matchesZone = selectedZone === "all" || shop.zoneId === selectedZone;
-            const matchesCategory = selectedCategory === "all" || shop.category === selectedCategory;
-            const matchesFacilities = selectedFacilities.length === 0 ||
-                selectedFacilities.every(f => shop.facilities.includes(f));
-            const matchesSearch = searchQuery.trim() === "" ||
-                shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                shop.categoryLabel.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                shop.zone.toLowerCase().includes(searchQuery.toLowerCase());
+        let results = shops.filter((shop) => {
+            // ค้นหาตามคำค้น (ชื่อร้าน, หมวดหมู่, โซน, คำอธิบาย)
+            const query = searchQuery.trim().toLowerCase();
+            const matchesSearch = !query ||
+                shop.name?.toLowerCase().includes(query) ||
+                shop.category?.toLowerCase().includes(query) ||
+                shop.zone?.toLowerCase().includes(query) ||
+                (shop.description && shop.description.toLowerCase().includes(query));
 
-            return matchesZone && matchesCategory && matchesFacilities && matchesSearch;
+            // กรองตามโซน
+            const matchesZone = selectedZone === null || 
+                shop.zone?.toLowerCase().includes(selectedZone.toLowerCase());
+
+            // กรองตามหมวดหมู่ (ใช้ shop.type เหมือน useShops)
+            let matchesCategory = true;
+            if (selectedCategory && selectedCategory !== null) {
+                const dbType = (shop.type || shop.category || "").toLowerCase();
+                const uiCategory = selectedCategory.toLowerCase();
+                matchesCategory = dbType.includes(uiCategory);
+            }
+
+            return matchesSearch && matchesZone && matchesCategory;
         });
 
+        // เรียงลำดับ
         results.sort((a, b) => {
             switch (sortBy) {
-                case "rating": return b.rating - a.rating;
-                case "reviews": return b.reviewCount - a.reviewCount;
-                case "name": return a.name.localeCompare(b.name);
+                case "rating": return (b.ratingAvg || 0) - (a.ratingAvg || 0);
+                case "reviews": return (b.reviewCount || 0) - (a.reviewCount || 0);
+                case "name": return a.name.localeCompare(b.name, 'th');
                 default: return 0;
             }
         });
 
         return results;
-    }, [searchQuery, selectedZone, selectedCategory, selectedFacilities, sortBy]);
+    }, [shops, searchQuery, selectedZone, selectedCategory, sortBy]);
+
+    // คำนวณจำนวนร้านต่อหมวดหมู่ (optional - สำหรับอิสระในอนาคต)
+    const categoriesWithCount = useMemo(() => {
+        return CATEGORIES.map(cat => {
+            const count = shops.filter(shop => {
+                const dbType = (shop.type || shop.category || "").toLowerCase();
+                return dbType.includes(cat.id.toLowerCase());
+            }).length;
+            return { ...cat, count };
+        });
+    }, [shops]);
 
     const toggleFacility = (id: string) => {
         setSelectedFacilities(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
     };
 
     const clearFilters = () => {
-        setSelectedZone("all");
-        setSelectedCategory("all");
+        setSelectedZone(null);
+        setSelectedCategory(null);
         setSelectedFacilities([]);
         setSearchQuery("");
     };
@@ -76,6 +172,17 @@ export const SearchPage: React.FC = () => {
 
     return (
         <div className="min-vh-100 pb-5" style={{ backgroundColor: '#1a1412' }}>
+            <style>{`
+                @keyframes spin {
+                    100% { transform: rotate(360deg); }
+                }
+                .animate-spin {
+                    animation: spin 1s linear infinite;
+                }
+                .min-vh-75 {
+                    min-height: 75vh;
+                }
+            `}</style>
 
             <div className="d-none d-lg-block">
                 <TopNavbar
@@ -96,6 +203,13 @@ export const SearchPage: React.FC = () => {
                 clearFilters={clearFilters}
             />
 
+            {/* Loading State */}
+            {isLoading ? (
+                <div className="d-flex flex-column align-items-center justify-content-center min-vh-75">
+                    <Loader2 size={48} className="text-warning mb-3 animate-spin" />
+                    <h5 className="text-muted">กำลังโหลดข้อมูล...</h5>
+                </div>
+            ) : (
             <div className="container py-4">
                 <div className="row g-4">
                     <div className="col-lg-3 d-none d-lg-block">
@@ -104,6 +218,8 @@ export const SearchPage: React.FC = () => {
                             selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
                             selectedFacilities={selectedFacilities} toggleFacility={toggleFacility}
                             clearFilters={clearFilters}
+                            zonesWithCount={zonesWithCount}
+                            categoriesWithCount={categoriesWithCount}
                         />
                     </div>
 
@@ -143,6 +259,7 @@ export const SearchPage: React.FC = () => {
                     </div>
                 </div>
             </div>
+            )}
 
             <div className="d-lg-none"><BottomNav activePage="search" /></div>
         </div>

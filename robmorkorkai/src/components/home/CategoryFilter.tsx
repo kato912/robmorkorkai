@@ -12,8 +12,6 @@ interface Props {
     setSelectedCategory: (id: string | null) => void;
 }
 
-const KKU_RED = "#8B0000";
-
 export const CategoryFilter: React.FC<Props> = ({ categories, selectedCategory, setSelectedCategory }) => {
     return (
         <div className="d-flex gap-2 overflow-auto pb-3 px-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>

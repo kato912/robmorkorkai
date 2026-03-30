@@ -5,9 +5,6 @@ import type { Shop } from "../../types/shop";
 
 interface ShopHeroProps {
     shop: Shop;
-    displayImages: string[];
-    activeImageIndex: number;
-    setActiveImageIndex: (idx: number) => void;
     averageRating: string | number;
     reviewsCount: number;
     isLoggedIn: boolean;
@@ -17,19 +14,18 @@ interface ShopHeroProps {
 }
 
 export const ShopHero: React.FC<ShopHeroProps> = ({
-    shop, displayImages, activeImageIndex, setActiveImageIndex,
-    averageRating, reviewsCount, isLoggedIn, user, isFavorited, setIsFavorited
+    shop, averageRating, reviewsCount, isLoggedIn, user, isFavorited, setIsFavorited
 }) => {
     const navigate = useNavigate();
 
     return (
         <section className="position-relative overflow-hidden w-100 bg-dark" style={{ height: '75vh', minHeight: '550px' }}>
-            <img src={displayImages[activeImageIndex]} alt={shop.name} className="w-100 h-100 object-fit-cover transition-all" style={{ transitionDuration: '700ms', opacity: 0.9 }} />
+            <img src={shop.coverImage || shop.image || "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80"} alt={shop.name} className="w-100 h-100 object-fit-cover" style={{ opacity: 0.9 }} />
             <div className="position-absolute top-0 start-0 w-100 h-100 hero-gradient"></div>
 
             {/* Top Navigation */}
             <div className="position-absolute top-0 start-0 w-100 pt-4 px-4 px-lg-5 d-flex justify-content-between align-items-center" style={{ zIndex: 1020 }}>
-                <button onClick={() => navigate(-1)} className="btn btn-link text-white text-decoration-none d-flex align-items-center gap-3 p-0 opacity-75 hover-opacity-100 transition-all">
+                <button onClick={() => navigate(-1)} className="btn btn-link text-white text-decoration-none d-flex align-items-center gap-3 p-0 opacity-75 hover-opacity-100 transition-all" title="Go back" aria-label="Go back">
                     <div className="rounded-circle p-2 d-flex align-items-center justify-content-center" style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }}>
                         <ChevronLeft size={20} />
                     </div>
@@ -53,10 +49,10 @@ export const ShopHero: React.FC<ShopHeroProps> = ({
 
                 {/* Mobile Actions */}
                 <div className="d-lg-none d-flex gap-2">
-                    <button onClick={() => setIsFavorited(!isFavorited)} className="btn rounded-circle p-2 d-flex align-items-center justify-content-center text-white" style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }}>
+                    <button onClick={() => setIsFavorited(!isFavorited)} className="btn rounded-circle p-2 d-flex align-items-center justify-content-center text-white" style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }} title={isFavorited ? "Remove from favorites" : "Add to favorites"} aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}>
                         <Heart size={20} className={isFavorited ? "fill-danger text-danger" : ""} />
                     </button>
-                    <button className="btn rounded-circle p-2 d-flex align-items-center justify-content-center text-white" style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }}><Share2 size={20} /></button>
+                    <button className="btn rounded-circle p-2 d-flex align-items-center justify-content-center text-white" style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }} title="Share" aria-label="Share"><Share2 size={20} /></button>
                 </div>
             </div>
 
@@ -81,13 +77,6 @@ export const ShopHero: React.FC<ShopHeroProps> = ({
                     <div className="d-none d-sm-block" style={{ width: '1px', height: '20px', backgroundColor: 'rgba(255,255,255,0.3)' }}></div>
                     <div className="d-none d-sm-flex align-items-center gap-2 text-white opacity-75"><Clock size={18} /> <span>{shop.openHours}</span></div>
                 </div>
-            </div>
-
-            {/* Slider Dots */}
-            <div className="position-absolute bottom-0 end-0 m-4 m-lg-5 d-flex gap-2" style={{ zIndex: 1010 }}>
-                {displayImages.map((_, idx) => (
-                    <button key={idx} onClick={() => setActiveImageIndex(idx)} className="btn p-0 rounded-pill transition-all" style={{ width: activeImageIndex === idx ? '32px' : '8px', height: '8px', backgroundColor: activeImageIndex === idx ? 'white' : 'rgba(255,255,255,0.4)' }}></button>
-                ))}
             </div>
         </section>
     );

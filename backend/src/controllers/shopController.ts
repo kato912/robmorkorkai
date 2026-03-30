@@ -4,7 +4,8 @@ import { prisma } from "../utils/prisma.js";
 // 1. ดึงรายการร้านค้าทั้งหมด (รองรับการค้นหาและกรองโซน)
 export const getShops = async (req: Request, res: Response) => {
     try {
-        const { search, zone, type } = req.query;
+        const { search, zone, type, limit } = req.query;
+        const take = limit ? parseInt(String(limit)) : 1000; // Default 1000 ร้าน
 
         const shops = await prisma.shop.findMany({
             where: {
@@ -14,7 +15,7 @@ export const getShops = async (req: Request, res: Response) => {
             },
             // เรียงตามร้านที่มีรีวิวเยอะสุดขึ้นก่อน (เผื่ออนาคตเอาไว้จัดอันดับ)
             orderBy: { reviews: { _count: 'desc' } }, 
-            take: 50, // จำกัดการดึงข้อมูลเพื่อไม่ให้แอปค้าง
+            take: take,
         });
 
         res.json(shops);

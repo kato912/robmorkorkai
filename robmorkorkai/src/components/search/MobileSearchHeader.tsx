@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, Home, X, SlidersHorizontal, MapPin, Coffee } from "lucide-react";
-import { ZONES, CATEGORIES, FACILITIES } from "../../data/mockDatat";
+import { ZONES, CATEGORIES } from "../../utils/constants";
 
 interface Props {
     searchQuery: string;
     setSearchQuery: (val: string) => void;
-    selectedZone: string;
-    setSelectedZone: (val: string) => void;
-    selectedCategory: string;
-    setSelectedCategory: (val: string) => void;
+    selectedZone: string | null;
+    setSelectedZone: (val: string | null) => void;
+    selectedCategory: string | null;
+    setSelectedCategory: (val: string | null) => void;
     selectedFacilities: string[];
     toggleFacility: (id: string) => void;
     clearFilters: () => void;
@@ -64,8 +64,17 @@ export const MobileSearchHeader: React.FC<Props> = ({
                     <div className="mb-3">
                         <small className="fw-bold mb-2 d-block" style={{ fontSize: '0.8rem', color: '#c9943a' }}>โซน</small>
                         <div className="d-flex flex-wrap gap-2">
+                            <button onClick={() => setSelectedZone(null)} 
+                                className="btn btn-sm rounded-pill px-3"
+                                style={{ 
+                                    backgroundColor: selectedZone === null ? '#A73B24' : '#2d2320',
+                                    color: selectedZone === null ? '#f5ebe4' : '#9a8a7e',
+                                    border: 'none'
+                                }}>
+                                ทั้งหมด
+                            </button>
                             {ZONES.map(z => (
-                                <button key={z.id} onClick={() => setSelectedZone(z.id)} 
+                                <button key={z.id} onClick={() => setSelectedZone(selectedZone === z.id ? null : z.id)} 
                                     className="btn btn-sm rounded-pill px-3"
                                     style={{ 
                                         backgroundColor: selectedZone === z.id ? '#A73B24' : '#2d2320',
@@ -84,7 +93,7 @@ export const MobileSearchHeader: React.FC<Props> = ({
                             {CATEGORIES.map(c => {
                                 const Icon = c.icon || Coffee;
                                 return (
-                                    <button key={c.id} onClick={() => setSelectedCategory(c.id)} 
+                                    <button key={c.id} onClick={() => setSelectedCategory(selectedCategory === c.id ? null : c.id)} 
                                         className="btn btn-sm rounded-pill px-3 d-flex gap-1 align-items-center"
                                         style={{ 
                                             backgroundColor: selectedCategory === c.id ? '#A73B24' : '#2d2320',
@@ -98,28 +107,9 @@ export const MobileSearchHeader: React.FC<Props> = ({
                         </div>
                     </div>
 
-                    <div className="mb-3">
-                        <small className="fw-bold mb-2 d-block" style={{ fontSize: '0.8rem', color: '#c9943a' }}>สิ่งอำนวยความสะดวก</small>
-                        <div className="d-flex flex-wrap gap-2">
-                            {FACILITIES.map(f => {
-                                const Icon = f.icon;
-                                const isSelected = selectedFacilities.includes(f.id);
-                                return (
-                                    <button key={f.id} onClick={() => toggleFacility(f.id)} 
-                                        className="btn btn-sm rounded-pill px-3 d-flex gap-1 align-items-center"
-                                        style={{ 
-                                            backgroundColor: isSelected ? '#A73B24' : '#2d2320',
-                                            color: isSelected ? '#f5ebe4' : '#9a8a7e',
-                                            border: 'none'
-                                        }}>
-                                        <Icon size={14} /> {f.label}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
+                    
 
-                    {(selectedZone !== 'all' || selectedCategory !== 'all' || selectedFacilities.length > 0) && (
+                    {(selectedZone !== null || selectedCategory !== null || selectedFacilities.length > 0) && (
                         <div className="text-end mt-2 pt-2" style={{ borderTop: '1px solid #3d302a' }}>
                             <button onClick={clearFilters} className="btn btn-link p-0 small text-decoration-none" style={{ color: '#c9943a' }}>ล้างตัวกรองทั้งหมด</button>
                         </div>
@@ -130,8 +120,17 @@ export const MobileSearchHeader: React.FC<Props> = ({
             <div className="overflow-hidden transition-all" style={{ backgroundColor: '#1a1412', borderTop: '1px solid #3d302a', maxHeight: (isScrolled && !showFilters) ? '60px' : '0px', opacity: (isScrolled && !showFilters) ? 1 : 0 }}>
                 <div className="d-flex align-items-center gap-2 px-3 py-2 overflow-auto no-scrollbar">
                     <span className="small text-nowrap me-1" style={{ color: '#8a7b72' }}><MapPin size={12} /> โซน:</span>
+                    <button onClick={() => setSelectedZone(null)} 
+                        className="btn btn-sm rounded-pill text-nowrap px-3"
+                        style={{ 
+                            backgroundColor: selectedZone === null ? '#A73B24' : '#2d2320',
+                            color: selectedZone === null ? '#f5ebe4' : '#9a8a7e',
+                            border: 'none'
+                        }}>
+                        ทั้งหมด
+                    </button>
                     {ZONES.map(z => (
-                        <button key={z.id} onClick={() => setSelectedZone(z.id)} 
+                        <button key={z.id} onClick={() => setSelectedZone(selectedZone === z.id ? null : z.id)} 
                             className="btn btn-sm rounded-pill text-nowrap px-3"
                             style={{ 
                                 backgroundColor: selectedZone === z.id ? '#A73B24' : '#2d2320',

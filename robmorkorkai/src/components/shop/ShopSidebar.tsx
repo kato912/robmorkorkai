@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { MapPin, Clock, Star, MessageSquare, Heart, Share2, ArrowUpRight } from "lucide-react";
+import { MapPin, Clock, Star, MessageSquare, Heart, Share2, ArrowUpRight, TicketPlus } from "lucide-react";
 import type { Shop } from "../../types/shop";
 
 interface ShopSidebarProps {
@@ -21,7 +21,7 @@ export const ShopSidebar: React.FC<ShopSidebarProps> = ({
             const mapUrl = `https://www.google.com/maps?q=${shop.latitude},${shop.longitude}`;
             window.open(mapUrl, "_blank");
         } else {
-            alert("ขออภัย ยังไม่มีข้อมูลพิกัดสำหรับร้านนี้ครับ");
+            alert("ขออภัย ยังไม่มีลิงก์แผนที่สำหรับร้านนี้ครับ");
         }
     };
 
@@ -90,7 +90,7 @@ export const ShopSidebar: React.FC<ShopSidebarProps> = ({
                                 <Heart size={18} className={isFavorited ? "fill-danger" : ""} style={{ color: isFavorited ? '#A73B24' : '#e8b94a' }} /> 
                                 {isFavorited ? "บันทึกแล้ว" : "บันทึก"}
                             </button>
-                            <button className="btn rounded-pill px-4 hover-scale" style={{ backgroundColor: '#2d2320', color: '#e8b94a', border: '1px dashed rgba(201, 148, 58, 0.4)' }}>
+                            <button className="btn rounded-pill px-4 hover-scale" title="share" style={{ backgroundColor: '#2d2320', color: '#e8b94a', border: '1px dashed rgba(201, 148, 58, 0.4)' }}>
                                 <Share2 size={18} />
                             </button>
                         </div>
@@ -112,7 +112,7 @@ export const ShopSidebar: React.FC<ShopSidebarProps> = ({
                             title="Shop Location"
                             width="100%"
                             height="160"
-                            style={{ border: 0, filter: 'contrast(1.2) opacity(0.8)' }} // ใส่ฟิลเตอร์ให้แผนที่ดูดาร์กขึ้นนิดนึง
+                            style={{ border: 0, filter: 'contrast(1.2) opacity(0.8)' }}
                             loading="lazy"
                             allowFullScreen
                             src={`https://maps.google.com/maps?q=${shop.latitude},${shop.longitude}&hl=th&z=15&output=embed`}

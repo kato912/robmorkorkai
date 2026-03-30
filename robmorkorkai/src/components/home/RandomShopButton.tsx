@@ -63,6 +63,7 @@ export const RandomShopButton: React.FC<Props> = ({ shops }) => {
             <button
                 onClick={handleRandomShop}
                 className="btn rounded-circle shadow-lg d-flex align-items-center justify-content-center gacha-btn"
+                title='random'
             >
                 <Dices size={28} />
             </button>
