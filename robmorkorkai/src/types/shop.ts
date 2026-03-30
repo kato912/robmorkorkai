@@ -1,5 +1,4 @@
 
-
 export interface Review {
     id: string;
     userId: string;
@@ -13,12 +12,20 @@ export interface Review {
     createdAt?: string;
 }
 
+export interface ShopImage {
+    id: string;
+    url: string;
+    alt?: string | null;
+    order: number;
+}
+
 export interface Shop {
     type: string;
     id: string; // id
     name: string; // ชื่อร้าน
-    image: string; // รูปภาพ
-    images?: string[]; // รูปภาพเพิ่มเติม
+    image?: string; // รูปภาพ (fallback)
+    coverImage?: string; // รูปภาพ (actual field from backend)
+    images?: ShopImage[]; // รูปภาพเพิ่มเติม (multiple images)
     category: string;// หมวดหมู่
     latitude: number; // ละติจูด
     longitude: number; // ลองจิจูด

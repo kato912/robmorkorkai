@@ -1,5 +1,12 @@
 export type StoreStatus = "pending" | "approved" | "rejected";
 
+export interface ShopImage {
+    id: string;
+    url: string;
+    alt?: string | null;
+    order: number;
+}
+
 export interface ShopRequest {
     id: string;
     name: string;
@@ -9,7 +16,9 @@ export interface ShopRequest {
     category: string;
     status: string;
     submittedAt?: string;
-    image: string;
+    image?: string;
+    coverImage?: string;
+    images?: ShopImage[];
     description?: string;
     mapsLink?: string;
     openHours?: string;

@@ -27,7 +27,7 @@ export const SearchShopCard: React.FC<Props> = ({ shop }) => {
                 <div className="d-flex h-100">
                     {/* รูปภาพ */}
                     <div style={{ width: '35%', maxWidth: '160px', minWidth: '120px' }} className="position-relative">
-                        <img src={shop.image} className="w-100 h-100 object-fit-cover" alt={shop.name} style={{ minHeight: '130px', opacity: 0.9 }} />
+                        <img src={shop.coverImage || shop.image} className="w-100 h-100 object-fit-cover" alt={shop.name} style={{ minHeight: '130px', opacity: 0.9 }} />
                         {shop.verified && (
                             <span className="position-absolute top-0 start-0 m-2 badge rounded-1 shadow-sm px-2 py-1" 
                                 style={{ fontSize: '0.65rem', backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.3)' }}>

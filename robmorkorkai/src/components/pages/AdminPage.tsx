@@ -5,30 +5,28 @@ import { AdminDesktop } from "../admin/AdminDesktop";
 import { AdminMobile } from "../admin/AdminMobile";
 import type { TabType } from "../admin/types";
 import type { Shop } from "../../types/shop";
+import api from "../../services/api"; // 👈 1. ใช้ api แทน fetch เพื่อให้ส่ง Token อัตโนมัติ
 
 export const AdminPage: React.FC = () => {
     const { logout } = useAuth();
     const [activeTab, setActiveTab] = useState<TabType>("overview");
 
-    // --- API State ---
     const [shops, setShops] = useState<Shop[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    // --- UI State ---
     const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
     const [editingShop, setEditingShop] = useState<Shop | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
+    const [dashboardStats, setDashboardStats] = useState({ totalStores: 0, totalReviews: 0, totalUsers: 0 });
 
     // ดึงข้อมูลร้านค้า (GET)
-    // ==========================================
     const fetchShops = async () => {
         try {
             setIsLoading(true);
-            const res = await fetch("http://localhost:3000/api/shops");
-            const data = await res.json();
-            setShops(data);
+            const res = await api.get("/api/admin/shops");
+            setShops(res.data);
         } catch (err) {
             console.error("Fetch Error:", err);
             alert("ไม่สามารถดึงข้อมูลร้านค้าได้");
@@ -37,8 +35,24 @@ export const AdminPage: React.FC = () => {
         }
     };
 
+    // ดึง stats (จำนวนร้าน ผู้ใช้ รีวิว)
+    const fetchStats = async () => {
+        try {
+            const res = await api.get("/api/admin/stats");
+            const { totalShops, totalUsers, totalReviews } = res.data;
+            setDashboardStats({
+                totalStores: totalShops,
+                totalReviews: totalReviews,
+                totalUsers: totalUsers
+            });
+        } catch (err) {
+            console.error("Fetch Stats Error:", err);
+        }
+    };
+
     useEffect(() => {
         fetchShops();
+        fetchStats();
     }, []);
 
     // ลบร้านค้า (DELETE)
@@ -46,18 +60,12 @@ export const AdminPage: React.FC = () => {
         if (!window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบร้านค้านี้?")) return;
 
         try {
-            const res = await fetch(`http://localhost:3000/api/shops/${id}`, {
-                method: "DELETE",
-            });
+            // 👈 3. ใช้ api.delete ยิงไปที่ Admin Route
+            await api.delete(`/api/admin/shops/${id}`);
 
-            if (res.ok) {
-                // อัปเดต State ลบร้านนั้นออก โดยไม่ต้อง fetch ใหม่
-                setShops(prevShops => prevShops.filter(shop => shop.id !== id));
-                setSelectedShop(null);
-                alert("ลบร้านค้าเรียบร้อยแล้ว");
-            } else {
-                throw new Error("ลบไม่สำเร็จ");
-            }
+            setShops(prevShops => prevShops.filter(shop => shop.id !== id));
+            setSelectedShop(null);
+            alert("ลบร้านค้าเรียบร้อยแล้ว");
         } catch (err) {
             console.error("Delete Error:", err);
             alert("เกิดข้อผิดพลาดในการลบร้านค้า");
@@ -67,30 +75,39 @@ export const AdminPage: React.FC = () => {
     // แก้ไขข้อมูลร้านค้า (PUT)
     const handleSaveEdit = async (updatedShop: Shop) => {
         try {
-            const res = await fetch(`http://localhost:3000/api/shops/${updatedShop.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updatedShop)
-            });
+            const payload = {
+                name: updatedShop.name,
+                type: updatedShop.category,
+                zone: updatedShop.zone,
+                coverImage: updatedShop.coverImage,
+                openHours: updatedShop.openHours,
+            };
 
-            if (res.ok) {
-                const savedShop = await res.json();
-                // อัปเดตข้อมูลร้านใน State ให้เป็นข้อมูลใหม่
-                setShops(prevShops => prevShops.map(shop =>
-                    shop.id === savedShop.id ? savedShop : shop
-                ));
-                setEditingShop(null);
-                alert("บันทึกการแก้ไขเรียบร้อยแล้ว");
-            } else {
-                throw new Error("บันทึกไม่สำเร็จ");
-            }
-        } catch (err) {
+            const res = await api.put(`/api/admin/shops/${updatedShop.id}`, payload);
+            const savedShop = res.data;
+
+            const normalizedShop = {
+                ...updatedShop,
+                ...savedShop,
+                category: savedShop.type || updatedShop.category,
+            };
+
+            setShops(prevShops => prevShops.map(shop =>
+                shop.id === normalizedShop.id ? normalizedShop : shop
+            ));
+
+            setEditingShop(null);
+            alert("บันทึกการแก้ไขเรียบร้อยแล้ว");
+
+            // รีเฟตช์
+            setTimeout(() => fetchShops(), 500);
+
+        } catch (err: any) {
             console.error("Update Error:", err);
-            alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+            alert(err.response?.data?.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล");
         }
     };
 
-    // --- Logic กรองข้อมูลเพื่อแสดงบนตาราง ---
     const categories = ["all", ...new Set(shops.map(s => s.category || s.type || "ไม่ระบุหมวดหมู่"))];
 
     const filteredStores = useMemo(() => {
@@ -104,17 +121,18 @@ export const AdminPage: React.FC = () => {
             const matchesCategory = selectedCategory === "all" || shopCategory === selectedCategory;
 
             return matchesSearch && matchesCategory;
-        });
+        }).map(shop => ({
+            ...shop,
+            image: shop.coverImage || shop.image || "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"48\" height=\"48\"%3E%3Crect fill=\"%23e5e7eb\" width=\"48\" height=\"48\"/%3E%3C/svg%3E"
+        }));
     }, [shops, searchQuery, selectedCategory]);
 
-    // --- สรุปตัวเลข Stats ---
     const stats = {
         totalStores: shops.length,
         totalReviews: shops.reduce((sum, shop) => sum + (shop.reviewCount || 0), 0),
-        totalUsers: 2451, // mock data
+        totalUsers: dashboardStats.totalUsers,
     };
 
-    // --- รวม Props ส่งให้ View ---
     const viewProps = {
         activeTab, setActiveTab,
         storeRequests: filteredStores.map(shop => ({ ...shop, status: "active" })),
@@ -126,7 +144,16 @@ export const AdminPage: React.FC = () => {
         stats,
         onDelete: handleDeleteStore,
         onViewDetail: (shop: any) => setSelectedShop(shop as Shop),
-        onEdit: (shop: any) => setEditingShop(shop as Shop),
+        onEdit: async (shop: any) => {
+            // ดึงข้อมูลเต็มร้านค้ารวมถึง images
+            try {
+                const res = await api.get(`/api/admin/shops/${shop.id}`);
+                setEditingShop(res.data as Shop);
+            } catch (err) {
+                console.error("Error fetching shop details:", err);
+                setEditingShop(shop as Shop);
+            }
+        },
         logout
     };
 
@@ -136,13 +163,9 @@ export const AdminPage: React.FC = () => {
 
     return (
         <div className="font-sans" style={{ backgroundColor: theme.bgMain }}>
-            {/* Desktop View */}
             <AdminDesktop {...viewProps} />
-
-            {/* Mobile View */}
             <AdminMobile {...viewProps} />
 
-            {/* Shared Modals */}
             {selectedShop && (
                 <ShopDetailModal
                     shop={selectedShop}

@@ -20,6 +20,14 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
         </button>
     );
 
+    // สร้างไว้นอก AdminMobile Component
+    const getShopImage = (store: any) => {
+        if (store.coverImage) return store.coverImage;
+        if (store.images && store.images.length > 0) return store.images[0].url;
+        if (store.image) return store.image;
+        return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60"%3E%3Crect fill="%23e5e7eb" width="60" height="60"/%3E%3C/svg%3E';
+    };
+
     return (
         <div className="d-lg-none d-flex flex-column min-vh-100 w-100">
             {/* Header */}
@@ -50,7 +58,7 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
                             <div className="d-flex flex-column gap-3">
                                 {filteredStores.slice(0, 5).map(store => (
                                     <div key={store.id} className="d-flex align-items-center justify-content-between p-2 border-bottom">
-                                        <div className="d-flex align-items-center gap-3"><img src={store.image} className="rounded-3 object-fit-cover" width="48" height="48" alt="" /><div><div className="fw-bold small text-dark">{store.name}</div><div className="small text-secondary" style={{ fontSize: '0.75rem' }}>{store.owner}</div></div></div>
+                                        <div className="d-flex align-items-center gap-3"><img src={getShopImage(store)} className="rounded-3 object-fit-cover" width="48" height="48" alt="" /><div><div className="fw-bold small text-dark">{store.name}</div><div className="small text-secondary" style={{ fontSize: '0.75rem' }}>{store.owner}</div></div></div>
                                         <div className="d-flex gap-2">
                                             <button onClick={() => onViewDetail(store)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#e2e8f0', color: '#475569' }}><Eye size={18} /></button>
                                             <button onClick={() => onEdit(store)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#dcfce7', color: '#16a34a' }}><Edit size={18} /></button>
@@ -70,7 +78,7 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
                         {filteredStores.map(store => (
                             <div key={store.id} className="card border-0 shadow-sm p-3 rounded-4 bg-white">
                                 <div className="d-flex align-items-center gap-3 mb-2">
-                                    <img src={store.image} className="rounded-3 object-fit-cover" width="56" height="56" alt="" />
+                                    <img src={getShopImage(store)} className="rounded-3 object-fit-cover" width="56" height="56" alt="" />
                                     <div className="flex-grow-1"><div className="fw-bold small text-dark">{store.name}</div>
                                         <div className="small text-secondary mb-1">{store.owner}</div>
                                     </div>

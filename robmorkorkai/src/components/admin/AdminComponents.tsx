@@ -3,7 +3,7 @@ import {
     Shield, BarChart3, Store, LogOut, X,
     Clock, FileText, User, MapPin, Edit, Save, Image as ImageIcon
 } from "lucide-react";
-import type { Shop } from "../../types/shop"; // แก้ path ให้ตรงกับที่เก็บไฟล์ Interface ของคุณ
+import type { Shop } from "../../types/shop"; 
 import { adminTheme } from "./types";
 export const theme = adminTheme;
 
@@ -76,17 +76,23 @@ export const StatCardMobile = ({ icon: Icon, value, label, bg, color }: any) => 
 // --- Modals ---
 export const ShopDetailModal = ({ shop, onClose, onDelete, onEdit }: any) => {
     if (!shop) return null;
+    
+    const displayImage = shop.coverImage || shop.image || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="200"%3E%3Crect fill="%23e5e7eb" width="600" height="200"/%3E%3C/svg%3E';
+
     return (
         <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 2000 }} onClick={onClose}>
             <div className="bg-white rounded-4 shadow-lg w-100 overflow-hidden d-flex flex-column animate-fade-in" style={{ maxWidth: '600px', maxHeight: '90vh' }} onClick={e => e.stopPropagation()}>
-                <div className="position-relative bg-light" style={{ height: '200px' }}>
-                    <img src={shop.image} alt={shop.name} className="w-100 h-100 object-fit-cover" />
+                <div className="position-relative bg-light" style={{ height: '280px', aspectRatio: '3/1' }}>
+                    <img src={displayImage} alt={shop.name} className="w-100 h-100 object-fit-cover" onError={(e) => { (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="200"%3E%3Crect fill="%23e5e7eb" width="600" height="200"/%3E%3C/svg%3E'; }} />
                     <button onClick={onClose} className="btn btn-dark btn-sm rounded-circle position-absolute top-0 end-0 m-3 d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px' }}><X size={18} /></button>
                 </div>
                 <div className="p-4 overflow-auto custom-scrollbar">
                     <div className="d-flex justify-content-between align-items-start mb-3">
                         <div><h4 className="fw-bold mb-1">{shop.name}</h4><div className="text-muted small d-flex align-items-center gap-2"><span className="badge bg-light text-dark border">{shop.category}</span><span>•</span><span>{shop.zone}</span></div></div>
                     </div>
+                    
+                    {/* Gallery của các ảnh */}
+
                     <div className="d-flex align-items-center gap-2 mb-4 text-success fw-bold small bg-success bg-opacity-10 p-2 rounded-3 w-fit"><Clock size={16} /> <span>เวลาเปิด-ปิด: {shop.openHours || "ไม่ระบุ"}</span></div>
                     <div className="d-flex flex-column gap-3 mb-4">
                         <div className="p-3 bg-light rounded-3"><small className="text-secondary fw-bold mb-1 d-block"><FileText size={14} className="me-1" /> รายละเอียดร้าน</small><p className="m-0 small text-dark">{shop.description || "ไม่มีรายละเอียด"}</p></div>
@@ -96,7 +102,6 @@ export const ShopDetailModal = ({ shop, onClose, onDelete, onEdit }: any) => {
                         </div>
                     </div>
                     <div className="d-grid gap-2 d-flex justify-content-end border-top pt-3">
-
                         <button onClick={() => { onDelete(shop.id); onClose(); }} className="btn btn-light text-danger border flex-grow-1">ลบร้านค้า</button>
                         <button onClick={() => { onEdit(shop); onClose(); }} className="btn btn-light text-primary border flex-grow-1"><Edit size={16} /> แก้ไขข้อมูล</button>
                     </div>
@@ -108,8 +113,14 @@ export const ShopDetailModal = ({ shop, onClose, onDelete, onEdit }: any) => {
 
 export const EditShopModal = ({ shop, onClose, onSave }: any) => {
     const [formData, setFormData] = useState<Shop | null>(null);
+    const [imagePreviewError, setImagePreviewError] = useState(false);
 
-    useEffect(() => { if (shop) setFormData({ ...shop }); }, [shop]);
+    useEffect(() => {
+        if (shop) {
+            setFormData({ ...shop });
+            setImagePreviewError(false);
+        }
+    }, [shop]);
 
     if (!formData) return null;
 
@@ -118,45 +129,47 @@ export const EditShopModal = ({ shop, onClose, onSave }: any) => {
         setFormData(prev => prev ? { ...prev, [field]: value } : null);
     };
 
-    // Handle File Upload
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const previewUrl = URL.createObjectURL(file);
-            setFormData(prev => prev ? { ...prev, image: previewUrl } : null);
-        }
-    };
-
     return (
         <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 2050 }} onClick={onClose}>
-            <div className="bg-white rounded-4 shadow-lg w-100 overflow-hidden d-flex flex-column animate-fade-in" style={{ maxWidth: '600px', maxHeight: '90vh' }} onClick={e => e.stopPropagation()}>
+            <div className="bg-white rounded-4 shadow-lg w-100 overflow-hidden d-flex flex-column animate-fade-in" style={{ maxWidth: '700px', maxHeight: '90vh' }} onClick={e => e.stopPropagation()}>
                 <div className="px-4 py-3 border-bottom d-flex justify-content-between align-items-center bg-light">
                     <h5 className="fw-bold m-0 d-flex align-items-center gap-2"><Edit size={20} /> แก้ไขข้อมูลร้านค้า</h5>
                     <button type="button" onClick={onClose} className="btn p-0 text-secondary hover-dark"><X size={24} /></button>
                 </div>
 
                 <div className="p-4 overflow-auto custom-scrollbar">
-                    <div className="mb-3">
-                        <label className="form-label small fw-bold text-secondary">รูปภาพ (อัปโหลดไฟล์)</label>
+                    {/* Simple Image URL Input */}
+                    <div className="mb-4">
+                        <label className="form-label small fw-bold text-secondary mb-2 d-block">📸 URL รูปปกร้านค้า</label>
                         <div className="input-group">
                             <span className="input-group-text bg-white"><ImageIcon size={18} /></span>
-                            <input
-                                type="file"
-                                className="form-control"
-                                accept="image/png, image/jpeg, image/jpg"
-                                onChange={handleFileChange}
-                            />
+                            <input type="text" className="form-control" placeholder="https://..." value={formData?.coverImage || ""} onChange={(e) => { handleChange('coverImage', e.target.value); setImagePreviewError(false); }} />
                         </div>
-                        {formData.image && (
-                            <div className="mt-2">
-                                <img src={formData.image} alt="Preview" className="rounded-3 object-fit-cover border" style={{ width: '100px', height: '60px' }} />
+                        
+                        {/* Image Preview */}
+                        {formData?.coverImage && (
+                            <div className="mt-3 rounded-3 overflow-hidden bg-light" style={{ height: '150px' }}>
+                                <img 
+                                    src={formData.coverImage} 
+                                    alt="Preview" 
+                                    className="w-100 h-100 object-fit-cover" 
+                                    onError={() => setImagePreviewError(true)}
+                                    onLoad={() => setImagePreviewError(false)}
+                                />
+                            </div>
+                        )}
+                        {imagePreviewError && formData?.coverImage && (
+                            <div className="mt-2 p-2 bg-danger bg-opacity-10 text-danger small rounded-2">
+                                ❌ ไม่สามารถโหลดรูปได้ - ตรวจสอบ URL
                             </div>
                         )}
                     </div>
 
+                    <hr className="my-4" />
+
                     <div className="row g-3 mb-3">
                         <div className="col-md-6"><label className="form-label small fw-bold text-secondary">ชื่อร้าน</label><input type="text" className="form-control" value={formData.name || ""} onChange={(e) => handleChange('name', e.target.value)} /></div>
-                        <div className="col-md-6"><label className="form-label small fw-bold text-secondary">เจ้าของ</label><input type="text" className="form-control bg-light" value={formData.owner || ""} disabled /></div>
+                        <div className="col-md-6"><label className="form-label small fw-bold text-secondary">เจ้าของ</label><input type="text" className="form-control" value={formData.owner || ""} onChange={(e) => handleChange('owner', e.target.value)} /></div>
                     </div>
                     <div className="row g-3 mb-3">
                         <div className="col-6">
@@ -176,15 +189,15 @@ export const EditShopModal = ({ shop, onClose, onSave }: any) => {
                         <label className="form-label small fw-bold text-secondary">เวลาเปิด-ปิด</label>
                         <div className="input-group">
                             <span className="input-group-text bg-white"><Clock size={18} /></span>
-                            <input title="เวลาเปิด-ปิด" type="text" className="form-control" value={formData.openHours || ""} onChange={(e) => handleChange('openHours', e.target.value)} /></div>
+                            <input title="เวลาเปิด-ปิด" type="text" className="form-control" value={formData.openHours || ""} onChange={(e) => handleChange('openHours', e.target.value)} />
                         </div>
-                    <div className="mb-3">
-                        <label className="form-label small fw-bold text-secondary">Google Maps Link</label><div className="input-group">
-                            <span className="input-group-text bg-white">
-                                <MapPin size={18} />
-                            </span>
-                            <input title="Google Maps Link" type="text" className="form-control" value={formData.googleMap || ""} onChange={(e) => handleChange('googleMap', e.target.value)} />
                     </div>
+                    <div className="mb-3">
+                        <label className="form-label small fw-bold text-secondary">Google Maps Link</label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-white"><MapPin size={18} /></span>
+                            <input title="Google Maps Link" type="text" className="form-control" value={formData.googleMap || ""} onChange={(e) => handleChange('googleMap', e.target.value)} />
+                        </div>
                     </div>
                     <div className="mb-3"><label className="form-label small fw-bold text-secondary">รายละเอียดร้าน</label><textarea className="form-control" rows={3} value={formData.description || ""} onChange={(e) => handleChange('description', e.target.value)}></textarea></div>
                 </div>

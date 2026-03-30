@@ -75,7 +75,10 @@ export const ShopDetailPage: React.FC = () => {
     if (error || !shop) return <div className="min-vh-100 d-flex flex-column align-items-center justify-content-center" style={{ backgroundColor: '#1a1412' }}><div className="text-center p-5 rounded-4 shadow-sm" style={{ backgroundColor: '#231c18', border: '1px solid #3d302a', maxWidth: '400px' }}><div className="rounded-circle d-inline-flex p-3 mb-4" style={{ backgroundColor: 'rgba(167, 59, 36, 0.1)', color: '#A73B24' }}><AlertCircle size={40} /></div><h4 className="fw-bold mb-2" style={{ color: '#f5ebe4' }}>เกิดข้อผิดพลาด</h4><p className="mb-4" style={{ color: '#9a8a7e' }}>{error || "ไม่พบร้านค้านี้ในระบบ"}</p><button onClick={() => navigate("/")} className="btn rounded-pill px-4 fw-bold hover-scale" style={{ backgroundColor: '#A73B24', color: '#fff5f0' }}>กลับหน้าแรก</button></div></div>;
 
     const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80";
-    const displayImages = shop.images && shop.images.length > 0 ? shop.images : [shop.image || DEFAULT_IMAGE, shop.image || DEFAULT_IMAGE, shop.image || DEFAULT_IMAGE, shop.image || DEFAULT_IMAGE];
+    // แปลง ShopImage objects เป็น array ของ URLs
+    const displayImages = shop.images && shop.images.length > 0 
+        ? shop.images.map(img => img.url) 
+        : [shop.coverImage || shop.image || DEFAULT_IMAGE, shop.coverImage || shop.image || DEFAULT_IMAGE, shop.coverImage || shop.image || DEFAULT_IMAGE, shop.coverImage || shop.image || DEFAULT_IMAGE];
     const averageRating = Number(shop.ratingAvg ?? 0).toFixed(1);
     const ratingDistribution = [5, 4, 3, 2, 1].map((star) => {
         const count = reviews.filter((r) => r.rating === star).length;
@@ -156,7 +159,7 @@ export const ShopDetailPage: React.FC = () => {
                     }
                 }}
                 shopName={shop.name}
-                shopImage={shop.image}
+                shopImage={shop.coverImage || shop.image || DEFAULT_IMAGE}
                 isSubmitting={isSubmitting}
             />
 

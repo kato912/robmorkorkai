@@ -19,10 +19,11 @@ export const useShops = () => {
                 setIsLoading(true);
                 setError(null);
                 
-                const response = await fetch("http://localhost:3000/api/shops");
+                const response = await fetch("/api/shops");
                 if (!response.ok) throw new Error("ดึงข้อมูลร้านค้าไม่สำเร็จ");
 
                 const data = await response.json();
+                console.log("Shops from API:", data); // 👈 DEBUG
                 setShops(data);
             } catch (err: any) {
                 console.error("Fetch Error:", err);

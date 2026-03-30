@@ -15,7 +15,7 @@ export const AIResultCard: React.FC<AIResultCardProps> = ({ shop }) => {
                 <div className="row g-0 flex-column flex-sm-row">
                     {/* รูปภาพ */}
                     <div className="col-sm-4 position-relative" style={{ minHeight: '160px' }}>
-                        <img src={shop.image} alt={shop.name} className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />
+                        <img src={shop.coverImage || shop.image} alt={shop.name} className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />
                         <div className="position-absolute top-0 start-0 m-3">
                             <span className="fw-bold px-2 py-1 rounded-pill" style={{ fontSize: '0.7rem', backgroundColor: '#A73B24', color: '#fff5f0' }}>
                                 {shop.match}% Match
