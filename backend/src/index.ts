@@ -7,6 +7,7 @@ import userRoutes from "./routes/userRoutes.js";
 import shopRoutes from "./routes/shopRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import imageRoutes from "./routes/imageRoutes.js";
 
 const app: Express = express();
 const port: number = 3000;
@@ -27,6 +28,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/shops", shopRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/images", imageRoutes);
 
 app.get("/api" , (req:Request , res:Response) => {
     res.send('api is running');

@@ -44,7 +44,7 @@ export const authConfig = {
                     where: {id: user.id},
                     data: {lastLoginAt: new Date()},
                 });
-                console.log(`User ${user.email} logged in at ${new Date()}`);
+
             }
         },
     },

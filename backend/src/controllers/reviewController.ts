@@ -70,7 +70,7 @@ export const createReview = async (req: Request, res: Response) => {
                 where: { id: existingReview.id },
                 data: { rating: numericRating, comment: comment }
             });
-            console.log("🔄 Updated existing review for shop:", shopId);
+
         } else {
             // 2B. ถ้ายังไม่เคย -> "สร้าง" รีวิวใหม่ได้เลย
             review = await prisma.review.create({
@@ -81,7 +81,7 @@ export const createReview = async (req: Request, res: Response) => {
                     shopId: shopId,
                 }
             });
-            console.log("✅ Created new review for shop:", shopId);
+
         }
         // ---------------------------------------------------------
         // 📊 ส่วนที่ 2: Average Rating Logic (คำนวณคะแนนเฉลี่ยใหม่)
