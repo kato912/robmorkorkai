@@ -25,6 +25,27 @@ export const getShops = async (req: Request, res: Response) => {
     }
 };
 
+// 1.5. ดึงสถิติแอปพลิเคชัน (จำนวนร้าน จำนวนรีวิว)
+// ใช้สำหรับ Login Page features display
+export const getStats = async (req: Request, res: Response) => {
+    try {
+        // ดึงจำนวนร้านทั้งหมด
+        const shopCount = await prisma.shop.count();
+
+        // ดึงจำนวนรีวิวทั้งหมด
+        const reviewCount = await prisma.review.count();
+
+        res.json({
+            shops: shopCount,
+            reviews: reviewCount,
+            aiPowered: true // Always true for now
+        });
+    } catch (error) {
+        console.error("Error fetching stats:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
 // 2. ดึงรายละเอียดร้าน 1 ร้าน (พร้อมดึงรีวิวของร้านนั้นมาด้วย)
 export const getShopById = async (req: Request, res: Response) => {
     try {
