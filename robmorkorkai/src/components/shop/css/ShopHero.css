@@ -1,0 +1,134 @@
+/* Shop Hero Section Styles */
+/* Full-height hero section with background image and overlay gradient */
+
+.shop-hero-section {
+    height: 75vh;                /* Responsive height - 75% of viewport height */
+    min-height: 550px;          /* Minimum height for smaller screens */
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    background-color: #1a1412;  /* Dark background fallback */
+}
+
+/* Hero background image - cover the entire section */
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;          /* Maintain aspect ratio while covering */
+    opacity: 0.9;               /* Slightly transparent for overlay effect */
+}
+
+/* Dark gradient overlay on top of background image */
+.hero-gradient {
+    background: linear-gradient(to top, #1a1412 0%, rgba(26, 20, 18, 0.6) 50%, rgba(26, 20, 18, 0.2) 100%);
+}
+
+/* Top Navigation - positioned absolutely on hero */
+.hero-nav-container {
+    z-index: 1020;              /* High z-index to appear on top */
+}
+
+/* Back button with glass morphism effect */
+.back-button {
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px); /* Glass morphism blur effect */
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    opacity: 1 !important;      /* Fully opaque on hover */
+}
+
+/* Navigation links styling */
+.nav-link-hover {
+    transition: all 0.3s ease;  /* Smooth transition for hover effect */
+    color: #fff5f0;             /* Light text color */
+}
+
+.nav-link-hover:hover {
+    background-color: rgba(201, 148, 58, 0.1); /* Gold highlight on hover */
+    color: #c9943a !important;  /* Gold text on hover */
+}
+
+/* Vertical line separator in navigation */
+.nav-divider {
+    width: 1px;
+    height: 24px;
+    background-color: #fff5f0;  /* Light color to match text */
+}
+
+/* Mobile action buttons (heart/share icons) */
+.hero-mobile-btn {
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px); /* Glass morphism effect */
+}
+
+.hero-mobile-btn:hover {
+    opacity: 0.8;               /* Slightly more transparent on hover */
+}
+
+/* Content positioned at bottom of hero section */
+.hero-content-bottom {
+    z-index: 1010;              /* Appear on top of gradient */
+}
+
+/* Shop name - responsive sizing */
+.hero-title {
+    font-size: clamp(2.5rem, 6vw, 5rem); /* Scales between 2.5rem-5rem based on viewport */
+    line-height: 1.1;           /* Compact line height for title */
+    font-weight: 700;           /* Bold weight */
+    color: #fff5f0;             /* Light color */
+}
+
+/* Shop description text */
+.hero-description {
+    font-size: clamp(0.95rem, 2vw, 1.1rem); /* Responsive font size */
+    max-width: 650px;           /* Limit description width */
+    color: #fff5f0;             /* Light color */
+}
+
+/* Vertical divider in hero info section */
+.hero-info-divider {
+    width: 1px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Category badge - gold background */
+.hero-badge {
+    background-color: rgba(201, 148, 58, 0.15);
+    color: #e8b94a;             /* Gold text */
+    border: 1px solid rgba(201, 148, 58, 0.3);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Status badge - green for "open" */
+.hero-badge-green {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #34d399;             /* Green text */
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Supporting text for review count */
+.review-count-text {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7); /* Slightly transparent */
+}
+
+/* Container for shop info (rating, zone, hours) */
+.hero-info-container {
+    font-size: 1rem;            /* Base font size for info */
+}
+
+/* Opacity transition on hover */
+.hover-opacity-100:hover {
+    opacity: 1 !important;      /* Fully opaque on hover */
+}
+
+/* General transition utility class */
+.transition-all {
+    transition: all 0.3s ease;  /* Smooth transition for all properties */
+}

@@ -1,135 +1,201 @@
-import React from "react";
+/**
+ * LoginPage Component
+ *
+ * Main authentication landing page with responsive design.
+ * Features:
+ * - Responsive split layout: 55% image + 45% form (desktop only)
+ * - Mobile-optimized view: full-width image header + form below
+ * - Hero image with gradient overlays
+ * - Feature highlights badges
+ * - Testimonial section on desktop
+ * - Navigation bar with back button
+ * - Integrates LoginForm component
+ *
+ * Layout:
+ * Desktop: Side-by-side layout with image on left, form on right
+ * Mobile: Stacked layout with image header and form below
+ *
+ * Features displayed:
+ * - 500+ Verified shops near KKU
+ * - 10K+ Reviews from real students
+ * - AI-powered recommendations
+ *
+ * CSS Classes Used:
+ * - login-page-root: Main container
+ * - login-desktop-container: Desktop layout wrapper
+ * - login-desktop-image-section: Image area (55%)
+ * - login-desktop-form-section: Form area (45%)
+ * - login-mobile-container: Mobile layout wrapper
+ * - login-mobile-image-section: Mobile image header
+ * - login-mobile-content-section: Mobile form area
+ */
+
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MapPin, ArrowLeft } from "lucide-react";
 import { LoginForm } from "../auth/LoginForm";
+import "./css/LoginPage.css";
 
-const features = [
-    { label: "500+ Shops", desc: "Verified near KKU" },
-    { label: "10K+ Reviews", desc: "From real students" },
-    { label: "AI Powered", desc: "Smart recommendations" },
-];
+/** Feature statistics from database */
+interface Stats {
+    shops: number;
+    reviews: number;
+    aiPowered: boolean;
+}
 
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
+    const [stats, setStats] = useState<Stats>({ shops: 500, reviews: 10000, aiPowered: true });
 
-    // ฟังก์ชันสำหรับล็อกอิน (เรียกใช้เมื่อกดปุ่ม Google)
+    /**
+     * Fetch app statistics from backend on component mount
+     * Updates features display with real data from database
+     */
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const response = await fetch("http://localhost:3000/api/shops/stats");
+                if (!response.ok) throw new Error("Failed to fetch stats");
+                const data = await response.json();
+                setStats(data);
+            } catch (error) {
+                console.error("Error fetching stats:", error);
+                // Fallback to default values on error
+                setStats({ shops: 500, reviews: 10000, aiPowered: true });
+            }
+        };
+
+        fetchStats();
+    }, []);
+
+    /**
+     * Format feature items from stats for display
+     * Converts stats into human-readable feature pills
+     */
+    const features = [
+        { label: `${(stats.shops).toLocaleString()}+ Shops`, desc: "Verified near KKU" },
+        { label: `${(stats.reviews).toLocaleString()}+ Reviews`, desc: "From real students" },
+        { label: stats.aiPowered ? "AI Powered" : "Smart", desc: "Smart recommendations" },
+    ];
+
+    /**
+     * Handle Google login button click
+     * Triggers authentication flow
+     */
     const handleGoogleLogin = () => {
         console.log("Login with Google Clicked!");
-        // logic ล็อกอินด้วย AuthContext ตรงนี้
+        // Authentication logic handled in LoginForm component
     };
 
     return (
-        <div className="min-vh-100" style={{ backgroundColor: '#0c0a09', fontFamily: 'Inter, sans-serif' }}>
-
-            <style>{`
-        /* Global Styles สำหรับหน้า Login */
-        .text-stone-100 { color: #f5f5f4; }
-        .text-stone-300 { color: #d6d3d1; }
-        .text-stone-400 { color: #a8a29e; }
-        .text-stone-500 { color: #78716c; }
-        .text-stone-600 { color: #57534e; }
-        .bg-stone-800 { background-color: #292524; }
-        .bg-stone-900 { background-color: #1c1917; }
-        
-        .btn-google { background-color: transparent; border: 1px solid #44403c; color: #d6d3d1; transition: all 0.3s ease; }
-        .btn-google:hover, .btn-google.hovered { background-color: white; color: #1c1917; border-color: white; box-shadow: 0 10px 25px -5px rgba(255, 255, 255, 0.1); }
-        
-        .btn-guest { transition: all 0.2s; color: #78716c; }
-        .btn-guest:hover { background-color: #1c1917; color: #d6d3d1; }
-        
-        .hide-scroll::-webkit-scrollbar { display: none; }
-        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
-
+        <div className="login-page-root">
             {/* ======================= DESKTOP VIEW ======================= */}
-            <div className="d-none d-lg-flex min-vh-100">
+            {/* Desktop layout: 55% image on left, 45% form on right */}
+            <div className="login-desktop-container">
 
-                {/* Left Side - Image & Quote (55%) */}
-                <div className="position-relative overflow-hidden" style={{ width: '55%' }}>
+                {/* Left Side - Hero Image & Testimonial (55%) */}
+                <div className="login-desktop-image-section">
+                    {/* Background image - cafe interior */}
                     <img
                         src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80"
                         alt="Premium cafe interior"
-                        className="w-100 h-100 object-fit-cover"
+                        className="login-hero-image"
                     />
-                    <div className="position-absolute inset-0 w-100 h-100" style={{ background: 'linear-gradient(to right, rgba(12,10,9,0.3) 0%, transparent 50%, #0c0a09 100%)' }} />
-                    <div className="position-absolute inset-0 w-100 h-100" style={{ background: 'linear-gradient(to top, rgba(12,10,9,0.9) 0%, transparent 50%, rgba(12,10,9,0.4) 100%)' }} />
+                    
+                    {/* Dark gradient overlays - creates readability over image */}
+                    <div className="login-image-overlay-horizontal" />
+                    <div className="login-image-overlay-vertical" />
 
-                    <div className="position-absolute bottom-0 start-0 w-100 p-5" style={{ zIndex: 10 }}>
-                        <div className="d-flex align-items-center gap-3 mb-5">
+                    {/* Bottom content - Features and testimonial */}
+                    <div className="login-image-bottom-content">
+                        {/* Feature badges - display key stats */}
+                        <div className="login-features-desktop">
                             {features.map((f) => (
-                                <div key={f.label} className="rounded-pill px-4 py-2" style={{ backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                                    <span className="text-white fw-medium" style={{ fontSize: '0.9rem', opacity: 0.9 }}>{f.label}</span>
+                                <div key={f.label} className="login-feature-pill">
+                                    <span className="login-feature-pill-text">{f.label}</span>
                                 </div>
                             ))}
                         </div>
-                        <div style={{ maxWidth: '500px' }}>
-                            <p className="fst-italic text-white lh-lg mb-3" style={{ fontSize: '1.25rem', opacity: 0.8 }}>
-                                &ldquo;The best way to discover hidden gems around campus. Every student at KKU needs this.&rdquo;
-                            </p>
-                            <footer className="text-white small" style={{ opacity: 0.5 }}>A KKU Student, Class of 2025</footer>
-                        </div>
+                        
+                        {/* Testimonial section - social proof */}
+                        <p className="login-testimonial-text">
+                            &ldquo;The best way to discover hidden gems around campus. Every student at KKU needs this.&rdquo;
+                        </p>
+                        <footer className="login-testimonial-credit">A KKU Student, Class of 2025</footer>
                     </div>
                 </div>
 
-                {/* Right Side - Form (45%) */}
-                <div className="d-flex flex-column p-5" style={{ width: '45%' }}>
-                    {/* Nav */}
-                    <div className="d-flex align-items-center justify-content-between mt-3 px-3">
-                        <button onClick={() => navigate(-1)} className="btn btn-link text-decoration-none d-flex align-items-center gap-2 p-0 text-stone-500 hover-text-stone-300 transition-all">
-                            <ArrowLeft size={18} />
-                            <span className="small fw-medium">Back</span>
+                {/* Right Side - Form Section (45%) */}
+                <div className="login-desktop-form-section">
+                    {/* Navigation bar - Back button and branding */}
+                    <div className="login-desktop-nav">
+                        <button 
+                            onClick={() => navigate(-1)} 
+                            className="login-back-button"
+                            title="Go back to previous page"
+                        >
+                            <ArrowLeft size={18} className="login-back-button-icon" />
+                            <span className="login-back-button-text">Back</span>
                         </button>
-                        <Link to="/" className="text-decoration-none d-flex align-items-center gap-2">
-                            <MapPin size={20} className="text-stone-400" />
-                            <span className="text-stone-300 fw-bold tracking-tight">robmorkorkai</span>
+                        <Link to="/" className="login-brand-section">
+                            <MapPin size={20} className="login-brand-icon" />
+                            <span className="login-brand-name">robmorkorkai</span>
                         </Link>
                     </div>
 
-                    {/* Render Component LoginForm */}
-                    <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+                    {/* Form container - centered within right section */}
+                    <div className="login-desktop-form-container">
                         <LoginForm onGoogleLogin={handleGoogleLogin} />
                     </div>
                 </div>
             </div>
 
             {/* ======================= MOBILE VIEW ======================= */}
-            <div className="d-lg-none d-flex flex-column min-vh-100">
+            {/* Mobile layout: Stacked, full-width sections */}
+            <div className="login-mobile-container">
 
-                {/* Hero Image (45vh) */}
-                <div className="position-relative overflow-hidden" style={{ height: '45vh' }}>
+                {/* Hero Image Header (45vh) */}
+                <div className="login-mobile-image-section">
+                    {/* Background image - cafe interior */}
                     <img
                         src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80"
                         alt="Premium cafe interior"
-                        className="w-100 h-100 object-fit-cover"
+                        className="login-mobile-image"
                     />
-                    <div className="position-absolute inset-0 w-100 h-100" style={{ background: 'linear-gradient(to bottom, rgba(12,10,9,0.6) 0%, transparent 50%, #0c0a09 100%)' }} />
+                    
+                    {/* Dark overlay for image readability */}
+                    <div className="login-mobile-image-overlay" />
 
-                    {/* Top Nav (Mobile) */}
-                    <div className="position-absolute top-0 start-0 w-100 p-3 d-flex align-items-center justify-content-between pt-4">
-                        <button onClick={() => navigate(-1)} className="btn btn-link p-0 text-white text-decoration-none" title="black">
-                            <div className="rounded-circle d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px', backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }}>
+                    {/* Top Navigation - Back button and branding */}
+                    <div className="login-mobile-nav">
+                        <button 
+                            onClick={() => navigate(-1)} 
+                            className="login-mobile-back-button"
+                            title="Go back to previous page"
+                        >
+                            <div className="login-mobile-back-icon">
                                 <ArrowLeft size={20} />
                             </div>
                         </button>
-                        <div className="d-flex align-items-center gap-2">
-                            <MapPin size={16} className="text-white opacity-75" />
-                            <span className="text-white fw-bold opacity-75 small">robmorkorkai</span>
+                        <div className="login-mobile-brand">
+                            <MapPin size={16} className="login-mobile-brand-icon" />
+                            <span className="login-mobile-brand-text">robmorkorkai</span>
                         </div>
                     </div>
 
-                    {/* Feature Pills */}
-                    <div className="position-absolute bottom-0 start-0 w-100 px-3 pb-4 d-flex align-items-center gap-2 overflow-auto hide-scroll">
+                    {/* Feature Pills - Horizontal scrollable badges */}
+                    <div className="login-features-mobile">
                         {features.map((f) => (
-                            <div key={f.label} className="rounded-pill px-3 py-1 flex-shrink-0" style={{ backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                                <span className="text-white fw-medium" style={{ fontSize: '0.75rem', opacity: 0.9 }}>{f.label}</span>
+                            <div key={f.label} className="login-feature-pill-mobile">
+                                <span className="login-feature-pill-mobile-text">{f.label}</span>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Content Area */}
-                <div className="flex-grow-1 px-4 pt-4 pb-5 d-flex flex-column align-items-center">
-                    {/* Render Component LoginForm */}
+                {/* Content Area - Form section below image */}
+                <div className="login-mobile-content-section">
+                    {/* LoginForm component */}
                     <LoginForm onGoogleLogin={handleGoogleLogin} />
                 </div>
             </div>

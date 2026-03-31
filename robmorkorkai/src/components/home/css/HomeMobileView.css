@@ -1,0 +1,57 @@
+/* Reset tap highlight for mobile */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Fade up animation */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-up {
+    animation: fadeUp 0.6s ease-out forwards;
+}
+
+/* Search Input Styles */
+.custom-mobile-search::placeholder {
+    color: #8a7b72 !important;
+    opacity: 1;
+}
+
+.custom-mobile-search:focus {
+    background-color: #4a3b33 !important;
+    box-shadow: 0 0 0 2px rgba(232, 185, 74, 0.3) !important;
+    color: #f5ebe4 !important;
+}
+
+/* Login Button Styles */
+.custom-mobile-login {
+    background-color: #a73b24 !important;
+    border: none !important;
+    color: #f5ebe4 !important;
+    transition: all 0.2s ease;
+}
+
+.custom-mobile-login:hover {
+    background-color: #8b2f1d !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Profile Image Styles */
+.custom-mobile-profile {
+    transition: transform 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.custom-mobile-profile:hover {
+    transform: scale(1.05);
+    border-color: #a73b24;
+}

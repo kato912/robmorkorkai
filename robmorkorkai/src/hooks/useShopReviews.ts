@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import api  from "../services/api";
 import type { Review } from "../types/shop";
 
 interface SubmitReviewResult {
@@ -43,7 +44,7 @@ const mapBackendReview = (review: BackendReview): Review => ({
     id: review.id,
     userId: review.userId,
     userName: review.user?.name,
-    userImage: review.user?.image,
+    userImage: (review.user?.image && review.user.image.trim()) ? review.user.image : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300",
     email: review.user?.email,
     rating: review.rating,
     comment: review.comment,
@@ -71,15 +72,10 @@ export const useShopReviews = (shopId?: string) => {
             setError(null);
 
             try {
-                const response = await fetch(`/api/reviews/${shopId}`);
-                if (!response.ok) {
-                    throw new Error("โหลดรีวิวไม่สำเร็จ");
-                }
-
-                const data = await response.json();
-                const mapped = Array.isArray(data.reviews)
-                    ? data.reviews.map((review: BackendReview) => mapBackendReview(review))
-                    : [];
+                const response = await api.get(`/api/reviews/${shopId}`);
+                const data = response.data;
+                const reviews = Array.isArray(data.reviews) ? data.reviews : [];
+                const mapped = reviews.map((review: BackendReview) => mapBackendReview(review));
 
                 setAllReviews(mapped);
                 setVisibleCount(3);
@@ -114,24 +110,13 @@ export const useShopReviews = (shopId?: string) => {
 
         setIsSubmitting(true);
         try {
-            const response = await fetch("/api/reviews", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify({
-                    shopId,
-                    rating,
-                    comment
-                })
+            const response = await api.post("/api/reviews", {
+                shopId,
+                rating,
+                comment
             });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data?.message || "ส่งรีวิวไม่สำเร็จ");
-            }
+            const data = response.data;
 
             const review = mapBackendReview(data.review as BackendReview);
             setAllReviews((prev) => [review, ...prev.filter((item) => item.id !== review.id)]);

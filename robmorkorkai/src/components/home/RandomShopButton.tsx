@@ -31,10 +31,23 @@ export const RandomShopButton: React.FC<Props> = ({ shops }) => {
                         position: fixed; 
                         z-index: 1000; 
                         border: 2px solid #e8b94a;
-                        transition: all 0.2s;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                         animation: bounce 2s infinite;
                         bottom: 110px;
                         right: 20px;
+                    }
+
+                    .gacha-btn:hover:not(:active) {
+                        background-color: #8f3219 !important; /* ลดสีไป */
+                        box-shadow: 0 12px 40px rgba(167, 59, 36, 0.5) !important; /* ขยาย shadow */
+                        transform: translateY(-5px) scale(1.1) !important; /* Float ขึ้น + ขยาย */
+                        animation: none;
+                    }
+
+                    .gacha-btn:active {
+                        background-color: #6d2616 !important; /* ลดอีกกว่าหน่อย */
+                        box-shadow: 0 6px 20px rgba(167, 59, 36, 0.3) !important; /* Shadow ลดลง */
+                        transform: scale(0.95) !important; /* กดลงเล็กน้อย */
                     }
 
                     @media (min-width: 992px) {
@@ -54,15 +67,13 @@ export const RandomShopButton: React.FC<Props> = ({ shops }) => {
                         0%, 100% { transform: translateY(0); }
                         50% { transform: translateY(-5px); }
                     }
-                    .gacha-btn:active {
-                        transform: scale(0.9);
-                    }
                 `}
             </style>
             
             <button
                 onClick={handleRandomShop}
                 className="btn rounded-circle shadow-lg d-flex align-items-center justify-content-center gacha-btn"
+                title='random'
             >
                 <Dices size={28} />
             </button>

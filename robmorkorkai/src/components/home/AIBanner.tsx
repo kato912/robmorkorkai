@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Bot, Sparkles, ArrowRight } from "lucide-react";
+import "./css/AIBanner.css";
 
 export const AIBanner: React.FC = () => {
     return (

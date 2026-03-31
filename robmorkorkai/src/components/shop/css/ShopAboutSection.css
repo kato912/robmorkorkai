@@ -1,0 +1,59 @@
+/* Shop About Section Styles */
+/* Section displaying shop description with quote styling */
+
+.shop-about-section {
+    width: 100%;
+    padding: 3rem 0;            /* Vertical padding for breathing room */
+    background-color: #1a1412;  /* Dark background */
+}
+
+/* Section title - golden uppercase text */
+.shop-about-title {
+    font-size: 1rem;
+    font-weight: 700;           /* Bold weight */
+    text-transform: uppercase;  /* All caps */
+    letter-spacing: 2px;        /* Wide letter spacing for impact */
+    color: #c9943a;             /* Gold accent color */
+    margin-bottom: 1.5rem;      /* Space below title */
+}
+
+/* Card wrapper for description content */
+.shop-about-card {
+    background-color: #231c18;  /* Lighter dark background */
+    border-radius: 1.5rem;      /* Rounded corners */
+    padding: 2rem 2.5rem;       /* Responsive padding */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+/* Increase padding on larger screens */
+@media (min-width: 992px) {
+    .shop-about-card {
+        padding: 3rem 3.5rem;   /* More spacious padding */
+    }
+}
+
+/* Flex container for quote icon and text */
+.shop-about-content {
+    display: flex;
+    gap: 2rem;                  /* Space between icon and text */
+    align-items: flex-start;    /* Align to top */
+}
+
+/* Quote icon styling - subtle and translucent */
+.shop-about-icon {
+    color: rgba(201, 148, 58, 0.3); /* Very faint gold */
+    flex-shrink: 0;             /* Don't shrink to maintain space */
+}
+
+/* Shop description text */
+.shop-about-text {
+    color: #d7cec7;             /* Light tan text */
+    font-size: 1.05rem;         /* Slightly larger for readability */
+    line-height: 1.75;          /* Spacious line height for long text */
+    margin: 0;                  /* Reset default margin */
+    white-space: pre-line;      /* Preserve line breaks from content */
+}
+
+    white-space: pre-line;
+}

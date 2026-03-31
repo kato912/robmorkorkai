@@ -1,0 +1,110 @@
+/**
+ * ProfileInfoCard.css
+ * 
+ * Styles for the profile edit form section.
+ * Displays input fields for user name, email, and phone.
+ * Email field is disabled for security purposes.
+ */
+
+/* Edit Form Container - Main form section */
+.profile-edit-form {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    animation: fadeIn 0.3s ease forwards;
+    border-bottom: 1px solid #3d302a;
+}
+
+@media (min-width: 992px) {
+    .profile-edit-form {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+}
+
+/* Form Title - "Edit Info" section header */
+.profile-form-title {
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: #c9943a;
+}
+
+/* Form Fields Grid */
+.profile-form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .profile-form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 992px) {
+    .profile-form-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Form Field Group - Label and input wrapper */
+.profile-form-field {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Form Label */
+.profile-form-label {
+    font-weight: 500;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    color: #f5ebe4;
+}
+
+/* Form Input */
+.profile-form-input {
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    box-shadow: none;
+    background-color: #231c18;
+    border: 1px solid #3d302a;
+    color: #f5ebe4;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+}
+
+.profile-form-input::placeholder {
+    color: #8a7b72;
+}
+
+.profile-form-input:focus {
+    outline: none;
+    background-color: #2d2320;
+    border-color: #c9943a;
+    box-shadow: 0 0 0 2px rgba(201, 148, 58, 0.1);
+}
+
+/* Disabled Input - Email field (read-only) */
+.profile-form-input:disabled {
+    background-color: #1a1412;
+    border-color: #3d302a;
+    color: #8a7b72;
+    cursor: not-allowed;
+}
+
+/* Fade in animation for form appearance */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease forwards;
+}

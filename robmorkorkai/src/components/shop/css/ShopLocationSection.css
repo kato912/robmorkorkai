@@ -1,0 +1,130 @@
+/* Shop Location Section Styles */
+/* This section displays the shop map and contact information side by side */
+
+.shop-location-section {
+    width: 100%;
+    padding: 3rem 0;
+    background-color: #231c18;
+    border-top: 1px solid #3d302a;
+    border-bottom: 1px solid #3d302a;
+}
+
+/* Container with max-width and center alignment */
+.location-container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Main layout row - flexbox with equal spacing between map and sidebar */
+.location-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 4rem;      /* 4rem gap between map and sidebar for better spacing */
+    width: 100%;
+}
+
+/* Responsive: Stack vertically on mobile/tablet */
+@media (max-width: 991px) {
+    .location-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+/* Map column - takes up 50% on desktop, 100% on mobile */
+.location-map-col {
+    flex: 1;
+    min-width: 0;   /* Prevent flex overflow */
+}
+
+@media (max-width: 991px) {
+    .location-map-col {
+        flex: 0 0 100%;
+        padding-right: 0;
+        margin-bottom: 3rem;
+    }
+}
+
+/* Section title styling */
+.location-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #c9943a;
+    margin-bottom: 1.5rem;
+}
+
+/* Map card container */
+.map-card {
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    background-color: transparent;
+}
+
+/* Google Maps iframe styling */
+.map-iframe {
+    border: 0;
+    filter: contrast(1.2) opacity(0.8);
+    border-radius: 1rem;
+    width: 100%;
+    height: 280px;
+}
+
+/* Placeholder when coordinates are not available */
+.map-placeholder {
+    height: 280px;
+    background-color: #2d2320;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #8a7b72;
+}
+
+.map-placeholder-icon {
+    color: #c9943a;
+    opacity: 0.5;
+    margin-bottom: 0.5rem;
+}
+
+/* "Open in Google Maps" button */
+.map-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 9999px;
+    border: none;
+    font-weight: 600;
+    background-color: #A73B24;
+    color: #fff5f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.map-button:hover {
+    background-color: #c94a2f;
+    transform: translateY(-2px);
+}
+
+/* Sidebar column - takes up 50% on desktop, 100% on mobile */
+.location-sidebar-col {
+    flex: 1;
+    min-width: 0;   /* Prevent flex overflow */
+}
+
+/* Responsive: Full width on mobile */
+@media (max-width: 991px) {
+    .location-sidebar-col {
+        flex: 0 0 100%;
+        padding-right: 0;
+    }
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import "./css/CategoryFilter.css";
 
 export interface CategoryItem {
     id: string;
@@ -11,8 +12,6 @@ interface Props {
     selectedCategory: string | null;
     setSelectedCategory: (id: string | null) => void;
 }
-
-const KKU_RED = "#8B0000";
 
 export const CategoryFilter: React.FC<Props> = ({ categories, selectedCategory, setSelectedCategory }) => {
     return (

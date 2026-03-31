@@ -1,0 +1,157 @@
+/**
+ * SearchShopCard.css
+ * 
+ * Styles for the search results shop card component.
+ * Displays shop information in a horizontal card layout with image, name, rating, and basic info.
+ * Features responsive design and hover effects for better UX.
+ */
+
+/* Card Container - Horizontal layout with image on left, content on right */
+.custom-search-card {
+    background-color: #231c18 !important;
+    border: 1px solid #3d302a !important;
+    transition: all 0.3s ease;
+    min-height: 130px;
+}
+
+/* Hover State - Card becomes more prominent on hover */
+.custom-search-card:hover {
+    border-color: #c9943a !important;
+    background-color: #2d2320 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Image Container - Left side of card (35% width) */
+.search-card-image-container {
+    width: 35%;
+    max-width: 160px;
+    min-width: 120px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2d2320;
+    min-height: 130px;
+}
+
+/* Image Loading Overlay - Shows spinner while image loads */
+.search-card-image-loading {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #2d2320;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Image Element - Responsive to container size */
+.search-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    min-height: 130px;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+/* Image Hover - Increase opacity on hover for better visibility */
+.custom-search-card:hover .search-card-image {
+    opacity: 1;
+}
+
+/* Loading Spinner Animation */
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Content Container - Right side of card (65% width) */
+.search-card-content {
+    padding: 0.75rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Shop Name - Title of the shop */
+.search-card-name {
+    font-weight: bold;
+    font-size: 0.95rem;
+    text-truncate;
+    max-width: 80%;
+    color: #f5ebe4;
+    margin: 0;
+    margin-bottom: 0.25rem;
+}
+
+/* Category Text - Shop category/type */
+.search-card-category {
+    font-size: 0.8rem;
+    text-truncate;
+    max-width: 95%;
+    color: #9a8a7e;
+    margin: 0;
+    margin-bottom: 0.5rem;
+}
+
+/* Rating Display - Star and rating number */
+.search-card-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #e8b94a;
+}
+
+/* Review Count - Number of reviews in parentheses */
+.search-card-review-count {
+    font-weight: normal;
+    color: #8a7b72;
+}
+
+/* Info Row - Location and hours info */
+.search-card-info-row {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: #9a8a7e;
+}
+
+/* Info Item - Individual info (zone or hours) with icon */
+.search-card-info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Responsive Design - Adjustments for smaller screens */
+@media (max-width: 576px) {
+    .search-card-image-container {
+        min-width: 100px;
+        max-width: 140px;
+    }
+
+    .search-card-name {
+        font-size: 0.85rem;
+    }
+
+    .search-card-category {
+        font-size: 0.75rem;
+    }
+
+    .search-card-info-row {
+        font-size: 0.7rem;
+    }
+}

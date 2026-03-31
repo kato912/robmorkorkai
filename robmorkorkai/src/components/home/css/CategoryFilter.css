@@ -1,0 +1,42 @@
+/* Category Filter Styles */
+.category-filter-container {
+    display: flex;
+    gap: 0.5rem;
+    overflow: auto;
+    padding-bottom: 0.75rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.category-filter-container::-webkit-scrollbar {
+    display: none;
+}
+
+.category-filter-btn {
+    border: 1px solid #3d302a;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.category-filter-btn:not(.active) {
+    background-color: #2d2320;
+    color: #f5ebe4;
+}
+
+.category-filter-btn.active {
+    background-color: #A73B24;
+    color: #fff5f0;
+    font-weight: bold;
+    border-color: #A73B24;
+}
+
+.category-filter-btn:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

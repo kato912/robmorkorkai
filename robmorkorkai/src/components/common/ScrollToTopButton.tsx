@@ -21,14 +21,27 @@ export const ScrollToTopButton: React.FC = () => {
             <style>
                 {`
                     .scroll-to-top-btn {
-                        bottom: 120px; /* มือถือ: ดันขึ้นสูงหน่อย เพื่อหลบแถบ Bottom Nav */
-                        right: 30px;   /* มือถือ: ชิดขอบเข้ามาหน่อย (20px กำลังสวย ไม่บังเนื้อหา) */
+                        bottom: 40px;  /* มือถือ: ลดความสูง ให้อยู่ใกล้บ่อกว่า */
+                        right: 20px;   /* มือถือ: ชิดขอบเข้ามา */
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    }
+
+                    .scroll-to-top-btn:hover:not(:active) {
+                        background-color: #d4a855 !important; /* ลดสีไป */
+                        box-shadow: 0 12px 40px rgba(232, 185, 74, 0.4) !important; /* ขยาย shadow */
+                        transform: translateY(-3px) scale(1.08) !important; /* Float ขึ้นมา + ขยายเล็กน้อย */
+                    }
+
+                    .scroll-to-top-btn:active {
+                        background-color: #b89e47 !important; /* ลดอีกกว่าหน่อย */
+                        box-shadow: 0 6px 20px rgba(232, 185, 74, 0.3) !important; /* Shadow ลดลง */
+                        transform: translateY(-1px) scale(0.95) !important; /* กดลงเล็กน้อย */
                     }
                     
                     @media (min-width: 992px) {
                         .scroll-to-top-btn {
-                            bottom: 40px; /* จอคอม: ดันลงมาต่ำได้ เพราะไม่มีแถบ Bottom Nav แล้ว */
-                            right: 40px;  /* จอคอม: ขยับห่างขอบได้มากขึ้น (40px) ดูสมดุลกว่า */
+                            bottom: 40px; /* จอคอม: ดูสมดุลกว่า */
+                            right: 40px;  /* จอคอม: ขยับห่างขอบ */
                         }
                     }
                 `}

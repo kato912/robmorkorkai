@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Star } from "lucide-react";
 import type { Shop } from "../../types/shop";
+import "./css/ShopCard.css";
 
 export const ShopCard: React.FC<{ shop: Shop }> = ({ shop }) => (
     <Link to={`/shop/${shop.id}`} className="text-decoration-none">
@@ -11,7 +12,8 @@ export const ShopCard: React.FC<{ shop: Shop }> = ({ shop }) => (
                     src={shop.coverImage || shop.image || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect fill='%23e5e7eb' width='180' height='180'/%3E%3C/svg%3E"}
                     loading="lazy"
                     alt={shop.name}
-                    className="w-100 h-100 object-fit-cover" />
+                    className="w-100 h-100 object-fit-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect fill='%23e5e7eb' width='180' height='180'/%3E%3C/svg%3E"; }} />
             </div>
 
             <div className="card-body">

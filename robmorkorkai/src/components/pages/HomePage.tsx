@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2, AlertCircle } from "lucide-react";
+
 import HomeMobileView from "../home/HomeMobileView";
 import HomeDesktopView from "../home/HomeDesktopView";
+
 import { ZONES as zones, CATEGORIES as categories } from "../../utils/constants";
-import { useShops } from "../../hooks/useShops"; 
+import { useShops } from "../../hooks/useShops";
+import "./css/HomePage.css";
 
 export interface HomeViewProps {
-    selectedZone: string | null; 
-    setSelectedZone: (id: string | null) => void; 
-    selectedCategory: string | null; 
-    setSelectedCategory: (id: string | null) => void; 
+    selectedZone: string | null;
+    setSelectedZone: (id: string | null) => void;
+    selectedCategory: string | null;
+    setSelectedCategory: (id: string | null) => void;
     filteredShops: any[];
     zone: typeof zones;
     categorie: typeof categories;
@@ -19,25 +22,100 @@ export interface HomeViewProps {
     handleSearch: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
+export interface HomeViewProps {
+    selectedZone: string | null;
+    setSelectedZone: (id: string | null) => void;
+    selectedCategory: string | null;
+    setSelectedCategory: (id: string | null) => void;
+    filteredShops: any[];
+    zone: typeof zones;
+    categorie: typeof categories;
+    searchQuery: string;
+    setSearchQuery: (text: string) => void;
+    handleSearch: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+}
+
+// Helper: Normalize Thai text for zone comparison
+const cleanText = (text: string): string => {
+    if (!text) return "";
+    return text
+        .normalize("NFD")
+        .replace(/[\u0E31\u0E33\u0E34-\u0E3A\u0E47-\u0E4E]/g, "") // Thai diacritics
+        .toLowerCase()
+        .trim();
+};
+
+// Manual mapping for zone ID to label (fallback for spelling variations)
+const ZONE_ID_MAP: Record<string, string[]> = {
+    "lang-mor": ["หลังมอ"],
+    "nai-mor": ["ในมอ"],
+    "muang": ["เมือง"],
+    "khlong-san": ["คลองซัน"],
+};
+
+/**
+ * HomePage Component
+ * 
+ * Responsibility:
+ * - ดึง shop data จาก useShops hook
+ * - คำนวณ zone/category counts
+ * - เลือก mobile/desktop view ตามขนาดจอ
+ * - จัดการ search และ filter logic
+ */
+
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
-    
-    // ดึง State และ Data ทั้งหมดมาจาก Custom Hook
+
+    // Fetch all state and data from custom hook
     const {
-        filteredShops, isLoading, error,
+        shops, filteredShops, isLoading, error,
         selectedZone, setSelectedZone,
         selectedCategory, setSelectedCategory,
         searchQuery, setSearchQuery
     } = useShops();
 
-    // ฟังก์ชันกด Enter เพื่อค้นหา
+    // Handle search: navigate to search page on Enter key
     const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && searchQuery.trim() !== "") {
             navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
         }
     };
 
-    // จัดการหน้า Loading & Error
+    // Calculate shop count per zone from all shops (not filtered)
+    const zonesWithCount = useMemo(() => {
+        return zones.map(z => {
+            const count = shops.filter(shop => {
+                const shopZone = shop.zone || "";
+                const zoneId = z.id;
+                const zoneLabel = z.label.replace('📍', '').trim();
+
+                // Check exact ID match
+                if (cleanText(shopZone) === cleanText(zoneId)) return true;
+
+                // Check exact label match (after removing pin emoji)
+                if (cleanText(shopZone) === cleanText(zoneLabel)) return true;
+
+                // Check against mapped labels (spelling variations)
+                const mappedLabels = ZONE_ID_MAP[zoneId] || [];
+                if (mappedLabels.some(label => cleanText(shopZone) === cleanText(label))) {
+                    return true;
+                }
+
+                // Fallback: compare normalized text
+                const cleanShopZone = cleanText(shopZone);
+                const cleanZoneId = cleanText(zoneId);
+                const cleanZoneLabel = cleanText(zoneLabel);
+
+                return cleanShopZone === cleanZoneId ||
+                    cleanShopZone === cleanZoneLabel ||
+                    cleanShopZone.includes(cleanZoneId) ||
+                    cleanZoneId.includes(cleanShopZone);
+            }).length;
+            return { ...z, count };
+        });
+    }, [shops]);
+
+    // Loading state
     if (isLoading) {
         return (
             <div className="min-vh-100 d-flex flex-column align-items-center justify-content-center bg-white">
@@ -48,10 +126,11 @@ const HomePage: React.FC = () => {
         );
     }
 
+    // Error state
     if (error) {
         return (
             <div className="min-vh-100 d-flex flex-column align-items-center justify-content-center bg-light">
-                <div className="text-center p-5 bg-white rounded-4 shadow-sm border" style={{ maxWidth: '400px' }}>
+                <div className="text-center p-5 bg-white rounded-4 shadow-sm border error-modal">
                     <div className="bg-danger bg-opacity-10 text-danger rounded-circle d-inline-flex p-3 mb-4">
                         <AlertCircle size={40} />
                     </div>
@@ -63,16 +142,17 @@ const HomePage: React.FC = () => {
         );
     }
 
-    // รวบรวม Props เพื่อส่งให้ View Component
+    // Pass props to view components
     const viewProps: HomeViewProps = {
         selectedZone, setSelectedZone,
         selectedCategory, setSelectedCategory,
         filteredShops,
-        zone: zones,       
-        categorie: categories,  
+        zone: zonesWithCount,
+        categorie: categories,
         searchQuery, setSearchQuery, handleSearch
     };
 
+    // Responsive render: mobile or desktop view
     return (
         <>
             <div className="d-lg-none">

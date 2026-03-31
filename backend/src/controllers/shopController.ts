@@ -4,7 +4,8 @@ import { prisma } from "../utils/prisma.js";
 // 1. ดึงรายการร้านค้าทั้งหมด (รองรับการค้นหาและกรองโซน)
 export const getShops = async (req: Request, res: Response) => {
     try {
-        const { search, zone, type } = req.query;
+        const { search, zone, type, limit } = req.query;
+        const take = limit ? parseInt(String(limit)) : 1000; // Default 1000 ร้าน
 
         const shops = await prisma.shop.findMany({
             where: {
@@ -12,19 +13,35 @@ export const getShops = async (req: Request, res: Response) => {
                 zone: zone ? { equals: String(zone) } : undefined,
                 type: type ? { equals: String(type) } : undefined,
             },
-            include: {
-                images: {
-                    orderBy: { order: 'asc' }
-                }
-            },
             // เรียงตามร้านที่มีรีวิวเยอะสุดขึ้นก่อน (เผื่ออนาคตเอาไว้จัดอันดับ)
             orderBy: { reviews: { _count: 'desc' } }, 
-            take: 50, // จำกัดการดึงข้อมูลเพื่อไม่ให้แอปค้าง
+            take: take,
         });
 
         res.json(shops);
     } catch (error) {
         console.error("Error fetching shops:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+// 1.5. ดึงสถิติแอปพลิเคชัน (จำนวนร้าน จำนวนรีวิว)
+// ใช้สำหรับ Login Page features display
+export const getStats = async (req: Request, res: Response) => {
+    try {
+        // ดึงจำนวนร้านทั้งหมด
+        const shopCount = await prisma.shop.count();
+
+        // ดึงจำนวนรีวิวทั้งหมด
+        const reviewCount = await prisma.review.count();
+
+        res.json({
+            shops: shopCount,
+            reviews: reviewCount,
+            aiPowered: true // Always true for now
+        });
+    } catch (error) {
+        console.error("Error fetching stats:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
@@ -41,9 +58,6 @@ export const getShopById = async (req: Request, res: Response) => {
                 reviews: {
                     include: { user: { select: { name: true, image: true } } },
                     orderBy: { createdAt: 'desc' } // รีวิวใหม่ล่าสุดขึ้นก่อน
-                },
-                images: {
-                    orderBy: { order: 'asc' }
                 }
             }
         });

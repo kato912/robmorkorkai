@@ -1,0 +1,248 @@
+/**
+ * SearchPage.css
+ * 
+ * Main styles for the search results page layout and components.
+ * Includes loading state, sort button styling, empty state message, and responsive layout.
+ */
+
+/* Page Container - Full height dark background */
+.search-page-container {
+    background-color: #1a1412;
+    min-height: 100vh;
+    padding-bottom: 3rem;
+}
+
+/* Main Content Container - Bootstrap container */
+.search-page-content {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* Loading State Container - Centered loading spinner and message */
+.search-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 75vh;
+}
+
+/* Loading Spinner - Animated rotating icon */
+.search-loading-spinner {
+    color: #e8b94a;
+    margin-bottom: 1rem;
+    animation: spin 1s linear infinite;
+}
+
+/* Loading Message - Text below spinner */
+.search-loading-message {
+    color: #9a8a7e;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Min height utility class */
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+/* Results Header Section - Title and sort controls */
+.search-results-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: nowrap;
+}
+
+/* Results Title - "All Shops" heading */
+.search-results-title {
+    color: #f5ebe4;
+    margin: 0;
+    font-weight: bold;
+}
+
+/* Results Title - Desktop version (h4) */
+.search-results-title-desktop {
+    font-size: 1.5rem;
+    display: none;
+}
+
+/* Results Title - Mobile version (h5) */
+.search-results-title-mobile {
+    font-size: 1.25rem;
+    display: block;
+}
+
+/* Results Count - Number of shops found */
+.search-results-count {
+    font-size: 0.875rem;
+    color: #9a8a7e;
+}
+
+/* Sort Controls Section - Sort button group */
+.search-sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0.25rem;
+    width: 100%;
+}
+
+/* Hide scrollbar on sort controls */
+.search-sort-controls::-webkit-scrollbar {
+    display: none;
+}
+
+/* Sort Label - "Sort by:" text */
+.search-sort-label {
+    font-size: 0.875rem;
+    color: #8a7b72;
+    white-space: nowrap;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+    display: none;
+}
+
+/* Sort Button - Individual sort option button */
+.search-sort-btn {
+    border-radius: 9999px;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Sort Button - Inactive state */
+.search-sort-btn-inactive {
+    background-color: #231c18;
+    color: #9a8a7e;
+    border: 1px solid #3d302a;
+}
+
+.search-sort-btn-inactive:hover {
+    background-color: rgba(201, 148, 58, 0.1);
+    border-color: #c9943a;
+    color: #c9943a;
+}
+
+/* Sort Button - Active state (selected) */
+.search-sort-btn-active {
+    background-color: #A73B24;
+    color: #f5ebe4;
+    border: 1px solid #A73B24;
+    font-weight: bold;
+}
+
+/* Results Grid - Container for shop cards */
+.search-results-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+}
+
+/* Results Grid - Responsive for larger screens */
+@media (min-width: 992px) {
+    .search-results-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .search-results-title-desktop {
+        display: block;
+    }
+
+    .search-results-title-mobile {
+        display: none;
+    }
+
+    .search-sort-label {
+        display: inline;
+    }
+}
+
+/* Empty State - No results found container */
+.search-empty-state {
+    text-align: center;
+    padding: 2rem;
+    background-color: transparent;
+}
+
+/* Empty State Icon - Placeholder icon */
+.search-empty-state-icon {
+    background-color: #2d2320;
+    border-radius: 50%;
+    padding: 0.75rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.search-empty-state-icon-svg {
+    color: #8a7b72;
+    opacity: 0.5;
+}
+
+/* Empty State Message - Text when no results found */
+.search-empty-message {
+    color: #9a8a7e;
+    margin-bottom: 1rem;
+}
+
+/* Clear Filters Button - Link to reset all filters */
+.search-clear-filters-btn {
+    border: 1px solid #A73B24;
+    color: #A73B24;
+    background-color: transparent;
+    border-radius: 9999px;
+    padding: 0.375rem 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.search-clear-filters-btn:hover {
+    background-color: rgba(167, 59, 36, 0.1);
+    color: #d94c2f;
+}
+
+/* Responsive Design - Mobile adjustments */
+@media (max-width: 768px) {
+    .search-page-content {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .search-results-header {
+        gap: 0.75rem;
+    }
+
+    .search-results-grid {
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .search-results-title-mobile {
+        font-size: 1.1rem;
+    }
+
+    .search-sort-btn {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+}

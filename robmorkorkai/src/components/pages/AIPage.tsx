@@ -136,7 +136,7 @@ export const AIPage: React.FC = () => {
             </div>
 
             {/* Input Component */}
-            <AIChatInput query={query} setQuery={setQuery} handleSend={handleSend} inputRef={inputRef} />
+            <AIChatInput query={query} setQuery={setQuery} handleSend={handleSend}/>
 
             <div className="d-lg-none"><BottomNav activePage="ai" /></div>
         </div>

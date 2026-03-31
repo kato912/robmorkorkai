@@ -1,0 +1,28 @@
+/**
+ * ProfilePage.css
+ * 
+ * Styles for the main profile page container.
+ * Sets up layout and spacing for the entire profile page.
+ */
+
+/* Main Container - Full page container */
+.profile-page-container {
+    min-height: 100vh;
+    background-color: #1a1412;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Main Content - Main content area with max-width */
+.profile-page-main {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 90px;
+}
+
+/* Bottom Navigation Spacing - Mobile navigation space */
+@media (min-width: 992px) {
+    .profile-page-main {
+        padding-bottom: 0;
+    }
+}

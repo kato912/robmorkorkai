@@ -52,7 +52,16 @@ export const getShopsAdmin = async (req: Request, res: Response) => {
             orderBy: { createdAt: 'desc' },
         });
 
-        res.json(shops);
+        // Map type to category for frontend compatibility
+        const shopsWithCategory = shops.map(shop => ({
+            ...shop,
+            category: shop.type || "ไม่ระบุหมวดหมู่",
+            reviewCount: shop._count.reviews,
+            // Remove _count from response
+            _count: undefined
+        }));
+
+        res.json(shopsWithCategory);
     } catch (error) {
         console.error("Error fetching shops for admin:", error);
         res.status(500).json({ message: "Internal Server Error" });
@@ -62,30 +71,21 @@ export const getShopsAdmin = async (req: Request, res: Response) => {
 // สร้างร้านค้าใหม่ (Admin only)
 export const createShopAdmin = async (req: Request, res: Response) => {
     try {
-        const { osmId, name, type, address, latitude, longitude, zone, coverImage, openHours } = req.body;
+        const { name, type, address, googleMapsUrl, latitude, longitude, zone, coverImage, openHours } = req.body;
 
         // ตรวจสอบข้อมูลที่จำเป็น
-        if (!osmId || !name || latitude === undefined || longitude === undefined) {
+        if (!name || latitude === undefined || longitude === undefined) {
             return res.status(400).json({ 
-                message: "Missing required fields: osmId, name, latitude, longitude" 
+                message: "Missing required fields: name, latitude, longitude" 
             });
-        }
-
-        // ตรวจสอบว่า osmId มีอยู่แล้วหรือไม่
-        const existingShop = await prisma.shop.findUnique({
-            where: { osmId }
-        });
-
-        if (existingShop) {
-            return res.status(409).json({ message: "Shop with this osmId already exists" });
         }
 
         const newShop = await prisma.shop.create({
             data: {
-                osmId,
                 name,
                 type: type || null,
                 address: address || null,
+                googleMapsUrl: googleMapsUrl || null,
                 latitude,
                 longitude,
                 zone: zone || null,
@@ -123,6 +123,7 @@ export const updateShopAdmin = async (req: Request, res: Response) => {
                 ...(name && { name }),
                 ...(type && { type }),
                 ...(address && { address }),
+                ...(googleMapsUrl && { googleMapsUrl }),
                 ...(latitude !== undefined && { latitude }),
                 ...(longitude !== undefined && { longitude }),
                 ...(zone && { zone }),
@@ -180,9 +181,6 @@ export const getShopByIdAdmin = async (req: Request, res: Response) => {
                     },
                     orderBy: { createdAt: 'desc' }
                 },
-                images: {
-                    orderBy: { order: 'asc' }
-                },
                 _count: {
                     select: { reviews: true }
                 }
@@ -193,12 +191,22 @@ export const getShopByIdAdmin = async (req: Request, res: Response) => {
             return res.status(404).json({ message: "Shop not found" });
         }
 
-        res.json(shop);
+        // Map type to category for frontend compatibility
+        const shopWithCategory = {
+            ...shop,
+            category: shop.type || "ไม่ระบุหมวดหมู่",
+            reviewCount: shop._count.reviews,
+            // Remove _count from response
+            _count: undefined
+        };
+
+        res.json(shopWithCategory);
     } catch (error) {
         console.error("Error fetching shop details:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
 
 // ==================== SHOP IMAGES ====================
 

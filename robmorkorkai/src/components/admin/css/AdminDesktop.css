@@ -1,0 +1,429 @@
+/**
+ * AdminDesktop.css
+ * 
+ * Styles for AdminDesktop component
+ * Desktop-optimized admin dashboard layout with sidebar and main content area
+ * 
+ * Structure:
+ * - Container & Layout
+ * - Sidebar Styles
+ * - Main Content Styles
+ * - Header & Search/Filter Styles
+ * - Tab Content Styles
+ * - Cards & Tables
+ */
+
+/* ========== CONTAINER & LAYOUT ========== */
+
+.admin-desktop-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.admin-desktop-sidebar {
+    position: fixed;
+    height: 100%;
+    width: 260px;
+    z-index: 1030;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-desktop-sidebar-header {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.admin-desktop-sidebar-nav {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.admin-desktop-sidebar-footer {
+    padding: 0.75rem;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ========== MAIN CONTENT ========== */
+
+.admin-desktop-main {
+    flex-grow: 1;
+    padding: 2rem;
+    margin-left: 260px;
+}
+
+/* ========== HEADER SECTION ========== */
+
+.admin-desktop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.admin-desktop-header-title {
+    font-weight: 700;
+    margin: 0;
+    color: #212529;
+}
+
+.admin-desktop-header-subtitle {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* ========== SEARCH & FILTER ========== */
+
+.admin-desktop-search-filter {
+    display: flex;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.admin-desktop-search-wrapper {
+    position: relative;
+}
+
+.admin-desktop-search-icon {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    color: #6c757d;
+}
+
+.admin-desktop-search-input {
+    width: 250px;
+    background-color: white;
+}
+
+.admin-desktop-filter-btn {
+    border: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.admin-desktop-filter-dropdown {
+    position: absolute;
+    right: 0;
+    margin-top: 0.5rem;
+    background-color: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    z-index: 1050;
+}
+
+.admin-desktop-filter-dropdown-title {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.admin-desktop-filter-option {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.15s ease;
+}
+
+.admin-desktop-filter-option:hover {
+    background-color: #f8f9fa;
+}
+
+.admin-desktop-filter-option.active {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.admin-desktop-filter-option.inactive {
+    color: #212529;
+}
+
+/* ========== CONTENT TABS ========== */
+
+.admin-desktop-overview {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.admin-desktop-stores {
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* ========== STAT CARDS ROW ========== */
+
+.admin-desktop-stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.admin-desktop-stat-col {
+    width: 100%;
+}
+
+/* ========== SHOP PREVIEW CARD ========== */
+
+.admin-desktop-shops-card {
+    border: 0;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 1.5rem;
+    height: 100%;
+    padding: 1.5rem;
+}
+
+.admin-desktop-shops-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.admin-desktop-shops-title {
+    font-weight: 700;
+    margin: 0;
+    color: #212529;
+}
+
+.admin-desktop-shops-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.admin-desktop-shop-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-radius: 1.5rem;
+}
+
+.admin-desktop-shop-item-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.admin-desktop-shop-item-image {
+    border-radius: 1.5rem;
+    object-fit: cover;
+}
+
+.admin-desktop-shop-item-details h6 {
+    font-weight: 700;
+    margin: 0;
+    color: #212529;
+    font-size: 0.875rem;
+}
+
+.admin-desktop-shop-item-details small {
+    color: #6c757d;
+}
+
+.admin-desktop-shop-item-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.admin-desktop-shop-item-action-btn {
+    border: 1px solid #dee2e6;
+    background-color: white;
+    border-radius: 50%; 
+    width: 36px; 
+    height: 36px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-desktop-shop-item-action-btn:hover {
+    transform: scale(1.05);
+}
+
+.admin-desktop-shop-item-action-btn.view {
+    color: #0dcaf0;
+}
+
+.admin-desktop-shop-item-action-btn.edit {
+    color: #198754;
+}
+
+.admin-desktop-shop-item-action-btn.delete {
+    color: #dc3545;
+}
+
+.admin-desktop-empty-state {
+    text-align: center;
+    color: #6c757d;
+    padding: 3rem 0;
+}
+
+/* ========== STORES TABLE ========== */
+
+.admin-desktop-table-wrapper {
+    border: 0;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 1.5rem;
+    overflow: hidden;
+}
+
+.admin-desktop-table {
+    border-collapse: collapse;
+}
+
+.admin-desktop-table thead {
+    background-color: #f8f9fa;
+}
+
+.admin-desktop-table thead tr {
+    background-color: #f8f9fa;
+}
+
+.admin-desktop-table th {
+    padding: 1rem;
+    color: #6c757d;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 0;
+}
+
+.admin-desktop-table-header {
+    padding: 1rem;
+    color: #6c757d;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 0;
+}
+
+.admin-desktop-table td {
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.admin-desktop-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.admin-desktop-table-shop {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.admin-desktop-table-shop-image {
+    border-radius: 1.5rem;
+    width: 40px;
+    height: 40px;
+}
+
+.admin-desktop-table-shop-name {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #212529;
+}
+
+.admin-desktop-table-shop-owner {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.admin-desktop-table-zone {
+    font-size: 0.875rem;
+    color: #212529;
+}
+
+.admin-desktop-table-category {
+    font-size: 0.875rem;
+    color: #212529;
+}
+
+.admin-desktop-table-actions {
+    text-align: right;
+}
+
+.admin-desktop-table-action-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.admin-desktop-table-action-btn {
+    font-size: 0.875rem;
+    border: 1px solid #dee2e6;
+    background-color: white;
+    color: #6c757d;
+    padding: 0.5rem 0.75rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+}
+
+.admin-desktop-table-action-btn:hover {
+    transform: translateY(-1px);
+}
+
+.admin-desktop-table-action-btn.view {
+    color: #0dcaf0;
+}
+
+.admin-desktop-table-action-btn.edit {
+    color: #0d6efd;
+}
+
+.admin-desktop-table-action-btn.delete {
+    color: #dc3545;
+}
+
+/* ========== ANIMATIONS ========== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== RESPONSIVE ========== */
+
+@media (max-width: 992px) {
+    .admin-desktop-container {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-desktop-stat-row {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-desktop-search-input {
+        width: 180px;
+    }
+}

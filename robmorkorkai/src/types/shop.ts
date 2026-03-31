@@ -20,6 +20,7 @@ export interface ShopImage {
 }
 
 export interface Shop {
+    coverImage: string;
     type: string;
     id: string; // id
     name: string; // ชื่อร้าน
@@ -27,6 +28,7 @@ export interface Shop {
     coverImage?: string; // รูปภาพ (actual field from backend)
     images?: ShopImage[]; // รูปภาพเพิ่มเติม (multiple images)
     category: string;// หมวดหมู่
+    address?: string; // ที่อยู่
     latitude: number; // ละติจูด
     longitude: number; // ลองจิจูด
     ratingAvg?: number; // เรทคะแนน

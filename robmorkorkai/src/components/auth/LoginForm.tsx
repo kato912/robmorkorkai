@@ -1,8 +1,38 @@
+/**
+ * LoginForm Component
+ *
+ * Responsive authentication form for user login.
+ * Features:
+ * - Google OAuth login button with hover effects
+ * - Guest browse option
+ * - Visual divider between login options
+ * - Educational tip box promoting KKU email sign-in
+ * - Terms and privacy policy links
+ * - Responsive design (mobile and desktop)
+ *
+ * Props:
+ * - onGoogleLogin: Optional callback when Google login is clicked
+ *
+ * State:
+ * - isHovering: Tracks hover state for Google button
+ *
+ * CSS Classes Used:
+ * - login-form-container: Main form wrapper
+ * - login-form-header: Welcome and heading section
+ * - login-form-buttons: Google and guest button container
+ * - login-button-google: Google OAuth button
+ * - login-button-guest: Guest browse button
+ * - login-form-divider-container: "or" divider
+ * - login-kku-tip-box: Educational tip for KKU email
+ * - login-form-footer: Terms and privacy links
+ */
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 import { GoogleIcon } from "./GoogleIcon";
 import { useAuth } from "../../context/AuthContext";
+import "./LoginForm.css";
 
 interface LoginFormProps {
     onGoogleLogin?: () => void;
@@ -11,72 +41,83 @@ interface LoginFormProps {
 export const LoginForm: React.FC<LoginFormProps> = ({ onGoogleLogin }) => {
     const [isHovering, setIsHovering] = useState(false);
     const { login } = useAuth();
+    
+    /**
+     * Handle Google login button click
+     * Triggers authentication flow via AuthContext
+     */
     const handleGoogleClick = () => {
-        login(); // เรียกใช้การล็อกอิน
+        login(); // Initiate Google OAuth login
     };
 
     return (
-        <div className="w-100" style={{ maxWidth: '400px' }}>
-            <div className="mb-4 mb-lg-5">
-                <p className="text-stone-500 text-uppercase fw-bold mb-2 mb-lg-3" style={{ fontSize: '0.75rem', letterSpacing: '0.2em' }}>Welcome</p>
-                <h1 className="fw-bolder text-stone-100 tracking-tight lh-sm mb-2 mb-lg-3" style={{ fontSize: 'clamp(2rem, 5vw, 2.5rem)' }}>
+        <div className="login-form-container">
+            {/* Header Section - Welcome text and main heading */}
+            <div className="login-form-header">
+                <p className="login-form-welcome-label">Welcome</p>
+                <h1 className="login-form-heading">
                     Sign in to<br />
-                    <span className="text-stone-400">explore KKU</span>
+                    <span className="login-form-heading-accent">explore KKU</span>
                 </h1>
-                <p className="text-stone-500 lh-base" style={{ fontSize: '1rem' }}>
+                <p className="login-form-description">
                     Discover the best cafes, restaurants, and study spots around Khon Kaen University.
                 </p>
             </div>
 
-            {/* Google Button */}
-            <div className="d-flex flex-column gap-3 mb-4">
+            {/* Buttons Section - Login options */}
+            <div className="login-form-buttons">
+                {/* Google Login Button - Primary authentication option */}
                 <button
                     onClick={handleGoogleClick}
                     onMouseEnter={() => setIsHovering(true)}
                     onMouseLeave={() => setIsHovering(false)}
-                    className={`btn w-100 rounded-4 d-flex align-items-center justify-content-center gap-3 fw-medium btn-google ${isHovering ? 'hovered' : ''}`}
-                    style={{ height: '56px', fontSize: '1rem' }}
+                    className={`login-button-google ${isHovering ? 'hovered' : ''}`}
+                    title="Continue with your Google account"
                 >
                     <GoogleIcon />
                     Continue with Google
                 </button>
 
-                {/* Divider */}
-                <div className="d-flex align-items-center gap-3 my-1">
-                    <div className="flex-grow-1 bg-stone-800" style={{ height: '1px' }} />
-                    <span className="text-stone-600 text-uppercase fw-bold" style={{ fontSize: '0.7rem', letterSpacing: '0.1em' }}>or</span>
-                    <div className="flex-grow-1 bg-stone-800" style={{ height: '1px' }} />
+                {/* Divider - "or" separator between login options */}
+                <div className="login-form-divider-container">
+                    <div className="login-divider-line" />
+                    <span className="login-divider-text">or</span>
+                    <div className="login-divider-line" />
                 </div>
 
-                {/* Guest Button */}
-                <Link to="/" className="text-decoration-none">
-                    <button className="btn w-100 rounded-4 fw-medium btn-guest" style={{ height: '48px' }}>
+                {/* Guest Login Button - Browse without authentication */}
+                <Link to="/" className="login-guest-button-link">
+                    <button 
+                        className="login-button-guest"
+                        title="Continue browsing as guest"
+                    >
                         Browse as guest
                     </button>
                 </Link>
             </div>
 
-            {/* KKU Mail Tip */}
-            <div className="p-3 p-lg-4 bg-stone-900 border border-secondary border-opacity-25 rounded-4 mb-4 mb-lg-5">
-                <div className="d-flex align-items-start gap-3">
-                    <div className="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '36px', height: '36px', backgroundColor: 'rgba(245, 158, 11, 0.1)' }}>
-                        <Sparkles size={18} className="text-warning" />
-                    </div>
-                    <div>
-                        <p className="text-stone-300 fw-bold mb-1" style={{ fontSize: '0.9rem' }}>Use @kkumail.com</p>
-                        <p className="text-stone-500 m-0 lh-base" style={{ fontSize: '0.8rem' }}>
-                            Sign in with your KKU email to unlock exclusive student features and verified badge.
-                        </p>
-                    </div>
+            {/* KKU Email Tip Box - Educational callout encouraging KKU email signups */}
+            <div className="login-kku-tip-box">
+                {/* Icon container with Sparkles icon */}
+                <div className="login-tip-icon-container">
+                    <Sparkles className="login-tip-icon" size={18} />
+                </div>
+                
+                {/* Tip content - Heading and description */}
+                <div className="login-tip-content">
+                    <p className="login-tip-heading">Use @kkumail.com</p>
+                    <p className="login-tip-description">
+                        Sign in with your KKU email to unlock exclusive student features and verified badge.
+                    </p>
                 </div>
             </div>
 
-            {/* Bottom Terms */}
-            <p className="text-stone-600 mb-0 text-center text-lg-start" style={{ fontSize: '0.75rem' }}>
+            {/* Footer - Terms and Privacy links */}
+            <p className="login-form-footer">
                 By signing in, you agree to our{" "}
-                <a href="#" className="text-stone-400 text-decoration-underline hover-text-stone-300">Terms</a>
+                <a href="#" className="login-footer-link">Terms</a>
                 {" "}&{" "}
-                <a href="#" className="text-stone-400 text-decoration-underline hover-text-stone-300">Privacy</a>
+                <a href="#" className="login-footer-link">Privacy</a>
             </p>
         </div>
     );
