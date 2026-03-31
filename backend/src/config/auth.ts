@@ -29,10 +29,10 @@ export const authConfig = {
     useSecureCookies: true,
     cookies: {
         csrfToken: {
-            name: '__Host-authjs.csrf-token',
+            name: '__Secure-authjs.csrf-token',
             options: {
                 httpOnly: true,
-                sameSite: 'none',
+                sameSite: 'lax',
                 path: '/',
                 secure: true
             }
@@ -41,7 +41,7 @@ export const authConfig = {
             name: '__Secure-authjs.pkce.code_verifier',
             options: {
                 httpOnly: true,
-                sameSite: 'none',
+                sameSite: 'lax',
                 path: '/',
                 secure: true
             }
@@ -50,7 +50,7 @@ export const authConfig = {
             name: '__Secure-authjs.state',
             options: {
                 httpOnly: true,
-                sameSite: 'none',
+                sameSite: 'lax',
                 path: '/',
                 secure: true
             }
@@ -59,7 +59,7 @@ export const authConfig = {
             name: '__Secure-authjs.callback-url',
             options: {
                 httpOnly: true,
-                sameSite: 'none',
+                sameSite: 'lax',
                 path: '/',
                 secure: true
             }
@@ -68,7 +68,7 @@ export const authConfig = {
              name: '__Secure-authjs.session-token',
              options: {
                   httpOnly: true,
-                  sameSite: 'none',
+                  sameSite: 'lax',
                   path: '/',
                   secure: true
              }
