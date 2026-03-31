@@ -8,12 +8,13 @@ import shopRoutes from "./routes/shopRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import imageRoutes from "./routes/imageRoutes.js";
+import "dotenv/config";
 
 const app: Express = express();
 const port: number = 3000;
 
 app.use(cors({
-    origin: 'http://localhost:5173', 
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     credentials: true,              
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
