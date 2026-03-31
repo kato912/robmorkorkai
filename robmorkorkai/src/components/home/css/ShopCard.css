@@ -1,0 +1,39 @@
+/* Shop Card Styles */
+.shop-card {
+    background: #231c18;
+    border: none;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+.shop-card-image {
+    position: relative;
+    height: 180px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.shop-card-title {
+    color: #f5ebe4;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.shop-card-zone {
+    color: #9a8a7e;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.shop-card-rating {
+    color: #f5ebe4;
+    font-size: 0.9rem;
+    font-weight: 500;
+}

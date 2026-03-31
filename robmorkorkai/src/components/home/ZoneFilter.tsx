@@ -1,5 +1,6 @@
 import React from "react";
-import { MapPin } from "lucide-react"; 
+import { MapPin } from "lucide-react";
+import "./css/ZoneFilter.css"; 
 
 interface Props {
     zones: any[];

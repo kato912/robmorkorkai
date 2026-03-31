@@ -1,4 +1,5 @@
 import React from "react";
+import "./css/CategoryFilter.css";
 
 export interface CategoryItem {
     id: string;

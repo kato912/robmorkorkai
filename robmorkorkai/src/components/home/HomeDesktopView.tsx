@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Search, Bot, MapPin, X } from "lucide-react";
+import { Search, MapPin, X } from "lucide-react";
+import type { HomeViewProps } from "../pages/HomePage"
+
+// Custom Hooks
+import { useTypingEffect } from "../../hooks/useTypingEffect";
+
+// Components
 import { ShopCard } from "./ShopCard";
 import { CategoryFilter } from "./CategoryFilter";
 import { TopNavbar } from "../layout/TopNavbar";
 import { AIBanner } from "./AIBanner";
 import { RandomShopButton } from "./RandomShopButton";
-import { useTypingEffect } from "../../hooks/useTypingEffect";
-import type { HomeViewProps } from "../pages/HomePage"
+
+// Assets
 import HeroImage from "../../assets/hero-campus-life.jpg"
+import "./css/HomeDesktopView.css";
 
 const TYPING_PHRASES = [
     "หาชาบูเด็ดๆ หลังมอ...", 
@@ -17,6 +24,12 @@ const TYPING_PHRASES = [
     "ไม่รู้จะกินอะไรดี?..."
 ];
 
+/**
+ * Desktop view สำหรับ HomePage
+ * - เต็มจอพร้อม hero section
+ * - Category filter ด้านล่าง
+ * - Grid layout สำหรับ shop cards
+ */
 const HomeDesktopView: React.FC<HomeViewProps> = ({
     selectedZone, setSelectedZone,
     selectedCategory, setSelectedCategory,
@@ -35,20 +48,7 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
 
     return (
         <div className="min-vh-100 pb-5" style={{ backgroundColor: '#1a1412' }}>
-            <style>
-                {`
-                    @keyframes fadeUp {
-                        from { opacity: 0; transform: translateY(20px); }
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-                    .animate-fade-up {
-                        animation: fadeUp 0.6s ease-out forwards;
-                    }
-                    .hover-scale { transition: transform 0.2s; }
-                    .hover-scale:hover { transform: scale(1.05); }
-                `}
-            </style>
-
+            {/* Top Navigation */}
             <TopNavbar
                 activePage="home"
                 showSearchBar={true}
@@ -61,22 +61,22 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
             <div className="animate-fade-up">
                 <main className="container pt-4">
 
+                    {/* Hero Section */}
                     <div className="position-relative rounded-4 overflow-hidden mb-5 shadow-sm" style={{ height: '320px' }}>
-                        
-                        {/* Layer 1*/}
+                        {/* Background Image */}
                         <img 
                             src={HeroImage} 
                             alt="KKU Campus" 
                             className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" 
                         />
                         
-                        {/* Layer 2 */}
+                        {/* Dark Gradient Overlay */}
                         <div 
                             className="position-absolute top-0 start-0 w-100 h-100" 
                             style={{ background: 'linear-gradient(to right, rgba(26,18,16,0.9) 0%, rgba(26,18,16,0.6) 50%, transparent 100%)' }}
                         ></div>
                         
-                        {/* Layer 3 */}
+                        {/* Red Tint */}
                         <div 
                             className="position-absolute top-0 start-0 w-100 h-100" 
                             style={{ background: 'linear-gradient(to right, rgba(167, 59, 36, 0.3) 0%, transparent 50%)' }}
@@ -105,20 +105,14 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
                                         style={{ backgroundColor: '#A73B24', color: '#fff5f0' }}>
                                         <Search size={18} /> ค้นหาร้าน
                                     </button>
-                                    
-                                    <Link to="/ai" 
-                                        className="btn rounded-pill px-4 py-2 fw-bold d-flex align-items-center gap-2 text-decoration-none hover-scale"
-                                        style={{ backgroundColor: 'rgba(61, 48, 42, 0.4)', border: '1px solid #c9943a', color: '#e8b94a', backdropFilter: 'blur(4px)' }}>
-                                        <Bot size={18} /> ถาม AI
-                                    </Link>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {/* 👆 จบ Hero Section */}
+                    {/* End of hero section */}
 
                     <div className="row g-5" id="main-content">
-                        {/* Sidebar Left: AI & Zones */}
+                        {/* Sidebar: AI banner and zone filters */}
                         <div className="col-lg-3">
                             <div className="sticky-top" style={{ top: '90px', zIndex: 10 }}>
                                 <AIBanner />

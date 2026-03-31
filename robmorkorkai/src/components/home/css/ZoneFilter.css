@@ -1,0 +1,70 @@
+/* Zone Filter Styles */
+.zone-filter-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.zone-filter-container-mobile {
+    overflow: auto;
+    padding-bottom: 0.5rem;
+    padding-left: 0.25rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.zone-filter-container-mobile::-webkit-scrollbar {
+    display: none;
+}
+
+.zone-filter-btn {
+    border: 1px solid #3d302a;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.zone-filter-btn-mobile {
+    height: 38px;
+    font-size: 14px;
+    border-radius: 9999px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    text-nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.zone-filter-btn-desktop {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    text-align: start;
+}
+
+.zone-filter-btn:not(.active) {
+    background-color: #2d2320;
+    color: #f5ebe4;
+}
+
+.zone-filter-btn.active {
+    background-color: #A73B24;
+    color: #fff5f0;
+    font-weight: bold;
+    border: none;
+}
+
+.zone-filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.zone-filter-icon {
+    font-size: 0.9rem;
+}
+
+.zone-filter-count {
+    font-size: 12px;
+    font-weight: bold;
+}
