@@ -44,11 +44,11 @@ const AppContent = () => {
     <Routes>
 
       <Route path="/" element={<HomeRedirect shops={shops}/>} />
-      <Route path="/search" element={<SearchPage shops={shops}/>} />
+      <Route path="/search" element={<SearchPage />} />
       <Route path='/ai' element={<AIPage />} />
 
       {/* ShopDetailPage ก็ไม่ต้องส่ง Props แล้ว */}
-      <Route path="/shop/:id" element={<ShopDetailPage shops={shops}/>} />
+      <Route path="/shop/:id" element={<ShopDetailPage />} />
 
       {/* Login ไม่ต้องรับ onLogin แล้ว */}
       <Route path="/login" element={<Login />} />
