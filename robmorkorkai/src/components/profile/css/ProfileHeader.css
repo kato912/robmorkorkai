@@ -372,6 +372,20 @@
     padding: 0.35rem 0.6rem;
 }
 
+/* Admin Badge - Administrator indicator */
+.profile-admin-badge {
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 700;
+    background-color: rgba(0, 180, 216, 0.1);
+    color: #00b4d8;
+    border: 1px solid rgba(0, 180, 216, 0.3);
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+}
+
 /* Profile Email - User email address */
 .profile-email {
     margin: 0;

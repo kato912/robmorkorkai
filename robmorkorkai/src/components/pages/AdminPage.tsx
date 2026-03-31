@@ -126,6 +126,7 @@ export const AdminPage: React.FC = () => {
                 zone: updatedShop.zone,
                 coverImage: updatedShop.coverImage,
                 openHours: updatedShop.openHours,
+                googleMapsUrl: (updatedShop as any).googleMap || (updatedShop as any).googleMapsUrl || null,
             };
 
             const res = await api.put(`/api/admin/shops/${updatedShop.id}`, payload);

@@ -168,8 +168,12 @@ export const ProfileHeader: React.FC<Props> = ({
                             <div className="profile-name-section">
                                 <div className="profile-name-badge">
                                     <h1 className="profile-name">{profile.name}</h1>
-                                    {/* KKU Verification Badge or User Badge */}
-                                    {(profile.email?.endsWith('@kkumail.com') || profile.email?.endsWith('@kku.ac.th')) ? (
+                                    {/* Badge - Show only one based on role/verification */}
+                                    {user?.role === "ADMIN" ? (
+                                        <span className="profile-admin-badge">
+                                            <Shield size={14} /> ADMIN
+                                        </span>
+                                    ) : (profile.email?.endsWith('@kkumail.com') || profile.email?.endsWith('@kku.ac.th')) ? (
                                         <span className="profile-kku-badge">
                                             <BadgeCheck size={14} /> KKU
                                         </span>

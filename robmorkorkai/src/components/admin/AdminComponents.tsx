@@ -193,7 +193,13 @@ export const EditShopModal = ({ shop, onClose, onSave }: any) => {
 
     // Initialize form data when shop prop changes
     useEffect(() => { 
-        if (shop) setFormData({ ...shop }); 
+        if (shop) {
+            setFormData({ 
+                ...shop,
+                // Map googleMapsUrl from backend to googleMap form field
+                googleMap: (shop as any).googleMapsUrl || (shop as any).googleMap || ""
+            }); 
+        }
     }, [shop]);
 
     if (!formData) return null;
@@ -205,7 +211,7 @@ export const EditShopModal = ({ shop, onClose, onSave }: any) => {
      * @param field - Shop field to update
      * @param value - New value for field
      */
-    const handleChange = (field: keyof Shop, value: string) => {
+    const handleChange = (field: string, value: string) => {
         setFormData(prev => prev ? { ...prev, [field]: value } : null);
     };
 
