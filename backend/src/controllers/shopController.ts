@@ -112,7 +112,6 @@ export const getShopImage = async (req: Request, res: Response) => {
 
         // Send image URL as redirect (allow browser to handle CORS)
         res.setHeader("Cache-Control", "public, max-age=3600");
-        res.setHeader("Access-Control-Allow-Origin", "*");
         res.redirect(imageUrl);
     } catch (error) {
         console.error("Error in getShopImage:", error);

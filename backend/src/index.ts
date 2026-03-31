@@ -22,6 +22,12 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Add credentials header for Safari compatibility
+app.use((req: Request, res: Response, next) => {
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
+
 app.use(express.json());
 
 app.use("/api/auth",ExpressAuth(authConfig)); //signin / session
