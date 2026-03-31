@@ -105,7 +105,7 @@ export const createShopAdmin = async (req: Request, res: Response) => {
 export const updateShopAdmin = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { name, type, address, latitude, longitude, zone, coverImage, openHours } = req.body;
+        const { name, type, address, latitude, longitude, zone, coverImage, openHours, googleMapsUrl } = req.body;
 
         // ตรวจสอบว่าร้านค้ามีอยู่หรือไม่
         const shop = await prisma.shop.findUnique({
@@ -123,7 +123,7 @@ export const updateShopAdmin = async (req: Request, res: Response) => {
                 ...(name && { name }),
                 ...(type && { type }),
                 ...(address && { address }),
-                ...(googleMapsUrl && { googleMapsUrl }),
+                ...(googleMapsUrl !== undefined && { googleMapsUrl }),
                 ...(latitude !== undefined && { latitude }),
                 ...(longitude !== undefined && { longitude }),
                 ...(zone && { zone }),
