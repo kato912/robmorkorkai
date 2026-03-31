@@ -1,0 +1,62 @@
+/* Shop Sidebar Styles */
+/* Sidebar showing shop information: address, hours, rating, and action buttons */
+
+.shop-sidebar-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content-center;
+    border-radius: 12px;
+    flex-shrink: 0;
+    background-color: #2d2320;
+    border: 1px solid #3d302a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shop-sidebar-icon-color {
+    color: #e8b94a;
+}
+
+.shop-info-text {
+    color: #f5ebe4;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.shop-info-secondary {
+    font-size: 0.95rem;
+    color: #9a8a7e;
+}
+
+.shop-action-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.shop-action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.status-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.divider-dark {
+    border-color: #3d302a;
+}

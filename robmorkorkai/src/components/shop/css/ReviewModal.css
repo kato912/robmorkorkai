@@ -1,0 +1,244 @@
+/* Review Modal Styles */
+/* Modal for submitting shop reviews with rating and comment */
+
+/* Slide up animation for modal entrance */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+/* Full-screen overlay for modal */
+.review-modal-overlay {
+    position: fixed;
+    top: 0;
+    start: 0;
+    width: 100%;              /* Full viewport width */
+    height: 100%;             /* Full viewport height */
+    z-index: 1060;            /* High z-index to appear on top */
+    display: flex;
+    align-items: flex-end;    /* Slide from bottom on mobile */
+    justify-content: center;
+    padding: 0;
+    background-color: rgba(10, 10, 10, 0.7); /* Darkened background */
+}
+
+/* Center modal on desktop */
+@media (min-width: 992px) {
+    .review-modal-overlay {
+        align-items: center;  /* Center vertically */
+    }
+}
+
+/* Modal container */
+.review-modal-box {
+    max-width: 500px;         /* Max width constraint */
+    background-color: #231c18; /* Dark background */
+    border: 1px solid #3d302a; /* Subtle border */
+    overflow: hidden;         /* Clip children to border radius */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* Modal header section */
+.review-modal-header {
+    border-bottom: 1px solid rgba(201, 148, 58, 0.2); /* Subtle divider */
+    padding: 1.5rem;
+    display: flex;              /* Flex layout for title and close button */
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Modal title - "เขียนรีวิว" */
+.review-modal-title {
+    color: #c9943a;             /* Gold color */
+    font-weight: 700;           /* Bold */
+    margin: 0;                  /* No margin */
+}
+
+/* Close button (X icon) */
+.review-modal-close-btn {
+    background-color: rgba(201, 148, 58, 0.1); /* Subtle gold background */
+    color: #e8b94a;             /* Gold color */
+    border: none;
+    transition: all 0.2s ease;  /* Smooth transition */
+}
+
+.review-modal-close-btn:hover {
+    background-color: rgba(201, 148, 58, 0.2); /* Darker on hover */
+    transform: scale(1.1);      /* Slightly larger */
+}
+
+/* Modal main content area */
+.review-modal-body {
+    padding: 1.5rem;            /* Padding around content */
+}
+
+/* Shop info section at top of modal */
+.review-shop-info {
+    display: flex;              /* Horizontal layout */
+    align-items: center;
+    gap: 1rem;                  /* Space between image and text */
+    margin-bottom: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #3d302a; /* Divider */
+}
+
+/* Shop image thumbnail */
+.review-shop-image {
+    width: 64px;
+    height: 64px;               /* Square image */
+    border-radius: 8px;         /* Rounded corners */
+    object-fit: cover;          /* Cover the space */
+    border: 1px solid #3d302a;  /* Subtle border */
+    flex-shrink: 0;             /* Don't shrink */
+}
+
+/* Container for shop name and subtitle */
+.review-shop-details {
+    display: flex;
+    flex-direction: column;     /* Vertical layout */
+    gap: 0.25rem;              /* Small gap */
+}
+
+/* Shop name in the modal */
+.review-shop-name {
+    font-size: 1.1rem;         /* Slightly large */
+    font-weight: 700;          /* Bold */
+    color: #f5ebe4;            /* Light text */
+    margin: 0;                 /* No margin */
+}
+
+/* Subtitle under shop name */
+.review-shop-subtitle {
+    color: #9a8a7e;            /* Gray text */
+    font-size: 0.9rem;         /* Small */
+}
+
+/* Rating Section */
+.review-rating-section {
+    margin-bottom: 1.5rem;
+}
+
+.review-rating-label {
+    font-weight: 600;
+    color: #e8ebe4;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.review-star-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.review-star-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.review-star-btn:hover {
+    transform: scale(1.2);
+}
+
+/* Textarea Styles */
+.review-textarea-label {
+    font-weight: 600;
+    color: #e8ebe4;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+}
+
+.custom-textarea {
+    width: 100%;
+    background-color: #2d2320;
+    border: 1px solid #3d302a;
+    color: #f5ebe4;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    min-height: 120px;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+.custom-textarea:focus {
+    outline: none;
+    border-color: #c9943a;
+    background-color: #2d2320;
+    color: #f5ebe4;
+}
+
+.custom-textarea::placeholder {
+    color: #8a7b72;
+}
+
+/* Info Alert */
+.review-info-alert {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    background-color: #2d2320;
+    border: 1px dashed rgba(201, 148, 58, 0.3);
+}
+
+.review-info-icon {
+    color: #e8b94a;
+    flex-shrink: 0;
+}
+
+.review-info-text {
+    color: #9a8a7e;
+    font-size: 0.85rem;
+}
+
+/* Modal Footer/Buttons */
+.review-modal-footer {
+    padding: 1.5rem;
+    border-top: 1px solid #3d302a;
+    display: flex;
+    gap: 1rem;
+}
+
+.review-submit-btn {
+    background-color: #A73B24;
+    color: #fff5f0;
+    border: none;
+    flex: 1;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.review-submit-btn:hover {
+    background-color: #c94a2f;
+    transform: translateY(-2px);
+}
+
+.review-submit-btn:active {
+    transform: translateY(0);
+}
+
+/* Hover Scale Effect */
+.hover-scale {
+    transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
