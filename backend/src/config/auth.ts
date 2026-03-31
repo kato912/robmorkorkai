@@ -26,6 +26,55 @@ export const authConfig = {
         }),
     ],
 
+    useSecureCookies: true,
+    cookies: {
+        csrfToken: {
+            name: '__Host-authjs.csrf-token',
+            options: {
+                httpOnly: true,
+                sameSite: 'none',
+                path: '/',
+                secure: true
+            }
+        },
+        pkceCodeVerifier: {
+            name: '__Secure-authjs.pkce.code_verifier',
+            options: {
+                httpOnly: true,
+                sameSite: 'none',
+                path: '/',
+                secure: true
+            }
+        },
+        state: {
+            name: '__Secure-authjs.state',
+            options: {
+                httpOnly: true,
+                sameSite: 'none',
+                path: '/',
+                secure: true
+            }
+        },
+        callbackUrl: {
+            name: '__Secure-authjs.callback-url',
+            options: {
+                httpOnly: true,
+                sameSite: 'none',
+                path: '/',
+                secure: true
+            }
+        },
+        sessionToken: {
+             name: '__Secure-authjs.session-token',
+             options: {
+                  httpOnly: true,
+                  sameSite: 'none',
+                  path: '/',
+                  secure: true
+             }
+        }
+    },
+
     callbacks: {
         async session({ session, user }: { session: any; user: any }) {
             // เอา ID และ Role จาก Database (user) ยัดกลับเข้าไปใน Session
