@@ -59,10 +59,13 @@ router.get('/proxy', async (req: Request, res: Response) => {
         // Cache the image
         if (Object.keys(imageCache).length >= MAX_CACHE_SIZE) {
             // Remove oldest cache entry if limit reached
-            const oldestKey = Object.entries(imageCache).sort(
+            const entries = Object.entries(imageCache).sort(
                 (a, b) => a[1].timestamp - b[1].timestamp
-            )[0][0];
-            delete imageCache[oldestKey];
+            );
+            if (entries.length > 0) {
+                const oldestKey = entries[0][0];
+                delete imageCache[oldestKey];
+            }
         }
 
         imageCache[decodedUrl] = {

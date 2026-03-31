@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../utils/prisma";
+import { prisma } from "../utils/prisma.js";
 
 export const getMe = async (req: Request, res: Response) => {
     try {
@@ -70,7 +70,7 @@ export const getUserFavorites = async (req: Request, res: Response) => {
             }
         });
 
-        const shops = favorites.map(fav => fav.shop);
+        const shops = favorites.map((fav: any) => fav.shop);
         res.json(shops);
     } catch (error) {
         console.error("Error fetching user favorites:", error);
@@ -161,7 +161,7 @@ export const getUserReviews = async (req: Request, res: Response) => {
         });
 
         // ส่ง shop data พร้อมกับ review info ของ user
-        const reviewedShops = reviews.map(review => ({
+        const reviewedShops = reviews.map((review: any) => ({
             ...review.shop,
             userReview: {
                 id: review.id,

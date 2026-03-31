@@ -27,7 +27,7 @@ export const authConfig = {
     ],
 
     callbacks: {
-        async session({ session, user }) {
+        async session({ session, user }: { session: any; user: any }) {
             // เอา ID และ Role จาก Database (user) ยัดกลับเข้าไปใน Session
             if (session.user) {
                 session.user.id = user.id;

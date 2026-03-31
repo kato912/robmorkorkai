@@ -9,9 +9,10 @@ export const getReviewsByShop = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "Missing shopId" });
         }
 
+        const shopIdStr = Array.isArray(shopId) ? shopId[0] : shopId;
         const reviews = await prisma.review.findMany({
             where: {
-                shopId,
+                shopId: shopIdStr,
                 isFlagged: false
             },
             include: {
@@ -148,8 +149,9 @@ export const getReviewsByShopId = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "Missing shopId parameter" });
         }
 
+        const shopIdStr = Array.isArray(shopId) ? shopId[0] : shopId;
         const reviews = await prisma.review.findMany({
-            where: { shopId: shopId },
+            where: { shopId: shopIdStr },
             include: {
                 user: {
                     select: {
