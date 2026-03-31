@@ -35,6 +35,11 @@ export const authConfig = {
                 session.user.isVerifiedStudent = user.isVerifiedStudent;
             }
             return session;
+        },
+        async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
+            // Redirect ไปที่ Frontend หลังจากขึ้นชื่อเสร็จ
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+            return url.startsWith(frontendUrl) ? url : frontendUrl;
         }
     },
     events:{
