@@ -27,12 +27,17 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   return isLoggedIn ? children : <Navigate to="/login" replace />;
 };
 
-// แสดง HomePage เสมอ ไม่ต้องตัดสินใจ redirect
+// แสดง HomePage หรือ redirect admin ไป admin page
 const HomeRedirect = ({ shops }: { shops: Shop[] }) => {
-  const { loading } = useAuth();
+  const { loading, user } = useAuth();
   
   if (loading) {
     return null; // รอให้ session load เสร็จก่อน
+  }
+  
+  // ถ้าเป็น admin ให้ไป admin page
+  if (user?.role === "ADMIN") {
+    return <Navigate to="/admin" replace />;
   }
   
   return <HomePage />;

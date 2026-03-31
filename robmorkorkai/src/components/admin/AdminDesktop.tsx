@@ -85,7 +85,7 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
                     <div className="admin-desktop-search-filter">
                         {/* Search Bar */}
                         <div className="admin-desktop-search-wrapper">
-                            <Search className="admin-desktop-search-icon" size={18} />
+                            {!searchQuery && <Search className="admin-desktop-search-icon" size={18} />}
                             <input className="form-control admin-desktop-search-input border-0 shadow-sm" placeholder="ค้นหา..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                         </div>
                         

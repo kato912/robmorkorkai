@@ -148,7 +148,7 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
                         {/* Header with Search and Add Button */}
                         <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
                             <div className="admin-mobile-search-wrapper" style={{ flex: 1 }}>
-                                <Search className="admin-mobile-search-icon" size={18} />
+                                {!searchQuery && <Search className="admin-mobile-search-icon" size={18} />}
                                 <input className="form-control admin-mobile-search-input" placeholder="ค้นหา..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                             </div>
                             <button onClick={onAddShop} className="btn btn-success" style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', padding: '8px 16px' }}>
