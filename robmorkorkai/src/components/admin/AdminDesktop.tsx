@@ -1,7 +1,7 @@
 import React from "react";
 import { 
     Store, Search, Filter, Shield, BarChart3, 
-    MessageSquare, Trash2, Edit, Eye, User, LogOut 
+    MessageSquare, Trash2, Edit, Eye, User, LogOut, Plus 
 } from "lucide-react";
 import { type AdminViewProps, adminTheme as theme } from "./types";
 import { StatCard } from "./AdminComponents";
@@ -32,7 +32,7 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
     stats, searchQuery, setSearchQuery, 
     selectedCategory, setSelectedCategory,
     categories, isFilterDropdownOpen, setIsFilterDropdownOpen,
-    onDelete, onViewDetail, onEdit, logout
+    onDelete, onViewDetail, onEdit, onAddShop, logout
 }) => {
     // ========== COMPONENTS ==========
 
@@ -89,6 +89,11 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
                             <input className="form-control admin-desktop-search-input border-0 shadow-sm" placeholder="ค้นหา..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                         </div>
                         
+                        {/* Add Shop Button */}
+                        <button onClick={onAddShop} className="btn d-flex align-items-center gap-2 px-4 py-2 rounded-3 border-0 fw-medium" style={{ backgroundColor: '#16a34a', color: '#ffffff', transition: 'all 0.2s ease', boxShadow: '0 2px 8px rgba(22, 163, 74, 0.2)' }} onMouseOver={(e) => (e.currentTarget.style.boxShadow = '0 4px 12px rgba(22, 163, 74, 0.4)', e.currentTarget.style.backgroundColor = '#15803d')} onMouseOut={(e) => (e.currentTarget.style.boxShadow = '0 2px 8px rgba(22, 163, 74, 0.2)', e.currentTarget.style.backgroundColor = '#16a34a')}>
+                            <Plus size={20} /> เพิ่มร้านค้า
+                        </button>
+
                         {/* Filter Dropdown */}
                         <div className="position-relative">
                             <button onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)} className={`admin-desktop-filter-btn ${isFilterDropdownOpen || selectedCategory !== 'all' ? 'bg-primary text-white' : 'bg-white text-secondary'}`}>

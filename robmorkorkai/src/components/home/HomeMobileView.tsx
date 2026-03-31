@@ -10,7 +10,6 @@ import { useAuth } from "../../context/AuthContext";
 import { useTypingEffect } from "../../hooks/useTypingEffect";
 
 // Components
-import { AIBanner } from "./AIBanner";
 import { ShopCard } from "./ShopCard";
 import { ZoneFilter } from "./ZoneFilter";
 import { CategoryFilter } from "./CategoryFilter";
@@ -124,10 +123,6 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
 
                 {/* Main content: filters and shop list */}
                 <div className="px-3">
-                    {/* AI Banner */}
-                    <div className="mb-4">
-                        <AIBanner />
-                    </div>
 
                     {/* Zone Filter */}
                     <div className="mb-4">

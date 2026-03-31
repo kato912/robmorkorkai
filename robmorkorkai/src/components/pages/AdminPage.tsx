@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../services/api";
-import { ShopDetailModal, EditShopModal, theme } from "../admin/AdminComponents";
+import { ShopDetailModal, EditShopModal, AddShopModal, theme } from "../admin/AdminComponents";
 import { AdminDesktop } from "../admin/AdminDesktop";
 import { AdminMobile } from "../admin/AdminMobile";
 import type { TabType } from "../admin/types";
@@ -35,6 +35,7 @@ export const AdminPage: React.FC = () => {
     // ========== UI/MODAL STATE ==========
     const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
     const [editingShop, setEditingShop] = useState<Shop | null>(null);
+    const [isAddingShop, setIsAddingShop] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
@@ -153,6 +154,60 @@ export const AdminPage: React.FC = () => {
     };
 
     /**
+     * Add new shop via POST request
+     * Validates required fields and calls API
+     * @param newShopData - New shop object with form data
+     */
+    const handleAddShop = async (newShopData: any) => {
+        try {
+            // Validate required fields (name is mandatory, coordinates have defaults)
+            if (!newShopData.name) {
+                alert("กรุณากรอกชื่อร้านค้า");
+                return;
+            }
+
+            // Use provided coordinates or defaults
+            const latitude = newShopData.latitude || 16.243;
+            const longitude = newShopData.longitude || 102.832;
+
+            const payload = {
+                name: newShopData.name,
+                type: newShopData.category,
+                zone: newShopData.zone,
+                coverImage: newShopData.coverImage,
+                openHours: newShopData.openHours,
+                googleMapsUrl: newShopData.googleMap,
+                address: newShopData.address || null,
+                latitude: latitude,
+                longitude: longitude,
+            };
+
+            const res = await api.post("/api/admin/shops", payload);
+            const createdShop = res.data;
+
+            // Normalize and add to shops list
+            const normalizedShop = {
+                ...createdShop,
+                category: createdShop.type || newShopData.category,
+                description: "",
+                reviewCount: 0,
+                ratingAvg: 0,
+            };
+
+            setShops(prevShops => [normalizedShop, ...prevShops]);
+            setIsAddingShop(false);
+            alert("เพิ่มร้านค้าเรียบร้อยแล้ว");
+
+            // Re-fetch to sync data
+            setTimeout(() => fetchShops(), 500);
+
+        } catch (err: any) {
+            console.error("Add Shop Error:", err);
+            alert(err.response?.data?.message || "เกิดข้อผิดพลาดในการเพิ่มร้านค้า");
+        }
+    };
+
+    /**
      * Extract unique categories from shops for filter dropdown
      */
     const categories = ["all", ...new Set(shops.map(s => s.category || s.type || "ไม่ระบุหมวดหมู่"))];
@@ -203,6 +258,7 @@ export const AdminPage: React.FC = () => {
         onDelete: handleDeleteStore,
         onViewDetail: (shop: any) => setSelectedShop(shop as Shop),
         onEdit: (shop: any) => setEditingShop(shop as Shop),
+        onAddShop: () => setIsAddingShop(true),
         logout
     };
 
@@ -235,6 +291,12 @@ export const AdminPage: React.FC = () => {
                     shop={editingShop}
                     onClose={() => setEditingShop(null)}
                     onSave={handleSaveEdit}
+                />
+            )}
+            {isAddingShop && (
+                <AddShopModal
+                    onClose={() => setIsAddingShop(false)}
+                    onSave={handleAddShop}
                 />
             )}
         </div>

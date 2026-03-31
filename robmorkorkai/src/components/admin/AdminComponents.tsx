@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
     Shield, BarChart3, Store, LogOut, X,
-    Clock, FileText, User, MapPin, Edit, Save, Image as ImageIcon
+    Clock, FileText, User, MapPin, Edit, Save, Image as ImageIcon, Plus
 } from "lucide-react";
 import type { Shop } from "../../types/shop";
 import { adminTheme } from "./types";
@@ -165,7 +165,7 @@ export const ShopDetailModal = ({ shop, onClose, onDelete, onEdit }: any) => {
                         <div className="p-3 bg-light rounded-3"><small className="text-secondary fw-bold mb-1 d-block"><FileText size={14} className="me-1" /> รายละเอียดร้าน</small><p className="m-0 small text-dark">{shop.description || "ไม่มีรายละเอียด"}</p></div>
                         <div className="row g-3">
                             <div className="col-6"><div className="p-3 bg-light rounded-3 h-100"><small className="text-secondary fw-bold mb-1 d-block"><User size={14} className="me-1" /> เจ้าของร้าน</small><div className="fw-medium small">{shop.owner}</div><div className="text-muted small" style={{ fontSize: '0.7rem' }}>{shop.ownerEmail}</div></div></div>
-                            <div className="col-6"><div className="p-3 bg-light rounded-3 h-100"><small className="text-secondary fw-bold mb-1 d-block"><MapPin size={14} className="me-1" /> ที่ตั้ง</small><a href={shop.mapsLink} target="_blank" rel="noreferrer" className="text-primary small text-decoration-none fw-bold">เปิด Google Maps</a></div></div>
+                            <div className="col-6"><div className="p-3 bg-light rounded-3 h-100"><small className="text-secondary fw-bold mb-1 d-block"><MapPin size={14} className="me-1" /> Google Maps</small>{(shop.googleMap || shop.googleMapsUrl) ? <a href={shop.googleMap || shop.googleMapsUrl} target="_blank" rel="noreferrer" className="btn btn-success btn-sm w-100 d-flex align-items-center justify-content-center gap-2">เปิดแผนที่</a> : <span className="text-muted small">ไม่มีลิงก์</span>}</div></div>
                         </div>
                     </div>
                 </div>
@@ -251,23 +251,24 @@ export const EditShopModal = ({ shop, onClose, onSave }: any) => {
                         <div className="col-6">
                             <label className="form-label small fw-bold text-secondary">โซน</label>
                             <select className="form-select" value={formData.zone || ""} onChange={(e) => handleChange('zone', e.target.value)}>
-                                <option value="กังสดาล">กังสดาล</option><option value="หลังมอ">หลังมอ</option><option value="ฝั่งบึง">ฝั่งบึง</option>
+                                <option value="กังสดาล">กังสดาล</option><option value="หลังมอ">หลังมอ</option><option value="ฝั่งบึง">ฝั่งบึง</option><option value="ในมหาวิทยาลัย">ในมหาวิทยาลัย</option>
                             </select>
                         </div>
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label small fw-bold text-secondary">Google Maps Link <span className="badge bg-success">แนะนำ</span></label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-white"><MapPin size={18} /></span>
+                            <input type="text" className="form-control" placeholder="https://maps.google.com/..." value={formData.googleMap || ""} onChange={(e) => handleChange('googleMap', e.target.value)} />
+                        </div>
+                        <small className="text-muted d-block mt-2">ลิงก์ Google Maps เป็นวิธีที่แนะนำในการระบุที่ตั้งร้าน</small>
                     </div>
                     <div className="mb-3">
                         <label className="form-label small fw-bold text-secondary">เวลาเปิด-ปิด</label>
                         <div className="input-group">
                             <span className="input-group-text bg-white"><Clock size={18} /></span>
-                            <input title="เวลาเปิด-ปิด" type="text" className="form-control" value={formData.openHours || ""} onChange={(e) => handleChange('openHours', e.target.value)} /></div>
+                            <input title="เวลาเปิด-ปิด" type="text" className="form-control" placeholder="08:00-22:00" value={formData.openHours || ""} onChange={(e) => handleChange('openHours', e.target.value)} />
                         </div>
-                    <div className="mb-3">
-                        <label className="form-label small fw-bold text-secondary">Google Maps Link</label><div className="input-group">
-                            <span className="input-group-text bg-white">
-                                <MapPin size={18} />
-                            </span>
-                            <input title="Google Maps Link" type="text" className="form-control" value={formData.googleMap || ""} onChange={(e) => handleChange('googleMap', e.target.value)} />
-                    </div>
                     </div>
                     <div className="mb-3"><label className="form-label small fw-bold text-secondary">รายละเอียดร้าน</label><textarea className="form-control" rows={3} value={formData.description || ""} onChange={(e) => handleChange('description', e.target.value)}></textarea></div>
                 </div>
@@ -275,6 +276,108 @@ export const EditShopModal = ({ shop, onClose, onSave }: any) => {
                 <div className="p-3 border-top bg-light d-flex justify-content-end gap-2 flex-shrink-0">
                     <button type="button" onClick={onClose} className="btn btn-outline-secondary">ยกเลิก</button>
                     <button type="button" onClick={() => onSave(formData)} className="btn btn-primary d-flex align-items-center gap-1"><Save size={18} /> บันทึกการแก้ไข</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/**
+ * AddShopModal
+ * Modal for creating a new shop with form inputs.
+ * Requires: name, latitude, longitude (from backend validation)
+ * Optional: category, zone, cover image, operating hours, Maps link, description.
+ * Props:
+ * - onClose: Callback to close modal without saving
+ * - onSave: Callback to save new shop data
+ */
+export const AddShopModal = ({ onClose, onSave }: any) => {
+    const [formData, setFormData] = useState<any>({
+        name: "",
+        owner: "",
+        category: "คาเฟ่",
+        zone: "กังสดาล",
+        coverImage: "",
+        openHours: "",
+        googleMap: "",
+        description: "",
+    });
+
+    const handleChange = (field: string, value: string | number) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    return (
+        <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 2050 }} onClick={onClose}>
+            <div className="bg-white rounded-4 shadow-lg w-100 overflow-hidden d-flex flex-column animate-fade-in" style={{ maxWidth: '600px', maxHeight: '90vh' }} onClick={e => e.stopPropagation()}>
+                <div className="px-4 py-3 border-bottom d-flex justify-content-between align-items-center bg-light flex-shrink-0">
+                    <h5 className="fw-bold m-0 d-flex align-items-center gap-2"><Plus size={20} /> เพิ่มร้านค้าใหม่</h5>
+                    <button type="button" onClick={onClose} className="btn p-0 text-secondary hover-dark"><X size={24} /></button>
+                </div>
+
+                <div className="p-4 overflow-auto flex-grow-1" style={{ minHeight: '0' }}>
+                    <div className="mb-3">
+                        <label className="form-label small fw-bold text-secondary">URL รูปภาพ</label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-white"><ImageIcon size={18} /></span>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="https://example.com/image.jpg"
+                                value={formData.coverImage || ""}
+                                onChange={(e) => handleChange('coverImage', e.target.value)}
+                            />
+                        </div>
+                        {formData.coverImage && (
+                            <div className="mt-2">
+                                <img src={formData.coverImage} alt="Preview" className="rounded-3 object-fit-cover border" style={{ width: '100px', height: '60px' }} />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="row g-3 mb-3">
+                        <div className="col-md-6"><label className="form-label small fw-bold text-secondary">ชื่อร้าน *</label><input type="text" className="form-control" value={formData.name || ""} onChange={(e) => handleChange('name', e.target.value)} /></div>
+                        <div className="col-md-6"><label className="form-label small fw-bold text-secondary">เจ้าของร้าน</label><input type="text" className="form-control" value={formData.owner || ""} onChange={(e) => handleChange('owner', e.target.value)} /></div>
+                    </div>
+                    <div className="row g-3 mb-3">
+                        <div className="col-6">
+                            <label className="form-label small fw-bold text-secondary">หมวดหมู่</label>
+                            <select className="form-select" value={formData.category || ""} onChange={(e) => handleChange('category', e.target.value)}>
+                                <option value="คาเฟ่">คาเฟ่</option><option value="อาหาร">อาหาร</option><option value="สุขภาพ">สุขภาพ</option><option value="บาร์">บาร์</option><option value="บริการ">บริการ</option>
+                            </select>
+                        </div>
+                        <div className="col-6">
+                            <label className="form-label small fw-bold text-secondary">โซน</label>
+                            <select className="form-select" value={formData.zone || ""} onChange={(e) => handleChange('zone', e.target.value)}>
+                                <option value="กังสดาล">กังสดาล</option><option value="หลังมอ">หลังมอ</option><option value="ฝั่งบึง">ฝั่งบึง</option><option value="ในมหาวิทยาลัย">ในมหาวิทยาลัย</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label small fw-bold text-secondary">Google Maps Link <span className="badge bg-success">แนะนำ</span></label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-white"><MapPin size={18} /></span>
+                            <input type="text" className="form-control" placeholder="https://maps.google.com/..." value={formData.googleMap || ""} onChange={(e) => handleChange('googleMap', e.target.value)} />
+                        </div>
+                        <small className="text-muted d-block mt-2">ลิงก์ Google Maps เป็นวิธีที่แนะนำในการระบุที่ตั้งร้าน</small>
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label small fw-bold text-secondary">เวลาเปิด-ปิด</label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-white"><Clock size={18} /></span>
+                            <input type="text" className="form-control" placeholder="08:00-22:00" value={formData.openHours || ""} onChange={(e) => handleChange('openHours', e.target.value)} />
+                        </div>
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label small fw-bold text-secondary">รายละเอียดร้าน</label>
+                        <textarea className="form-control" rows={3} value={formData.description || ""} onChange={(e) => handleChange('description', e.target.value)}></textarea>
+                    </div>
+                    <small className="text-muted">* = ข้อมูลที่จำเป็น (ชื่อร้าน) | ลิงก์ Google Maps แนะนำให้ระบุเพื่อการอ้างอิงที่ตั้งที่ดีขึ้น</small>
+                </div>
+
+                <div className="p-3 border-top bg-light d-flex justify-content-end gap-2 flex-shrink-0">
+                    <button type="button" onClick={onClose} className="btn btn-outline-secondary">ยกเลิก</button>
+                    <button type="button" onClick={() => onSave(formData)} className="btn btn-success d-flex align-items-center gap-1"><Plus size={18} /> เพิ่มร้านค้า</button>
                 </div>
             </div>
         </div>

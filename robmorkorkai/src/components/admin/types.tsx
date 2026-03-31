@@ -29,5 +29,6 @@ export interface AdminViewProps {
     onDelete: (id: string) => void;
     onViewDetail: (shop: Shop) => void;
     onEdit: (shop: Shop) => void;
+    onAddShop: () => void;
     logout: () => void;
 }

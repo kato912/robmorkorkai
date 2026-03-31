@@ -10,7 +10,6 @@ import { useTypingEffect } from "../../hooks/useTypingEffect";
 import { ShopCard } from "./ShopCard";
 import { CategoryFilter } from "./CategoryFilter";
 import { TopNavbar } from "../layout/TopNavbar";
-import { AIBanner } from "./AIBanner";
 import { RandomShopButton } from "./RandomShopButton";
 
 // Assets
@@ -112,10 +111,9 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
                     {/* End of hero section */}
 
                     <div className="row g-5" id="main-content">
-                        {/* Sidebar: AI banner and zone filters */}
+                        {/* Sidebar: Zone filters */}
                         <div className="col-lg-3">
                             <div className="sticky-top" style={{ top: '90px', zIndex: 10 }}>
-                                <AIBanner />
                                 <div>
                                     <h6 className="text-uppercase fw-bold mb-3" style={{color: "#c9943a", fontSize: '0.9rem', letterSpacing: '1px' }}>โซน</h6>
                                     <div className="d-flex flex-column gap-2">

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
     Store,
     Search, Menu, X, Shield,
-    BarChart3, MessageSquare, Trash2, Edit, Eye, User, LogOut
+    BarChart3, MessageSquare, Trash2, Edit, Eye, User, LogOut, Plus
 } from "lucide-react";
 import { type AdminViewProps, adminTheme as theme } from "./types";
 import { StatCardMobile } from "./AdminComponents";
@@ -32,7 +32,7 @@ import "./css/AdminMobile.css";
 export const AdminMobile: React.FC<AdminViewProps> = ({
     activeTab, setActiveTab, filteredStores, stats,
     searchQuery, setSearchQuery, selectedCategory, setSelectedCategory,
-    categories, onDelete, onViewDetail, onEdit, logout
+    categories, onDelete, onViewDetail, onEdit, onAddShop, logout
 }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -145,10 +145,15 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
                 {/* ========== STORES TAB ========== */}
                 {activeTab === 'stores' && (
                     <div className="admin-mobile-stores">
-                        {/* Search Bar */}
-                        <div className="admin-mobile-search-wrapper">
-                            <Search className="admin-mobile-search-icon" size={18} />
-                            <input className="form-control admin-mobile-search-input" placeholder="ค้นหา..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                        {/* Header with Search and Add Button */}
+                        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                            <div className="admin-mobile-search-wrapper" style={{ flex: 1 }}>
+                                <Search className="admin-mobile-search-icon" size={18} />
+                                <input className="form-control admin-mobile-search-input" placeholder="ค้นหา..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                            </div>
+                            <button onClick={onAddShop} className="btn btn-success" style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', padding: '8px 16px' }}>
+                                <Plus size={18} /> เพิ่ม
+                            </button>
                         </div>
 
                         {/* Category Filter */}
@@ -192,6 +197,32 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
             </main>
 
             {/* ========== BOTTOM NAVIGATION ========== */}
+            {/* Floating Action Button for Add Shop */}
+            <button 
+                onClick={onAddShop}
+                className="admin-mobile-fab"
+                style={{
+                    position: 'fixed',
+                    bottom: '90px',
+                    right: '16px',
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '50%',
+                    backgroundColor: '#16a34a',
+                    color: '#ffffff',
+                    border: 'none',
+                    boxShadow: '0 4px 12px rgba(22, 163, 74, 0.4)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 99
+                }}
+                title="เพิ่มร้านค้า"
+            >
+                <Plus size={28} strokeWidth={2.5} />
+            </button>
+
             <nav className="admin-mobile-bottom-nav">
                 <NavBtn icon={BarChart3} label="ภาพรวม" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
                 <NavBtn icon={Store} label="ร้านค้า" active={activeTab === 'stores'} onClick={() => setActiveTab('stores')} />

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Home, Bot, User, LogIn } from "lucide-react";
+import { Home, Search, User, LogIn } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 interface Props {
@@ -26,10 +26,10 @@ export const BottomNav: React.FC<Props> = ({ activePage }) => {
                     <span style={{ fontSize: '10px', marginTop: '4px', fontWeight: activePage === 'home' ? 'bold' : 'normal' }}>Home</span>
                 </Link>
 
-                <Link to="/ai" className="text-decoration-none d-flex flex-column align-items-center"
-                    style={{ color: activePage === 'ai' ? '#e8b94a' : '#8a7b72', transition: 'color 0.2s' }}>
-                    <Bot size={24} strokeWidth={activePage === 'ai' ? 2.5 : 2} />
-                    <span style={{ fontSize: '10px', marginTop: '4px', fontWeight: activePage === 'ai' ? 'bold' : 'normal' }}>AI</span>
+                <Link to="/search" className="text-decoration-none d-flex flex-column align-items-center"
+                    style={{ color: activePage === 'search' ? '#e8b94a' : '#8a7b72', transition: 'color 0.2s' }}>
+                    <Search size={24} strokeWidth={activePage === 'search' ? 2.5 : 2} />
+                    <span style={{ fontSize: '10px', marginTop: '4px', fontWeight: activePage === 'search' ? 'bold' : 'normal' }}>Search</span>
                 </Link>
 
                 <Link to={isLoggedIn ? "/profile" : "/login"} className="text-decoration-none d-flex flex-column align-items-center"

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { MapPin, Search, Home, Bot } from "lucide-react";
+import { MapPin, Search, Home } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import '../../assets/css/Topnavbar.css'
 
@@ -61,8 +61,8 @@ export const TopNavbar: React.FC<Props> = ({
                     <Link to="/" className={`btn btn-sm rounded-pill px-3 d-flex align-items-center gap-2 custom-nav-link ${activePage === 'home' ? 'active' : ''}`}>
                         <Home size={16} /> Home
                     </Link>
-                    <Link to="/ai" className={`btn btn-sm rounded-pill px-3 d-flex align-items-center gap-2 custom-nav-link ${activePage === 'ai' ? 'active' : ''}`}>
-                        <Bot size={16} /> AI Helper
+                    <Link to="/search" className={`btn btn-sm rounded-pill px-3 d-flex align-items-center gap-2 custom-nav-link ${activePage === 'search' ? 'active' : ''}`}>
+                        <Search size={16} /> Search
                     </Link>
 
                     <div className="vr mx-1" style={{ backgroundColor: '#f5ebe4' }}></div>
