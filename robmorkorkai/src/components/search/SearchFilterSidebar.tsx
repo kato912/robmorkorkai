@@ -42,7 +42,7 @@ export const SearchFilterSidebar: React.FC<Props> = ({
                     {/* ปุ่ม "ทั้งหมด" */}
                     <button
                         onClick={() => setSelectedZone(null)}
-                        className={`btn text-start d-flex justify-content-between align-items-center py-3 px-4 rounded-4 transition-all`}
+                        className={`btn text-start d-flex justify-content-between align-items-center py-2 py-md-3 px-3 px-md-4 rounded-4 transition-all`}
                         style={{
                             backgroundColor: selectedZone === null ? '#A73B24' : '#2d2320',
                             color: selectedZone === null ? '#f5ebe4' : '#9a8a7e',
@@ -62,7 +62,7 @@ export const SearchFilterSidebar: React.FC<Props> = ({
                             <button
                                 key={z.id}
                                 onClick={() => setSelectedZone(isSelected ? null : z.id)}
-                                className={`btn text-start d-flex justify-content-between align-items-center py-3 px-4 rounded-4 transition-all`}
+                                className={`btn text-start d-flex justify-content-between align-items-center py-2 py-md-3 px-3 px-md-4 rounded-4 transition-all`}
                                 style={{
                                     backgroundColor: isSelected ? '#A73B24' : '#2d2320',
                                     color: isSelected ? '#f5ebe4' : '#9a8a7e',

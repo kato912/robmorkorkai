@@ -21,6 +21,7 @@ export interface Shop {
     image: string; // รูปภาพ
     images?: string[]; // รูปภาพเพิ่มเติม
     category: string;// หมวดหมู่
+    address?: string; // ที่อยู่
     latitude: number; // ละติจูด
     longitude: number; // ลองจิจูด
     ratingAvg?: number; // เรทคะแนน

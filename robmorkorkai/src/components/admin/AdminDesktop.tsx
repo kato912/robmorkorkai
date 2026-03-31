@@ -92,14 +92,14 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
                         <div className="card border-0 shadow-sm rounded-4 h-100 p-4" style={{ backgroundColor: theme.cardBg }}>
                             <div className="d-flex justify-content-between align-items-center mb-4">
                                 <h6 className="fw-bold m-0 text-dark">ร้านค้า</h6>
-                                <button className="btn btn-link btn-sm fw-bold" onClick={() => setActiveTab('shops')}>ดูตารางแบบเต็ม</button>
+                                <button className="btn btn-link btn-sm fw-bold" onClick={() => setActiveTab('stores')}>ดูตารางแบบเต็ม</button>
                             </div>
                             <div className="d-flex flex-column gap-3">
                                 {/* ✅ เปลี่ยนตัวแปรตอนวนลูปเป็น shop */}
                                 {filteredStores.slice(0, 5).map(shop => (
                                     <div key={shop.id} className="d-flex align-items-center justify-content-between p-3 rounded-3" style={{ backgroundColor: theme.bgMain }}>
                                         <div className="d-flex align-items-center gap-3">
-                                            <img src={shop.image} className="rounded-3 object-fit-cover" width="48" height="48" alt=""/>
+                                            <img src={shop.coverImage || shop.image} className="rounded-3 object-fit-cover" width="48" height="48" alt=""/>
                                             <div>
                                                 <h6 className="fw-bold m-0 text-dark small">{shop.name}</h6>
                                                 <small className="text-secondary">{shop.owner}</small>
@@ -136,7 +136,7 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
                                         <tr key={shop.id}>
                                             <td className="px-4">
                                                 <div className="d-flex align-items-center gap-3">
-                                                    <img src={shop.image} className="rounded-3" width="40" height="40" alt=""/>
+                                                    <img src={shop.coverImage || shop.image} className="rounded-3" width="40" height="40" alt=""/>
                                                     <div>
                                                         <div className="fw-bold small">{shop.name}</div>
                                                         <div className="text-muted small">{shop.owner}</div>

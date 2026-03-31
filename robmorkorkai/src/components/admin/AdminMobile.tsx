@@ -50,7 +50,7 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
                             <div className="d-flex flex-column gap-3">
                                 {filteredStores.slice(0, 5).map(store => (
                                     <div key={store.id} className="d-flex align-items-center justify-content-between p-2 border-bottom">
-                                        <div className="d-flex align-items-center gap-3"><img src={store.image} className="rounded-3 object-fit-cover" width="48" height="48" alt="" /><div><div className="fw-bold small text-dark">{store.name}</div><div className="small text-secondary" style={{ fontSize: '0.75rem' }}>{store.owner}</div></div></div>
+                                        <div className="d-flex align-items-center gap-3"><img src={store.coverImage || store.image} className="rounded-3 object-fit-cover" width="48" height="48" alt="" /><div><div className="fw-bold small text-dark">{store.name}</div><div className="small text-secondary" style={{ fontSize: '0.75rem' }}>{store.owner}</div></div></div>
                                         <div className="d-flex gap-2">
                                             <button onClick={() => onViewDetail(store)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#e2e8f0', color: '#475569' }}><Eye size={18} /></button>
                                             <button onClick={() => onEdit(store)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#dcfce7', color: '#16a34a' }}><Edit size={18} /></button>
@@ -70,7 +70,7 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
                         {filteredStores.map(store => (
                             <div key={store.id} className="card border-0 shadow-sm p-3 rounded-4 bg-white">
                                 <div className="d-flex align-items-center gap-3 mb-2">
-                                    <img src={store.image} className="rounded-3 object-fit-cover" width="56" height="56" alt="" />
+                                    <img src={store.coverImage || store.image} className="rounded-3 object-fit-cover" width="56" height="56" alt="" />
                                     <div className="flex-grow-1"><div className="fw-bold small text-dark">{store.name}</div>
                                         <div className="small text-secondary mb-1">{store.owner}</div>
                                     </div>

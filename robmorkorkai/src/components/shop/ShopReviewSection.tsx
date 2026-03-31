@@ -17,27 +17,21 @@ interface ShopReviewSectionProps {
 export const ShopReviewSection: React.FC<ShopReviewSectionProps> = ({
     reviews, averageRating, reviewsCount, ratingDistribution, verifiedOnly, setVerifiedOnly, hasMore, handleShowMore, isLoggedIn, onOpenReviewModal
 }) => {
-    // 👇 เพิ่ม State สำหรับจัดการการกาง/หุบ รีวิว
     const [isExpanded, setIsExpanded] = useState(false);
-
-    // ถ้ายังไม่กดกาง ให้โชว์แค่ 2 รีวิว
     const displayReviews = isExpanded ? reviews : reviews.slice(0, 2);
-    
-    // เช็คว่าควรมีปุ่ม "ดูเพิ่มเติม" ไหม
     const canShowMore = hasMore || (!isExpanded && reviews.length > 2);
 
     const handleLocalShowMore = () => {
         if (!isExpanded && reviews.length > 2) {
-            setIsExpanded(true); // แค่กางรีวิวที่มีอยู่แล้ว
+            setIsExpanded(true);
         } else {
-            handleShowMore(); // ไปดึงข้อมูลเพิ่มจาก Backend
+            handleShowMore();
             setIsExpanded(true);
         }
     };
 
     const handleLocalShowLess = () => {
-        setIsExpanded(false); // หุบรีวิว
-        // เลื่อนหน้าจอกลับมาที่หัวข้อรีวิวแบบนุ่มนวล
+        setIsExpanded(false);
         document.getElementById('review-header-top')?.scrollIntoView({ behavior: 'smooth' });
     };
 
@@ -53,64 +47,51 @@ export const ShopReviewSection: React.FC<ShopReviewSectionProps> = ({
     return (
         <section className="py-0 py-lg-2" id="review-header-top">
             
-            <div className="mb-5">
-                <div className="d-flex align-items-center justify-content-between mb-3 mb-lg-4">
-                    <h6 className="fw-bold text-uppercase m-0" style={{ fontSize: '0.85rem', letterSpacing: '2px', color: '#c9943a' }}>
-                        รีวิวและความเห็น
-                    </h6>
-                    {isLoggedIn && (
-                        <button onClick={onOpenReviewModal} className="btn rounded-pill px-4 py-2 fw-bold hover-scale shadow-sm d-lg-none" style={{ backgroundColor: '#A73B24', color: '#fff5f0', fontSize: '0.85rem' }}>
-                            เขียนรีวิว
-                        </button>
-                    )}
+            <div className="mb-5 row g-4 align-items-center">
+                <div className="col-12 col-md-4 d-flex align-items-center gap-3">
+                    <span className="fw-bolder tracking-tight" style={{ fontSize: '4.5rem', lineHeight: '1', color: '#f5ebe4' }}>{averageRating}</span>
+                    <div className="d-flex flex-column justify-content-center mt-2">
+                        <div className="d-flex gap-1 mb-2">{renderStars(Number(averageRating), 18)}</div>
+                        <p className="m-0 small" style={{ color: '#9a8a7e' }}>จาก {reviewsCount} รีวิว</p>
+                    </div>
                 </div>
 
-                <div className="d-flex align-items-end justify-content-between">
-                    <div className="d-flex align-items-center gap-3">
-                        <span className="fw-bolder tracking-tight" style={{ fontSize: '4.5rem', lineHeight: '1', color: '#f5ebe4' }}>{averageRating}</span>
-                        <div className="d-flex flex-column justify-content-center mt-2">
-                            <div className="d-flex gap-1 mb-2">{renderStars(Number(averageRating), 18)}</div>
-                            <p className="m-0 small" style={{ color: '#9a8a7e' }}>จาก {reviewsCount} รีวิว</p>
+                <div className="col-12 col-md-5">
+                    <div className="p-3 rounded-4 shadow-sm h-100" style={{ backgroundColor: '#231c18', border: '1px solid rgba(201, 148, 58, 0.1)' }}>
+                        <div className="d-flex flex-column gap-2">
+                            {ratingDistribution.map((item) => (
+                                <div key={item.star} className="d-flex align-items-center gap-3">
+                                    <div className="d-flex align-items-center justify-content-end gap-1" style={{ width: '40px' }}><span className="fw-bold small" style={{ color: '#f5ebe4' }}>{item.star}</span><Star size={12} style={{ color: '#e8b94a', fill: '#e8b94a' }} /></div>
+                                    <div className="flex-grow-1 rounded-pill" style={{ height: '6px', backgroundColor: '#3d302a' }}><div className="rounded-pill h-100 transition-all" style={{ width: `${item.percentage}%`, transitionDuration: '500ms', backgroundColor: '#e8b94a' }}></div></div>
+                                    <span className="small fw-medium text-end" style={{ width: '30px', color: '#9a8a7e' }}>{item.count}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
+                </div>
+
+                <div className="col-12 col-md-3 text-md-end">
                     {isLoggedIn && (
-                        <button onClick={onOpenReviewModal} className="btn rounded-pill px-4 py-2 fw-bold hover-scale shadow-sm d-none d-lg-block" style={{ backgroundColor: '#A73B24', color: '#fff5f0' }}>
-                            เขียนรีวิว
+                        <button onClick={onOpenReviewModal} className="btn w-100 rounded-pill px-4 py-3 fw-bold hover-scale shadow-sm" style={{ backgroundColor: '#A73B24', color: '#fff5f0' }}>
+                            เขียนรีวิวของคุณ
                         </button>
                     )}
                 </div>
-            </div>
-
-            <div className="mb-5 p-4 rounded-4 shadow-sm" style={{ backgroundColor: '#231c18', border: '1px solid rgba(201, 148, 58, 0.1)' }}>
-                <div className="d-flex flex-column gap-2">
-                    {ratingDistribution.map((item) => (
-                        <div key={item.star} className="d-flex align-items-center gap-3">
-                            <div className="d-flex align-items-center justify-content-end gap-1" style={{ width: '40px' }}><span className="fw-bold small" style={{ color: '#f5ebe4' }}>{item.star}</span><Star size={12} style={{ color: '#e8b94a', fill: '#e8b94a' }} /></div>
-                            <div className="flex-grow-1 rounded-pill" style={{ height: '8px', backgroundColor: '#3d302a' }}><div className="rounded-pill h-100 transition-all" style={{ width: `${item.percentage}%`, transitionDuration: '500ms', backgroundColor: '#e8b94a' }}></div></div>
-                            <span className="small fw-medium text-end" style={{ width: '30px', color: '#9a8a7e' }}>{item.count}</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <div className="d-flex align-items-center justify-content-between mb-4 p-3 rounded-4 shadow-sm" style={{ backgroundColor: '#231c18', border: '1px solid rgba(201, 148, 58, 0.1)' }}>
-                <div className="d-flex align-items-center gap-3"><BadgeCheck size={20} style={{ color: '#e8b94a' }} /><div><p className="fw-bold m-0 small" style={{ color: '#f5ebe4' }}>เฉพาะ Verified KKU</p><small style={{ fontSize: '0.75rem', color: '#9a8a7e' }}>รีวิวจากนักศึกษา มข. เท่านั้น</small></div></div>
-                <div className="form-check form-switch m-0"><input title="filterInput" className="form-check-input cursor-pointer shadow-none" type="checkbox" checked={verifiedOnly} onChange={(e) => setVerifiedOnly(e.target.checked)} style={{ width: '40px', height: '20px' }} /></div>
             </div>
 
             <div className="d-flex flex-column gap-0">
                 {displayReviews.map((review, index) => (
                     <article key={review.id} className="py-4" style={{ borderBottom: index < displayReviews.length - 1 ? '1px solid #3d302a' : 'none' }}>
                         <div className="d-flex gap-3 align-items-start">
-                            <div className="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0 object-fit-cover" style={{ width: '44px', height: '44px', overflow: 'hidden', backgroundColor: '#A73B24' }}>{review.userImage ? <img src={review.userImage} alt={review.userName} className="w-100 h-100 object-fit-cover"/> : (review.userName?.charAt(0) || "U")}</div>
+                            <div className="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0 shadow-sm" style={{ width: '48px', height: '48px', overflow: 'hidden', backgroundColor: '#A73B24', border: '2px solid #3d302a' }}>{review.userImage && review.userImage.trim() ? <img src={review.userImage} alt={review.userName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.currentTarget.style.display = 'none'; }}/> : <span style={{ fontSize: '20px' }}>{review.userName?.charAt(0)?.toUpperCase() || "U"}</span>}</div>
                             <div className="flex-grow-1 min-w-0">
                                 <div className="d-flex justify-content-between align-items-center mb-2">
-                                    <div className="d-flex align-items-center gap-2"><span className="fw-bold" style={{ color: '#f5ebe4' }}>{review.userName || review.email}</span>{review.verified && (<span className="badge rounded-pill px-2 py-1 d-flex align-items-center gap-1" style={{ fontSize: '0.6rem', backgroundColor: 'rgba(201, 148, 58, 0.15)', color: '#e8b94a', border: '1px solid rgba(201, 148, 58, 0.3)' }}><BadgeCheck size={12} /> KKU</span>)}</div>
-                                    <span style={{ fontSize: '0.75rem', color: '#8a7b72' }}>{review.date}</span>
+                                    <div className="d-flex align-items-center gap-2"><span className="fw-bold" style={{ color: '#f5ebe4', fontSize: '1.05rem' }}>{review.userName || review.email}</span>{review.verified && (<span className="badge rounded-pill px-2 py-1 d-flex align-items-center gap-1" style={{ fontSize: '0.65rem', backgroundColor: 'rgba(201, 148, 58, 0.15)', color: '#e8b94a', border: '1px solid rgba(201, 148, 58, 0.3)' }}><BadgeCheck size={12} /> KKU</span>)}</div>
+                                    <span style={{ fontSize: '0.8rem', color: '#8a7b72' }}>{review.date}</span>
                                 </div>
                                 <div className="d-flex gap-1 mb-3">{renderStars(review.rating, 14)}</div>
-                                <p className="lh-base mb-3" style={{ fontSize: '0.9rem', color: '#e8ebe4' }}>{review.comment}</p>
-                                <div className="d-flex gap-4"><button className="btn btn-link p-0 text-decoration-none small d-flex align-items-center gap-2" style={{ color: '#8a7b72' }}><ThumbsUp size={14} /> <span>เป็นประโยชน์</span></button><button className="btn btn-link p-0 text-decoration-none small" style={{ color: '#8a7b72' }}>ตอบกลับ</button></div>
+                                <p className="lh-base mb-3" style={{ fontSize: '1rem', color: '#e8ebe4' }}>{review.comment}</p>
+                                <div className="d-flex gap-4"><button className="btn btn-link p-0 text-decoration-none small d-flex align-items-center gap-2 hover-scale" style={{ color: '#8a7b72' }}><ThumbsUp size={14} /> <span>เป็นประโยชน์</span></button><button className="btn btn-link p-0 text-decoration-none small hover-scale" style={{ color: '#8a7b72' }}>ตอบกลับ</button></div>
                             </div>
                         </div>
                     </article>

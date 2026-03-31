@@ -80,7 +80,7 @@ export const ShopDetailModal = ({ shop, onClose, onDelete, onEdit }: any) => {
         <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 2000 }} onClick={onClose}>
             <div className="bg-white rounded-4 shadow-lg w-100 overflow-hidden d-flex flex-column animate-fade-in" style={{ maxWidth: '600px', maxHeight: '90vh' }} onClick={e => e.stopPropagation()}>
                 <div className="position-relative bg-light" style={{ height: '200px' }}>
-                    <img src={shop.image} alt={shop.name} className="w-100 h-100 object-fit-cover" />
+                    <img src={shop.coverImage || shop.image} alt={shop.name} className="w-100 h-100 object-fit-cover" />
                     <button onClick={onClose} className="btn btn-dark btn-sm rounded-circle position-absolute top-0 end-0 m-3 d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px' }}><X size={18} /></button>
                 </div>
                 <div className="p-4 overflow-auto custom-scrollbar">

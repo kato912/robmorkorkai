@@ -1,4 +1,4 @@
-import type { ShopRequest } from "../../data/mockAdminData";
+import type { Shop } from "../../types/shop";
 export type TabType = "overview" | "stores";
 export const adminTheme = {
     sidebarBg: "#111827",
@@ -12,8 +12,8 @@ export const adminTheme = {
 export interface AdminViewProps {
     activeTab: TabType;
     setActiveTab: (tab: TabType) => void;
-    storeRequests: ShopRequest[];
-    filteredStores: ShopRequest[];
+    storeRequests: Shop[];
+    filteredStores: Shop[];
     searchQuery: string;
     setSearchQuery: (q: string) => void;
     selectedCategory: string;
@@ -27,7 +27,7 @@ export interface AdminViewProps {
         totalUsers: number;
     };
     onDelete: (id: string) => void;
-    onViewDetail: (shop: ShopRequest) => void;
-    onEdit: (shop: ShopRequest) => void;
+    onViewDetail: (shop: Shop) => void;
+    onEdit: (shop: Shop) => void;
     logout: () => void;
 }

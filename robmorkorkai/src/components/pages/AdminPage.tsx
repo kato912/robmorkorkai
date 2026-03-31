@@ -14,6 +14,7 @@ export const AdminPage: React.FC = () => {
     // --- API State ---
     const [shops, setShops] = useState<Shop[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [totalUsers, setTotalUsers] = useState(0);
 
     // --- UI State ---
     const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
@@ -53,6 +54,21 @@ export const AdminPage: React.FC = () => {
 
     useEffect(() => {
         fetchShops();
+    }, []);
+
+    // ฟ้งข้อมูลจำนวนผู้ใช้
+    const fetchUserCount = async () => {
+        try {
+            const res = await api.get("/api/admin/stats");
+            setTotalUsers(res.data.totalUsers || 0);
+        } catch (err) {
+            console.error("Error fetching user count:", err);
+            setTotalUsers(0);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserCount();
     }, []);
 
     // ลบร้านค้า (DELETE)
@@ -127,7 +143,7 @@ export const AdminPage: React.FC = () => {
     const stats = {
         totalStores: shops.length,
         totalReviews: shops.reduce((sum, shop) => sum + (shop.reviewCount || 0), 0),
-        totalUsers: 2451, // mock data
+        totalUsers: totalUsers,
     };
 
     // --- รวม Props ส่งให้ View ---
