@@ -1,5 +1,27 @@
+/**
+ * ProfileEditForm Component
+ *
+ * User profile edit form with input fields.
+ * Features:
+ * - Text input for user name (editable)
+ * - Email field (read-only, KKU verification only)
+ * - Phone number input (optional)
+ * - Form validation and styling
+ * - Fade-in animation on mount
+ *
+ * Props:
+ * - profile: User profile data object
+ * - setProfile: Callback to update profile state
+ *
+ * CSS Classes Used:
+ * - profile-edit-form: Main form container
+ * - profile-form-label: Label styling
+ * - profile-form-input: Input field styling
+ */
+
 import React from "react";
 import type { ProfileData } from "../pages/ProfilePage";
+import "./css/ProfileInfoCard.css";
 
 interface Props {
     profile: ProfileData;
@@ -8,36 +30,41 @@ interface Props {
 
 export const ProfileEditForm: React.FC<Props> = ({ profile, setProfile }) => {
     return (
-        <div className="py-4 py-lg-5 animate-fade-in" style={{ borderBottom: '1px solid #3d302a' }}>
-            <h6 className="text-uppercase fw-bold mb-4" style={{ fontSize: '0.7rem', letterSpacing: '2px', color: '#c9943a' }}>แก้ไขข้อมูล</h6>
-            <div className="row g-4">
-                <div className="col-12 col-md-6 col-lg-4">
-                    <label className="fw-medium small mb-2" style={{ color: '#f5ebe4' }}>ชื่อ-นามสกุล</label>
+        <div className="profile-edit-form">
+            {/* Form Title - "Edit Information" section header */}
+            <h6 className="profile-form-title">แก้ไขข้อมูล</h6>
+            
+            {/* Form Fields Grid - 3 columns on lg, 2 on md, 1 on mobile */}
+            <div className="profile-form-grid">
+                {/* Full Name Field */}
+                <div className="profile-form-field">
+                    <label className="profile-form-label">ชื่อ-นามสกุล</label>
                     <input
                         type="text"
-                        className="form-control rounded-3 px-4 py-3 shadow-none"
-                        style={{ backgroundColor: '#231c18', border: '1px solid #3d302a', color: '#f5ebe4' }}
+                        className="profile-form-input"
                         value={profile.name}
                         onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                     />
                 </div>
-                <div className="col-12 col-md-6 col-lg-4">
-                    <label className="fw-medium small mb-2" style={{ color: '#f5ebe4' }}>อีเมล KKU</label>
+
+                {/* Email Field - Read-only, KKU verification only */}
+                <div className="profile-form-field">
+                    <label className="profile-form-label">อีเมล KKU</label>
                     <input
                         type="email"
                         title="email"
-                        className="form-control rounded-3 px-4 py-3 shadow-none"
-                        style={{ backgroundColor: '#1a1412', border: '1px solid #3d302a', color: '#8a7b72' }}
+                        className="profile-form-input"
                         value={profile.email}
-                        disabled // อีเมลแก้ไม่ได้
+                        disabled // Email cannot be changed for security
                     />
                 </div>
-                <div className="col-12 col-md-6 col-lg-4">
-                    <label className="fw-medium small mb-2" style={{ color: '#f5ebe4' }}>เบอร์โทรศัพท์ (ถ้ามี)</label>
+
+                {/* Phone Number Field - Optional */}
+                <div className="profile-form-field">
+                    <label className="profile-form-label">เบอร์โทรศัพท์ (ถ้ามี)</label>
                     <input
                         type="text"
-                        className="form-control rounded-3 px-4 py-3 shadow-none"
-                        style={{ backgroundColor: '#231c18', border: '1px solid #3d302a', color: '#f5ebe4' }}
+                        className="profile-form-input"
                         placeholder="08X-XXX-XXXX"
                         value={profile.phone || ""}
                         onChange={(e) => setProfile({ ...profile, phone: e.target.value })}

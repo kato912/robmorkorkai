@@ -1,3 +1,28 @@
+/**
+ * ProfilePage Component
+ *
+ * Main profile page displays user information, edit form, and user activity.
+ * Features:
+ * - Profile header with avatar, name, and statistics
+ * - Edit form for user information (name, phone)
+ * - Reviews list - all reviews written by the user
+ * - Favorites list - all favorite shops saved by user
+ * - Edit/Save functionality with API integration
+ * - Logout confirmation dialog
+ * - Responsive design for mobile and desktop
+ *
+ * State:
+ * - isEditing: Whether user is in edit mode
+ * - myReviews: Array of user's reviews from API
+ * - favoriteShops: Array of user's favorite shops from API
+ * - profile: Current user profile data (name, email, phone, image)
+ *
+ * API Endpoints:
+ * - GET /api/user/favorites - Fetch user's favorite shops
+ * - GET /api/user/reviews - Fetch user's reviews
+ * - PATCH /api/user/update - Update user profile information
+ */
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -9,12 +34,24 @@ import { ProfileHeader } from "../profile/ProfileHeader";
 import { ProfileEditForm } from "../profile/ProfileInfoCard";
 import { MyStoreList } from "../profile/MyStoreList";
 import { BottomNav } from "../../components/layout/BottomNav";
+import "./css/ProfilePage.css";
 
 export interface ProfileData {
-    name: string; email: string; imageUrl: string; role: string; phone?: string; isVerifiedStudent: boolean;
+    name: string;
+    email: string;
+    imageUrl: string;
+    role: string;
+    phone?: string;
+    isVerifiedStudent: boolean;
 }
 
-// ฟังก์ชัน format วันที่เป็น relative time
+/**
+ * Format relative time for review display
+ * Converts absolute timestamp to human-readable format (e.g., "2 hours ago")
+ * 
+ * @param date - Timestamp to format
+ * @returns Formatted relative time string in Thai
+ */
 const formatRelativeTime = (date: string | Date): string => {
     const now = new Date();
     const reviewDate = new Date(date);
@@ -53,7 +90,10 @@ const ProfilePage: React.FC = () => {
         isVerifiedStudent: user?.isVerifiedStudent || true
     });
 
-    // ดึง Favorites จาก API
+    /**
+     * Fetch user's favorite shops from API on component mount
+     * Maps API response to match MyStoreList component format
+     */
     useEffect(() => {
         const fetchFavorites = async () => {
             try {
@@ -63,7 +103,7 @@ const ProfilePage: React.FC = () => {
                 });
                 if (!response.ok) throw new Error("Failed to fetch favorites");
                 const data = await response.json();
-                // Map API response ให้ตรงกับ format ของ MyStoreList
+                // Transform API data to component format
                 const formatted = data.map((shop: any) => ({
                     id: shop.id,
                     name: shop.name,
@@ -85,14 +125,17 @@ const ProfilePage: React.FC = () => {
         fetchFavorites();
     }, []);
 
-    // ดึง Reviews จาก API
+    /**
+     * Fetch user's reviews from API on component mount
+     * Maps API response to match MyStoreList component format
+     */
     useEffect(() => {
         const fetchReviews = async () => {
             try {
                 setIsLoadingReviews(true);
                 const response = await api.get("/api/user/reviews");
                 const data = response.data;
-                // Map API response ให้ตรงกับ format ของ MyStoreList
+                // Transform API data to component format with relative time formatting
                 const formatted = data.map((review: any) => ({
                     id: review.id,
                     shopName: review.name,
@@ -100,7 +143,7 @@ const ProfilePage: React.FC = () => {
                     rating: review.userReview.rating,
                     comment: review.userReview.comment,
                     date: formatRelativeTime(review.userReview.createdAt),
-                    helpful: 0 // ยังไม่มี helpful count ในระบบ
+                    helpful: 0 // Helpful count not yet available in system
                 }));
                 setMyReviews(formatted);
             } catch (error) {
@@ -114,20 +157,43 @@ const ProfilePage: React.FC = () => {
         fetchReviews();
     }, []);
 
+    /**
+     * Sync profile state with authenticated user data
+     * Updates whenever user context changes
+     */
     useEffect(() => {
         if (user) {
-            setProfile(prev => ({ ...prev, name: user.name || prev.name, email: user.email || prev.email, imageUrl: user.image || prev.imageUrl }));
+            setProfile(prev => ({
+                ...prev,
+                name: user.name || prev.name,
+                email: user.email || prev.email,
+                imageUrl: user.image || prev.imageUrl
+            }));
         }
     }, [user]);
 
+    /**
+     * Handle logout with confirmation dialog
+     * Shows alert before destroying user session
+     */
     const handleLogout = () => {
         AlertUtils.confirm("คุณต้องการออกจากระบบใช่หรือไม่?", "", "ยืนยัน", "ยกเลิก").then((c) => {
-            if (c) { logout(); navigate("/login"); }
+            if (c) {
+                logout();
+                navigate("/login");
+            }
         });
     };
 
+    /**
+     * Handle profile save on edit form submission
+     * Sends updated name to API and updates local state
+     */
     const handleSave = async () => {
-        if (!isEditing) { setIsEditing(true); return; }
+        if (!isEditing) {
+            setIsEditing(true);
+            return;
+        }
         try {
             AlertUtils.loading("กำลังบันทึกข้อมูล...");
             const response = await api.patch('/api/user/update', { name: profile.name });
@@ -140,18 +206,30 @@ const ProfilePage: React.FC = () => {
     };
 
     return (
-        <div className="min-vh-100" style={{ backgroundColor: '#1a1412', fontFamily: 'Inter, sans-serif' }}>
+        <div className="profile-page-container">
+            {/* Profile Header Section */}
             <ProfileHeader
                 profile={profile}
                 isEditing={isEditing}
                 setIsEditing={(val) => { if (isEditing) handleSave(); else setIsEditing(val); }}
                 onLogout={handleLogout}
-                stats={{ reviews: myReviews.length, favorites: favoriteShops.length, helpful: 35 }}
+                stats={{
+                    reviews: myReviews.length,
+                    favorites: favoriteShops.length,
+                    helpful: 35
+                }}
             />
-            <main className="container" style={{ maxWidth: '900px', paddingBottom: '90px' }}>
+
+            {/* Main Content Area */}
+            <main className="profile-page-main">
+                {/* Edit Form - Shows only when in edit mode */}
                 {isEditing && <ProfileEditForm profile={profile} setProfile={setProfile} />}
+
+                {/* Reviews and Favorites Tabs */}
                 <MyStoreList reviews={myReviews} favorites={favoriteShops} />
             </main>
+
+            {/* Mobile Bottom Navigation */}
             <div className="d-lg-none">
                 <BottomNav activePage="profile" />
             </div>

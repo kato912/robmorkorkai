@@ -1,0 +1,442 @@
+/**
+ * ProfileHeader.css
+ * 
+ * Styles for the profile header section component.
+ * Displays user avatar, name, email, stats, and navigation buttons.
+ * Includes radial gradient background with pattern overlay.
+ * Only visible above header navigation with responsive layout.
+ */
+
+/* Main Header Section - Radial gradient background with pattern overlay */
+.profile-header-section {
+    position: relative;
+    overflow: hidden;
+    background-color: #231c18;
+    background: radial-gradient(circle at center, #3d302a 0%, #231c18 50%, #1a1412 100%);
+    border-bottom: 1px solid #3d302a;
+    color: #f5ebe4;
+}
+
+/* Background Pattern - Subtle dot grid pattern */
+.profile-header-pattern {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 1px 1px, rgba(201, 148, 58, 0.1) 1px, transparent 0);
+    background-size: 40px 40px;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* Top Navigation Bar - Back button and desktop nav links */
+.profile-header-nav {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    padding: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (min-width: 992px) {
+    .profile-header-nav {
+        padding-left: 3rem;
+        padding-right: 3rem;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+}
+
+/* Back Button - Navigates to previous page */
+.profile-back-button {
+    background: none;
+    border: none;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0;
+    color: #f5ebe4;
+    transition: all 0.3s ease;
+    opacity: 0.75;
+    cursor: pointer;
+}
+
+.profile-back-button:hover {
+    opacity: 1;
+}
+
+/* Back Button Icon Circle - Glass morphism effect */
+.profile-back-icon {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(201, 148, 58, 0.2);
+    width: 40px;
+    height: 40px;
+    background-color: rgba(201, 148, 58, 0.05);
+    backdrop-filter: blur(8px);
+    color: #e8b94a;
+}
+
+/* Back Button Text - Desktop only */
+.profile-back-text {
+    display: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+@media (min-width: 992px) {
+    .profile-back-text {
+        display: block;
+    }
+}
+
+/* Desktop Navigation Links */
+.profile-desktop-nav {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+}
+
+@media (min-width: 992px) {
+    .profile-desktop-nav {
+        display: flex;
+    }
+}
+
+/* Navigation Links */
+.profile-nav-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    opacity: 0.75;
+    color: #f5ebe4;
+    font-size: 0.9rem;
+}
+
+.profile-nav-link:hover {
+    opacity: 1;
+    color: #e8b94a;
+}
+
+/* Divider Line - Separates nav links from profile badge */
+.profile-nav-divider {
+    width: 1px;
+    height: 24px;
+    background-color: rgba(201, 148, 58, 0.2);
+}
+
+/* Profile Badge - Current page indicator */
+.profile-badge {
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    background-color: rgba(201, 148, 58, 0.1);
+    border: 1px solid rgba(201, 148, 58, 0.2);
+    color: #e8b94a;
+}
+
+/* Mobile Action Buttons - Only visible on small screens */
+.profile-mobile-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+@media (min-width: 992px) {
+    .profile-mobile-actions {
+        display: none;
+    }
+}
+
+/* Icon Button - Edit and logout buttons on mobile */
+.profile-icon-button {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    background: none;
+}
+
+.profile-icon-button-edit {
+    background-color: rgba(201, 148, 58, 0.05);
+    border-color: rgba(201, 148, 58, 0.2);
+    color: #e8b94a;
+}
+
+.profile-icon-button-logout {
+    background-color: rgba(167, 59, 36, 0.05);
+    border-color: rgba(167, 59, 36, 0.2);
+    color: #A73B24;
+}
+
+.profile-icon-button:hover {
+    opacity: 0.8;
+}
+
+/* Profile Content Container - Main content area */
+.profile-header-content {
+    position: relative;
+    z-index: 3;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: 1024px;
+}
+
+@media (min-width: 992px) {
+    .profile-header-content {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+        padding-left: 3rem;
+        padding-right: 3rem;
+        margin-bottom: 0.75rem;
+    }
+}
+
+/* Profile Layout - Flex row on desktop, column on mobile */
+.profile-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+@media (min-width: 992px) {
+    .profile-layout {
+        flex-direction: row;
+        gap: 1.5rem;
+    }
+}
+
+/* Avatar Container - Left side of profile */
+.profile-avatar-container {
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Avatar Image - Round profile picture */
+.profile-avatar {
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    width: 144px;
+    height: 144px;
+    border: 4px solid #3d302a;
+}
+
+/* Main Content Area - Right side of profile */
+.profile-main-content {
+    flex-grow: 1;
+    width: 100%;
+}
+
+/* Header Top Row - Name and action buttons */
+.profile-header-top {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 992px) {
+    .profile-header-top {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+}
+
+/* Name Section - User name and KKU badge */
+.profile-name-section {
+    text-align: center;
+    margin-bottom: 0.75rem;
+}
+
+@media (min-width: 992px) {
+    .profile-name-section {
+        text-align: left;
+        margin-bottom: 0;
+    }
+}
+
+/* Name with Badge Container */
+.profile-name-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+@media (min-width: 992px) {
+    .profile-name-badge {
+        justify-content: flex-start;
+    }
+}
+
+/* Profile Name - Main heading */
+.profile-name {
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.5px;
+    font-size: clamp(2rem, 5vw, 2.5rem);
+    color: #f5ebe4;
+}
+
+/* KKU Badge - Verified student indicator */
+.profile-kku-badge {
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 700;
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+}
+
+/* User Badge - Non-verified user indicator */
+.profile-user-badge {
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 700;
+    background-color: #2d2320;
+    color: #9a8a7e;
+    border: 1px solid #3d302a;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+}
+
+/* Profile Email - User email address */
+.profile-email {
+    margin: 0;
+    font-size: 1rem;
+    color: #9a8a7e;
+}
+
+/* Action Buttons Section - Edit and logout buttons (desktop only) */
+.profile-action-buttons {
+    display: none;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+@media (min-width: 992px) {
+    .profile-action-buttons {
+        display: flex;
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Profile Button - Edit/Save and logout buttons */
+.profile-button {
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid;
+    font-size: 0.9rem;
+}
+
+.profile-button-edit {
+    background-color: #2d2320;
+    color: #e8b94a;
+    border-color: #3d302a;
+}
+
+.profile-button-edit:hover {
+    opacity: 0.75;
+}
+
+.profile-button-logout {
+    background-color: transparent;
+    color: #A73B24;
+    border-color: rgba(167, 59, 36, 0.4);
+}
+
+.profile-button-logout:hover {
+    opacity: 0.75;
+}
+
+/* Stats Row - Reviews, favorites, helpful count display */
+.profile-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+@media (min-width: 992px) {
+    .profile-stats {
+        justify-content: flex-start;
+        gap: 1.5rem;
+    }
+}
+
+/* Stat Item - Individual stat display (reviews, favorites, helpful) */
+.profile-stat-item {
+    text-align: center;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+}
+
+/* Stat Number - Large stat value */
+.profile-stat-number {
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    font-size: 1.75rem;
+    color: #e8b94a;
+}
+
+/* Stat Label - Stat name/description */
+.profile-stat-label {
+    font-weight: 500;
+    display: block;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: #8a7b72;
+}
+
+/* Stat Divider - Vertical line separating stats */
+.profile-stat-divider {
+    width: 1px;
+    height: 35px;
+    background-color: rgba(201, 148, 58, 0.2);
+}

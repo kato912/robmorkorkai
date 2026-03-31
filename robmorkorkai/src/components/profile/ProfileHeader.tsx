@@ -1,7 +1,37 @@
+/**
+ * ProfileHeader Component
+ *
+ * Displays user profile information with avatar, name, email, and statistics.
+ * Features:
+ * - Radial gradient background with dot pattern overlay
+ * - Responsive avatar display
+ * - User name with KKU verification badge
+ * - Statistics display (reviews, favorites, helpful count)
+ * - Edit and logout buttons
+ * - Sticky desktop navigation bar
+ * - Mobile action buttons
+ *
+ * Props:
+ * - profile: User profile data (name, email, image, role, phone)
+ * - isEditing: Whether user is in edit mode
+ * - setIsEditing: Callback to toggle edit mode
+ * - onLogout: Callback for logout action
+ * - stats: User statistics (reviews count, favorites count, helpful count)
+ *
+ * CSS Classes Used:
+ * - profile-header-section: Main section container
+ * - profile-header-nav: Navigation bar
+ * - profile-avatar: User profile picture
+ * - profile-name: User full name
+ * - profile-stats: Statistics container
+ * - profile-button: Action buttons (edit, logout)
+ */
+
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, Edit2, LogOut, Check, BadgeCheck, Home, Search, Bot, User } from "lucide-react";
 import type { ProfileData } from "../pages/ProfilePage";
+import "./css/ProfileHeader.css";
 
 interface Props {
     profile: ProfileData;
@@ -17,161 +47,116 @@ export const ProfileHeader: React.FC<Props> = ({
     const navigate = useNavigate();
 
     return (
-        <section className="position-relative overflow-hidden" style={{ 
-            backgroundColor: '#231c18', 
-            background: 'radial-gradient(circle at center, #3d302a 0%, #231c18 50%, #1a1412 100%)', /* ปรับความสว่างตรงกลางให้เนียนขึ้น */
-            borderBottom: '1px solid #3d302a', 
-            color: '#f5ebe4' 
-        }}>
-            
-            {/* Background Pattern */}
-            <div className="position-absolute w-100 h-100" style={{
-                backgroundImage: "radial-gradient(circle at 1px 1px, rgba(201,148,58,0.1) 1px, transparent 0)",
-                backgroundSize: "40px 40px", top: 0, left: 0, zIndex: 1
-            }}></div>
+        <section className="profile-header-section">
+            {/* Background Pattern - Subtle dot grid overlay */}
+            <div className="profile-header-pattern"></div>
 
-            {/* Top Navigation */}
-            <div className="position-relative z-3 w-100 px-4 px-lg-5 pt-4 pt-lg-5 d-flex justify-content-between align-items-center">
-                <button
-                    onClick={() => navigate(-1)}
-                    className="btn btn-link text-decoration-none d-flex align-items-center gap-3 p-0 transition-all opacity-75 hover-opacity-100"
-                    style={{ color: '#f5ebe4' }}
-                >
-                    <div
-                        className="rounded-circle d-flex align-items-center justify-content-center border"
-                        style={{
-                            width: '40px', height: '40px',
-                            backgroundColor: 'rgba(201, 148, 58, 0.05)',
-                            borderColor: 'rgba(201, 148, 58, 0.2)',
-                            backdropFilter: 'blur(8px)',
-                            color: '#e8b94a'
-                        }}
-                    >
+            {/* Top Navigation Bar - Back button and desktop nav */}
+            <div className="profile-header-nav">
+                {/* Back Button - Navigate to previous page */}
+                <button onClick={() => navigate(-1)} className="profile-back-button">
+                    <div className="profile-back-icon">
                         <ChevronLeft size={20} />
                     </div>
-                    <span className="d-none d-lg-block fw-medium" style={{ fontSize: '0.95rem' }}>
-                        กลับหน้าแรก
-                    </span>
+                    <span className="profile-back-text">กลับหน้าแรก</span>
                 </button>
 
-                <div className="d-none d-lg-flex align-items-center gap-4">
-                    <Link to="/" className="text-decoration-none d-flex align-items-center gap-2 transition-all opacity-75 hover-opacity-100" style={{ fontSize: '0.9rem', color: '#f5ebe4' }}>
+                {/* Desktop Navigation Links - Only visible on lg+ screens */}
+                <div className="profile-desktop-nav">
+                    <Link to="/" className="profile-nav-link">
                         <Home size={18} /> Home
                     </Link>
-                    <Link to="/search" className="text-decoration-none d-flex align-items-center gap-2 transition-all opacity-75 hover-opacity-100" style={{ fontSize: '0.9rem', color: '#f5ebe4' }}>
+                    <Link to="/search" className="profile-nav-link">
                         <Search size={18} /> Search
                     </Link>
-                    <Link to="/ai" className="text-decoration-none d-flex align-items-center gap-2 transition-all opacity-75 hover-opacity-100" style={{ fontSize: '0.9rem', color: '#f5ebe4' }}>
+                    <Link to="/ai" className="profile-nav-link">
                         <Bot size={18} /> AI
                     </Link>
-                    <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(201,148,58,0.2)' }}></div>
-                    <div
-                        className="rounded-pill px-4 py-2 fw-medium d-flex align-items-center justify-content-center"
-                        style={{
-                            fontSize: '0.9rem',
-                            backgroundColor: 'rgba(201, 148, 58, 0.1)',
-                            border: '1px solid rgba(201, 148, 58, 0.2)',
-                            color: '#e8b94a'
-                        }}
-                    >
-                        Profile
-                    </div>
+                    <div className="profile-nav-divider"></div>
+                    <div className="profile-badge">Profile</div>
                 </div>
 
-                {/* Mobile Top Buttons */}
-                <div className="d-lg-none d-flex gap-2">
+                {/* Mobile Action Buttons - Edit and logout (small screens only) */}
+                <div className="profile-mobile-actions">
                     <button
                         onClick={() => setIsEditing(!isEditing)}
-                        className="btn rounded-circle d-flex align-items-center justify-content-center border"
-                        style={{ width: '40px', height: '40px', backgroundColor: 'rgba(201, 148, 58, 0.05)', borderColor: 'rgba(201, 148, 58, 0.2)', color: '#e8b94a' }}
+                        className="profile-icon-button profile-icon-button-edit"
                     >
                         {isEditing ? <Check size={18} /> : <Edit2 size={18} />}
                     </button>
-                    <button
-                        onClick={onLogout}
-                        className="btn rounded-circle d-flex align-items-center justify-content-center border"
-                        style={{ width: '40px', height: '40px', backgroundColor: 'rgba(167, 59, 36, 0.05)', borderColor: 'rgba(167, 59, 36, 0.2)', color: '#A73B24' }}
-                    >
+                    <button onClick={onLogout} className="profile-icon-button profile-icon-button-logout">
                         <LogOut size={18} />
                     </button>
                 </div>
             </div>
 
             {/* Profile Content Container */}
-            <div className="position-relative z-3 mx-auto px-4 px-lg-5 pt-4 pb-5 pt-lg-5 pb-lg-5 mb-lg-3" style={{ maxWidth: '1024px' }}>
-                
-                <div className="d-flex flex-column flex-lg-row align-items-center gap-4 gap-lg-5">
-                    
-                    {/* Avatar (ซ้าย) */}
-                    <div className="position-relative flex-shrink-0">
+            <div className="profile-header-content">
+                <div className="profile-layout">
+                    {/* Avatar Section - Left side profile picture */}
+                    <div className="profile-avatar-container">
                         <img
                             src={profile.imageUrl}
                             alt={profile.name}
                             referrerPolicy="no-referrer"
-                            className="rounded-circle object-fit-cover shadow-lg"
-                            style={{ width: '144px', height: '144px', border: '4px solid #3d302a' }}
+                            className="profile-avatar"
                         />
                     </div>
 
-                    {/* Content Area (ขวา) */}
-                    <div className="flex-grow-1 w-100">
-                        
-                        <div className="d-flex flex-column flex-lg-row justify-content-between align-items-center align-items-lg-center mb-4">
-                            
-                            {/* Name & Email */}
-                            <div className="text-center text-lg-start mb-3 mb-lg-0">
-                                <div className="d-flex align-items-center justify-content-center justify-content-lg-start gap-3 mb-2">
-                                    <h1 className="fw-bold m-0 tracking-tight" style={{ fontSize: 'clamp(2rem, 5vw, 2.5rem)', color: '#f5ebe4' }}>{profile.name}</h1>
+                    {/* Main Content Area - Right side with name and stats */}
+                    <div className="profile-main-content">
+                        {/* Header Top Row - Name section and action buttons */}
+                        <div className="profile-header-top">
+                            {/* Name and Badge Section */}
+                            <div className="profile-name-section">
+                                <div className="profile-name-badge">
+                                    <h1 className="profile-name">{profile.name}</h1>
+                                    {/* KKU Verification Badge or User Badge */}
                                     {(profile.email?.endsWith('@kkumail.com') || profile.email?.endsWith('@kku.ac.th')) ? (
-                                        <span className="badge rounded-pill d-flex align-items-center gap-1 fw-bold" style={{ backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: '0.75rem', padding: '0.35rem 0.6rem' }}>
+                                        <span className="profile-kku-badge">
                                             <BadgeCheck size={14} /> KKU
                                         </span>
                                     ) : (
-                                        <span className="badge rounded-pill d-flex align-items-center gap-1 fw-bold" style={{ backgroundColor: '#2d2320', color: '#9a8a7e', border: '1px solid #3d302a', fontSize: '0.75rem', padding: '0.35rem 0.6rem' }}>
+                                        <span className="profile-user-badge">
                                             <User size={14} /> USER
                                         </span>
                                     )}
                                 </div>
-                                <p className="mb-0" style={{ fontSize: '1rem', color: '#9a8a7e' }}>{profile.email}</p>
+                                <p className="profile-email">{profile.email}</p>
                             </div>
 
-                            {/* Action Buttons (Desktop Only) */}
-                            <div className="d-none d-lg-flex gap-3 mt-2">
+                            {/* Action Buttons - Edit and logout (desktop only) */}
+                            <div className="profile-action-buttons">
                                 <button
                                     onClick={() => setIsEditing(!isEditing)}
-                                    className="btn rounded-pill px-4 py-2 fw-medium d-flex align-items-center gap-2 transition-all hover-opacity-75"
-                                    style={{ backgroundColor: '#2d2320', color: '#e8b94a', border: '1px solid #3d302a', fontSize: '0.9rem' }}
+                                    className="profile-button profile-button-edit"
                                 >
-                                    {isEditing ? <Check size={16} /> : <Edit2 size={16} />} {isEditing ? "บันทึก" : "แก้ไข"}
+                                    {isEditing ? <Check size={16} /> : <Edit2 size={16} />}
+                                    {isEditing ? "บันทึก" : "แก้ไข"}
                                 </button>
-                                <button
-                                    onClick={onLogout}
-                                    className="btn rounded-pill px-4 py-2 fw-medium d-flex align-items-center gap-2 transition-all hover-opacity-75"
-                                    style={{ backgroundColor: 'transparent', color: '#A73B24', border: '1px solid rgba(167, 59, 36, 0.4)', fontSize: '0.9rem' }}
-                                >
+                                <button onClick={onLogout} className="profile-button profile-button-logout">
                                     <LogOut size={16} /> ออกจากระบบ
                                 </button>
                             </div>
                         </div>
 
-                        {/* Bottom Row (Stats) */}
-                        <div className="d-flex align-items-center justify-content-center justify-content-lg-start gap-4 gap-lg-5 w-100">
-                            <div className="text-center px-1">
-                                <h3 className="fw-bold m-0 mb-1" style={{ fontSize: '1.75rem', color: '#e8b94a' }}>{stats.reviews}</h3>
-                                <small className="fw-medium d-block text-uppercase" style={{ fontSize: '0.65rem', letterSpacing: '2px', color: '#8a7b72' }}>Reviews</small>
+                        {/* Stats Section - Reviews, favorites, helpful count */}
+                        <div className="profile-stats">
+                            <div className="profile-stat-item">
+                                <h3 className="profile-stat-number">{stats.reviews}</h3>
+                                <small className="profile-stat-label">Reviews</small>
                             </div>
-                            <div style={{ width: '1px', height: '35px', backgroundColor: 'rgba(201,148,58,0.2)' }}></div>
-                            <div className="text-center px-1">
-                                <h3 className="fw-bold m-0 mb-1" style={{ fontSize: '1.75rem', color: '#e8b94a' }}>{stats.favorites}</h3>
-                                <small className="fw-medium d-block text-uppercase" style={{ fontSize: '0.65rem', letterSpacing: '2px', color: '#8a7b72' }}>Favorites</small>
+                            <div className="profile-stat-divider"></div>
+                            <div className="profile-stat-item">
+                                <h3 className="profile-stat-number">{stats.favorites}</h3>
+                                <small className="profile-stat-label">Favorites</small>
                             </div>
-                            <div style={{ width: '1px', height: '35px', backgroundColor: 'rgba(201,148,58,0.2)' }}></div>
-                            <div className="text-center px-1">
-                                <h3 className="fw-bold m-0 mb-1" style={{ fontSize: '1.75rem', color: '#e8b94a' }}>{stats.helpful}</h3>
-                                <small className="fw-medium d-block text-uppercase" style={{ fontSize: '0.65rem', letterSpacing: '2px', color: '#8a7b72' }}>Helpful</small>
+                            <div className="profile-stat-divider"></div>
+                            <div className="profile-stat-item">
+                                <h3 className="profile-stat-number">{stats.helpful}</h3>
+                                <small className="profile-stat-label">Helpful</small>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
