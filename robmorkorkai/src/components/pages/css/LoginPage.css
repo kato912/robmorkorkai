@@ -1,0 +1,387 @@
+/**
+ * LoginPage.css
+ *
+ * Comprehensive styling for the login page layout.
+ * Provides responsive design for both desktop and mobile views.
+ * Includes hero image section, navigation, feature badges, and form container.
+ * Desktop: 55% image, 45% form layout
+ * Mobile: Full-width image header, form below
+ */
+
+/* ==================== GLOBAL COLOR VARIABLES ==================== */
+/* Dark mode color palette for login page */
+.login-page-root {
+    background-color: #0c0a09;
+    font-family: 'Inter', sans-serif;
+    color: #f5f5f4;
+    min-height: 100vh;
+}
+
+/* ==================== TEXT COLOR UTILITIES ==================== */
+/* Stone color scale - used throughout page for typography hierarchy */
+.text-stone-100 { color: #f5f5f4; }
+.text-stone-300 { color: #d6d3d1; }
+.text-stone-400 { color: #a8a29e; }
+.text-stone-500 { color: #78716c; }
+.text-stone-600 { color: #57534e; }
+
+/* ==================== BACKGROUND COLORS ==================== */
+.bg-stone-800 { background-color: #292524; }
+.bg-stone-900 { background-color: #1c1917; }
+
+/* ==================== DESKTOP LAYOUT (55% Image + 45% Form) ==================== */
+.login-desktop-container {
+    display: none;
+    min-height: 100vh;
+}
+
+@media (min-width: 992px) {
+    .login-desktop-container {
+        display: flex;
+    }
+}
+
+/* Left Side - Hero Image (55% width) */
+.login-desktop-image-section {
+    position: relative;
+    overflow: hidden;
+    width: 55%;
+}
+
+/* Hero Image styling */
+.login-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Gradient overlays for image - dark edges effect */
+.login-image-overlay-horizontal {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(12, 10, 9, 0.3) 0%, transparent 50%, #0c0a09 100%);
+    z-index: 2;
+}
+
+.login-image-overlay-vertical {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(12, 10, 9, 0.9) 0%, transparent 50%, rgba(12, 10, 9, 0.4) 100%);
+    z-index: 2;
+}
+
+/* Bottom content area over image - testimonials and features */
+.login-image-bottom-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 3rem;
+    z-index: 10;
+    max-width: 500px;
+}
+
+/* Features container - horizontal flex layout */
+.login-features-desktop {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: nowrap;
+}
+
+/* Individual feature pill styling */
+.login-feature-pill {
+    border-radius: 9999px;
+    padding: 0.5rem 1.5rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-feature-pill-text {
+    color: white;
+    font-weight: 500;
+    font-size: 0.8rem;
+    opacity: 0.9;
+    white-space: nowrap;
+}
+
+/* Testimonial section */
+.login-testimonial-text {
+    color: white;
+    font-style: italic;
+    font-size: 1.25rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+}
+
+.login-testimonial-credit {
+    color: white;
+    font-size: 0.85rem;
+    opacity: 0.5;
+    margin: 0;
+}
+
+/* Right Side - Form Section (45% width on desktop) */
+.login-desktop-form-section {
+    display: none;
+    flex-direction: column;
+    padding: 3rem;
+    width: 45%;
+}
+
+@media (min-width: 992px) {
+    .login-desktop-form-section {
+        display: flex;
+    }
+}
+
+/* Desktop Navigation - Back button and branding */
+.login-desktop-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding: 0 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Back button styling for desktop */
+.login-back-button {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.login-back-button-icon {
+    width: 18px;
+    height: 18px;
+    color: #78716c;
+}
+
+.login-back-button-text {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #78716c;
+}
+
+.login-back-button:hover .login-back-button-icon,
+.login-back-button:hover .login-back-button-text {
+    color: #a8a29e;
+}
+
+/* Branding section - App name and icon */
+.login-brand-section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+}
+
+.login-brand-icon {
+    width: 20px;
+    height: 20px;
+    color: #a8a29e;
+}
+
+.login-brand-name {
+    color: #d6d3d1;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Form container - centered within right section */
+.login-desktop-form-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ==================== MOBILE LAYOUT (Full Width) ==================== */
+.login-mobile-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+@media (min-width: 992px) {
+    .login-mobile-container {
+        display: none;
+    }
+}
+
+/* Mobile Hero Image Section (45vh height) */
+.login-mobile-image-section {
+    position: relative;
+    overflow: hidden;
+    height: 45vh;
+}
+
+.login-mobile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Mobile image overlay - darker for readability */
+.login-mobile-image-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(12, 10, 9, 0.6) 0%, transparent 50%, #0c0a09 100%);
+    z-index: 2;
+}
+
+/* Mobile Top Navigation - Back button and branding */
+.login-mobile-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    padding-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 20;
+}
+
+/* Back button for mobile - circular icon button */
+.login-mobile-back-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.login-mobile-back-icon {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.login-mobile-back-button:hover .login-mobile-back-icon {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Mobile branding in header */
+.login-mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.login-mobile-brand-icon {
+    width: 16px;
+    height: 16px;
+    color: white;
+    opacity: 0.75;
+}
+
+.login-mobile-brand-text {
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    opacity: 0.75;
+}
+
+/* Mobile features section - horizontal scrollable pills at bottom of image */
+.login-features-mobile {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    overflow-x: auto;
+    z-index: 10;
+}
+
+/* Hide scrollbar for mobile features */
+.login-features-mobile::-webkit-scrollbar {
+    display: none;
+}
+
+.login-features-mobile {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Mobile feature pill - compact version */
+.login-feature-pill-mobile {
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.login-feature-pill-mobile-text {
+    color: white;
+    font-weight: 500;
+    font-size: 0.75rem;
+    opacity: 0.9;
+}
+
+/* Mobile Content Area - Below hero image */
+.login-mobile-content-section {
+    flex: 1;
+    padding: 1.5rem 1rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ==================== ANIMATIONS ==================== */
+/* Smooth transitions for hover states and interactions */
+.login-button-transition {
+    transition: all 0.3s ease;
+}
+
+.login-opacity-transition {
+    transition: opacity 0.2s ease;
+}
+
+/* ==================== RESPONSIVE UTILITIES ==================== */
+/* Utility classes for responsive visibility */
+.login-hidden-mobile {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .login-hidden-mobile {
+        display: block;
+    }
+    
+    .login-hidden-desktop {
+        display: none !important;
+    }
+}
