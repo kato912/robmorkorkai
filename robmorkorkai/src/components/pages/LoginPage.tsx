@@ -36,6 +36,8 @@ import { MapPin, ArrowLeft } from "lucide-react";
 import { LoginForm } from "../auth/LoginForm";
 import "./css/LoginPage.css";
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 /** Feature statistics from database */
 interface Stats {
     shops: number;
@@ -54,7 +56,7 @@ export const LoginPage: React.FC = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await fetch("http://localhost:3000/api/shops/stats");
+                const response = await fetch(`${API_BASE}/api/shops/stats`);
                 if (!response.ok) throw new Error("Failed to fetch stats");
                 const data = await response.json();
                 setStats(data);

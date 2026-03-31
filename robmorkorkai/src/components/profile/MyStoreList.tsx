@@ -5,7 +5,6 @@
  * Features:
  * - Tabs for switching between reviews and favorites
  * - Review list with shop image, name, rating, and comment
- * - Helpful count badge on reviews
  * - Favorites grid with shop cards (image, rating, basic info)
  * - Empty states for both tabs
  * - Responsive grid layout for favorites
@@ -33,9 +32,47 @@ interface Props {
     favorites: any[];
 }
 
+const FALLBACK_SHOP_IMAGE = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=400&q=80";
+
 export const MyStoreList: React.FC<Props> = ({ reviews, favorites }) => {
     // State for active tab (reviews or favorites)
     const [activeTab, setActiveTab] = useState<"reviews" | "favorites">("reviews");
+    
+    // Track failed image URLs to fallback
+    const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+    const handleImageError = (url: string | undefined, event: React.SyntheticEvent<HTMLImageElement>) => {
+        if (!url) {
+            const img = event.currentTarget;
+            img.src = FALLBACK_SHOP_IMAGE;
+            return;
+        }
+
+        const img = event.currentTarget;
+        
+        if (!failedImages.has(url)) {
+            // Mark this URL as failed
+            const newFailedImages = new Set(failedImages);
+            newFailedImages.add(url);
+            setFailedImages(newFailedImages);
+        }
+        
+        // Use fallback image
+        img.src = FALLBACK_SHOP_IMAGE;
+    };
+
+    const getImageSrc = (url: string | undefined): string => {
+        // Check if URL is valid and not empty
+        if (!url || typeof url !== 'string' || url.trim() === '') {
+            return FALLBACK_SHOP_IMAGE;
+        }
+        if (failedImages.has(url)) {
+            return FALLBACK_SHOP_IMAGE;
+        }
+        
+        // URL is already processed through ProfilePage, so just return it
+        return url;
+    };
 
     // Helper function to render star rating
     // Returns 5 stars with filled/empty based on rating value
@@ -95,9 +132,11 @@ export const MyStoreList: React.FC<Props> = ({ reviews, favorites }) => {
                                     <Link to={`/shop/${review.id}`} className="review-shop-image-wrapper">
                                         <div className="review-shop-image">
                                             <img
-                                                src={review.shopImage}
+                                                src={getImageSrc(review.shopImage)}
                                                 alt={review.shopName}
                                                 className="w-100 h-100 object-fit-cover"
+                                                onError={(e) => handleImageError(review.shopImage, e)}
+                                                crossOrigin="anonymous"
                                             />
                                         </div>
                                     </Link>
@@ -120,12 +159,6 @@ export const MyStoreList: React.FC<Props> = ({ reviews, favorites }) => {
 
                                         {/* Review Comment Text */}
                                         <p className="review-comment">{review.comment}</p>
-
-                                        {/* Helpful Count Badge */}
-                                        <span className="review-helpful-badge">
-                                            <Star size={12} className="fill-warning" /> {review.helpful} คนเห็นว่า
-                                            เป็นประโยชน์
-                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -153,9 +186,11 @@ export const MyStoreList: React.FC<Props> = ({ reviews, favorites }) => {
                                     {/* Shop Card Image Section */}
                                     <div className="favorite-shop-image-container">
                                         <img
-                                            src={shop.image}
+                                            src={getImageSrc(shop.image)}
                                             alt={shop.shopName}
                                             className="favorite-shop-image w-100 h-100"
+                                            onError={(e) => handleImageError(shop.image, e)}
+                                            crossOrigin="anonymous"
                                         />
                                         {/* Dark gradient overlay at bottom */}
                                         <div className="favorite-shop-overlay"></div>

@@ -22,8 +22,8 @@ export const CategoryFilter: React.FC<Props> = ({ categories, selectedCategory, 
                 onClick={() => setSelectedCategory(null)}
                 className="btn rounded-pill px-3 d-flex align-items-center justify-content-center text-nowrap transition-all shadow-sm"
                 style={{
-                    fontSize: '0.85rem', // ลดขนาดฟอนต์ลงนิดนึง
-                    height: '36px',      // ล็อคความสูงให้ปุ่มดูเพรียวขึ้น
+                    fontSize: '0.85rem',
+                    height: '36px',     
                     ...(selectedCategory === null
                         ? { backgroundColor: '#A73B24', opacity: 15, color: '#e8b94a', fontWeight: 'bold', border: `1px solid #c9943a` }
                         : { backgroundColor: '#2d2320', color: '#c9943a', border: '1px solid #3d302a' })

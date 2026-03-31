@@ -6,7 +6,7 @@ import axios from 'axios';
 const api = axios.create({
     // baseURL คือที่อยู่ของ Backend คุณ
     // ถ้าคุณรัน backend ที่ port 3000 ก็ใส่ localhost:3000
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000', 
+    baseURL: import.meta.env.VITE_API_URL, 
     headers: {
         'Content-Type': 'application/json',
     },

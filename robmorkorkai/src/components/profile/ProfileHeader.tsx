@@ -6,7 +6,7 @@
  * - Radial gradient background with dot pattern overlay
  * - Responsive avatar display
  * - User name with KKU verification badge
- * - Statistics display (reviews, favorites, helpful count)
+ * - Statistics display (reviews, favorites count)
  * - Edit and logout buttons
  * - Sticky desktop navigation bar
  * - Mobile action buttons
@@ -16,7 +16,7 @@
  * - isEditing: Whether user is in edit mode
  * - setIsEditing: Callback to toggle edit mode
  * - onLogout: Callback for logout action
- * - stats: User statistics (reviews count, favorites count, helpful count)
+ * - stats: User statistics (reviews count, favorites count)
  *
  * CSS Classes Used:
  * - profile-header-section: Main section container
@@ -27,24 +27,59 @@
  * - profile-button: Action buttons (edit, logout)
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, Edit2, LogOut, Check, BadgeCheck, Home, Search, Bot, User } from "lucide-react";
+import { ChevronLeft, Edit2, LogOut, Check, BadgeCheck, Home, Search, User } from "lucide-react";
 import type { ProfileData } from "../pages/ProfilePage";
 import "./css/ProfileHeader.css";
+
+const FALLBACK_AVATAR = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80";
 
 interface Props {
     profile: ProfileData;
     isEditing: boolean;
     setIsEditing: (val: boolean) => void;
     onLogout: () => void;
-    stats: { reviews: number, favorites: number, helpful: number };
+    stats: { reviews: number, favorites: number };
 }
 
 export const ProfileHeader: React.FC<Props> = ({
     profile, isEditing, setIsEditing, onLogout, stats
 }) => {
     const navigate = useNavigate();
+    const [imageSrc, setImageSrc] = useState(profile.imageUrl || FALLBACK_AVATAR);
+    const [isLoading, setIsLoading] = useState(!!profile.imageUrl && profile.imageUrl !== FALLBACK_AVATAR);
+    const [hasError, setHasError] = useState(false);
+    const [retryCount, setRetryCount] = useState(0);
+
+    useEffect(() => {
+        if (!profile.imageUrl || profile.imageUrl === FALLBACK_AVATAR) {
+            setImageSrc(FALLBACK_AVATAR);
+            setIsLoading(false);
+            setHasError(false);
+            setRetryCount(0);
+            return;
+        }
+        // Try direct URL
+        setImageSrc(profile.imageUrl);
+        setIsLoading(true);
+        setHasError(false);
+    }, [profile.imageUrl]);
+
+    const handleImageError = () => {
+        if (retryCount < 1) {
+            // First attempt failed, retry with different params
+            const retryUrl = new URL(profile.imageUrl || FALLBACK_AVATAR);
+            retryUrl.searchParams.set('cache', Date.now().toString());
+            setImageSrc(retryUrl.toString());
+            setRetryCount(retryCount + 1);
+        } else {
+            // Retry failed, use fallback
+            setImageSrc(FALLBACK_AVATAR);
+            setIsLoading(false);
+            setHasError(true);
+        }
+    };
 
     return (
         <section className="profile-header-section">
@@ -69,9 +104,6 @@ export const ProfileHeader: React.FC<Props> = ({
                     <Link to="/search" className="profile-nav-link">
                         <Search size={18} /> Search
                     </Link>
-                    <Link to="/ai" className="profile-nav-link">
-                        <Bot size={18} /> AI
-                    </Link>
                     <div className="profile-nav-divider"></div>
                     <div className="profile-badge">Profile</div>
                 </div>
@@ -84,7 +116,7 @@ export const ProfileHeader: React.FC<Props> = ({
                     >
                         {isEditing ? <Check size={18} /> : <Edit2 size={18} />}
                     </button>
-                    <button onClick={onLogout} className="profile-icon-button profile-icon-button-logout">
+                    <button onClick={onLogout} className="profile-icon-button profile-icon-button-logout" title="ออกจากระบบ" aria-label="ออกจากระบบ">
                         <LogOut size={18} />
                     </button>
                 </div>
@@ -95,11 +127,21 @@ export const ProfileHeader: React.FC<Props> = ({
                 <div className="profile-layout">
                     {/* Avatar Section - Left side profile picture */}
                     <div className="profile-avatar-container">
+                        {isLoading && !hasError && (
+                            <div className="profile-avatar-loading">
+                                <div className="profile-avatar-spinner">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        )}
                         <img
-                            src={profile.imageUrl}
+                            src={imageSrc}
                             alt={profile.name}
                             referrerPolicy="no-referrer"
-                            className="profile-avatar"
+                            crossOrigin="anonymous"
+                            className={`profile-avatar ${isLoading && !hasError ? 'loading' : ''}`}
+                            onLoad={() => setIsLoading(false)}
+                            onError={handleImageError}
                         />
                     </div>
 
@@ -140,7 +182,7 @@ export const ProfileHeader: React.FC<Props> = ({
                             </div>
                         </div>
 
-                        {/* Stats Section - Reviews, favorites, helpful count */}
+                        {/* Stats Section - Reviews, favorites count */}
                         <div className="profile-stats">
                             <div className="profile-stat-item">
                                 <h3 className="profile-stat-number">{stats.reviews}</h3>
@@ -150,11 +192,6 @@ export const ProfileHeader: React.FC<Props> = ({
                             <div className="profile-stat-item">
                                 <h3 className="profile-stat-number">{stats.favorites}</h3>
                                 <small className="profile-stat-label">Favorites</small>
-                            </div>
-                            <div className="profile-stat-divider"></div>
-                            <div className="profile-stat-item">
-                                <h3 className="profile-stat-number">{stats.helpful}</h3>
-                                <small className="profile-stat-label">Helpful</small>
                             </div>
                         </div>
                     </div>

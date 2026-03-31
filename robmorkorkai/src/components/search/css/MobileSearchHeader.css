@@ -160,7 +160,7 @@
 /* Filter Button - Inactive state */
 .mobile-filter-btn-inactive {
     background-color: #2d2320;
-    color: #9a8a7e;
+    color: #c9943a;
 }
 
 .mobile-filter-btn-inactive:hover {
@@ -173,6 +173,11 @@
     background-color: #A73B24;
     color: #f5ebe4;
     font-weight: bold;
+}
+
+.mobile-filter-btn-active:hover {
+    background-color: #c9501e;
+    color: #fff5f0;
 }
 
 /* Clear Filters Button - Link style button to reset all filters */

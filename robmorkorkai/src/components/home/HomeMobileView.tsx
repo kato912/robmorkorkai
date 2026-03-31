@@ -14,7 +14,7 @@ import { ShopCard } from "./ShopCard";
 import { ZoneFilter } from "./ZoneFilter";
 import { CategoryFilter } from "./CategoryFilter";
 import { BottomNav } from "../layout/BottomNav";
-import { RandomShopButton } from "./RandomShopButton";
+import { FloatingActionButton } from "./FloatingActionButton";
 
 // Assets
 import HeroImage from "../../assets/hero-campus-life.jpg";
@@ -125,14 +125,14 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
                 <div className="px-3">
 
                     {/* Zone Filter */}
-                    <div className="mb-4">
-                        <h6 className="text-uppercase fw-bold mb-3" style={{ fontSize: '0.75rem', letterSpacing: '1px', color: '#c9943a' }}>โซน</h6>
+                    <div className="mb-2">
+                        <h6 className="text-uppercase fw-bold mb-3" style={{ fontSize: '0.85rem', letterSpacing: '1px', color: '#c9943a' }}>โซน</h6>
                         <ZoneFilter zones={zone} selectedZone={selectedZone} setSelectedZone={setSelectedZone} isMobile />
                     </div>
 
                     {/* Category Filter */}
-                    <div className="mb-4">
-                        <h6 className="text-uppercase fw-bold mb-3" style={{ fontSize: '0.75rem', letterSpacing: '1px', color: '#c9943a' }}>หมวดหมู่</h6>
+                    <div className="mb-2">
+                        <h6 className="text-uppercase fw-bold mb-3" style={{ fontSize: '0.85rem', letterSpacing: '1px', color: '#c9943a' }}>หมวดหมู่</h6>
                         <CategoryFilter categories={categorie} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
                     </div>
 
@@ -160,7 +160,7 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
             </div>
 
             <BottomNav activePage="home" />
-            <RandomShopButton shops={filteredShops} />
+            <FloatingActionButton shops={filteredShops} />
         </>
     );
 };

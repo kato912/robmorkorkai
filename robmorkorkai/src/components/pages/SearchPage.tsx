@@ -14,6 +14,8 @@ import "./css/SearchPage.css";
 import type { Shop } from "../../types/shop";
 import { ZONES as zones, CATEGORIES } from "../../utils/constants";
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 // Helper Functions
 /**
  * Clean Thai text for comparison by removing tone marks and diacritics
@@ -82,7 +84,7 @@ export const SearchPage: React.FC = () => {
         const fetchShops = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch("http://localhost:3000/api/shops?limit=1000");
+                const response = await fetch(`${API_BASE}/api/shops?limit=1000`);
                 if (!response.ok) throw new Error("Failed to fetch shops");
                 const data = await response.json();
                 setShops(data);

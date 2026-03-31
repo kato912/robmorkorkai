@@ -130,8 +130,8 @@
 
 /* Sort Button - Inactive state */
 .search-sort-btn-inactive {
-    background-color: #231c18;
-    color: #9a8a7e;
+    background-color: #2d2320;
+    color: #ffff;
     border: 1px solid #3d302a;
 }
 
@@ -147,6 +147,12 @@
     color: #f5ebe4;
     border: 1px solid #A73B24;
     font-weight: bold;
+}
+
+.search-sort-btn-active:hover {
+    background-color: #c9501e;
+    border-color: #e8b94a;
+    color: #fff5f0;
 }
 
 /* Results Grid - Container for shop cards */

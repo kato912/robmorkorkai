@@ -20,11 +20,20 @@
  * - onToggleFavorite: Callback to toggle favorite status
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, Home, Search, Bot, Heart, Share2, Star, MapPin, Clock } from "lucide-react";
 import type { Shop } from "../../types/shop";
 import "./css/ShopHero.css";
+
+const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80";
+const API_BASE = import.meta.env.VITE_API_URL;
+
+// Convert image URL to proxy URL to avoid rate limiting
+const getProxyImageUrl = (url: string): string => {
+    if (!url) return FALLBACK_IMAGE;
+    return `${API_BASE}/api/images/proxy?url=${encodeURIComponent(url)}`;
+};
 
 interface ShopHeroProps {
     shop: Shop;
@@ -40,12 +49,104 @@ export const ShopHero: React.FC<ShopHeroProps> = ({
     shop, averageRating, reviewsCount, isLoggedIn, user, isFavorited, onToggleFavorite
 }) => {
     const navigate = useNavigate();
+    const imageUrl = shop.coverImage || shop.image;
+    
+    // Try direct URL first for speed, only use proxy if direct fails
+    const initialSrc = imageUrl || FALLBACK_IMAGE;
+    const proxyUrl = imageUrl ? getProxyImageUrl(imageUrl) : FALLBACK_IMAGE;
+    
+    const [imageSrc, setImageSrc] = useState(initialSrc);
+    const [isLoading, setIsLoading] = useState(!!imageUrl);
+    const [hasError, setHasError] = useState(false);
+
+    useEffect(() => {
+        if (!imageUrl) {
+            setIsLoading(false);
+            setImageSrc(FALLBACK_IMAGE);
+            return;
+        }
+        // Reset state when URL changes
+        setIsLoading(true);
+        setHasError(false);
+        setImageSrc(initialSrc); // Try direct URL first
+    }, [imageUrl]);
+
+    const handleImageError = () => {
+        if (!hasError && imageSrc !== proxyUrl) {
+            // Try proxy as fallback
+            setImageSrc(proxyUrl);
+            setHasError(true);
+        } else {
+            // Proxy also failed, show fallback
+            setImageSrc(FALLBACK_IMAGE);
+            setIsLoading(false);
+        }
+    };
+
+    const handleShare = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const btn = e.currentTarget;
+        const shareUrl = window.location.href;
+        const shareText = `${shop.name} - ${shop.category} ที่ ${shop.zone}`;
+        const textToCopy = `${shareText}\n${shareUrl}`;
+
+        // Try using native Web Share API if available (mainly on mobile)
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: "RobMorKorKai",
+                    text: shareText,
+                    url: shareUrl,
+                });
+            } catch (error) {
+                // User cancelled share - fallback to clipboard
+                try {
+                    await navigator.clipboard.writeText(textToCopy);
+                    if (btn) showShareFeedback(btn);
+                } catch (clipError) {
+                    console.error("Share failed:", clipError);
+                }
+            }
+        } else {
+            // Fallback: Copy to clipboard (mainly for desktop)
+            try {
+                await navigator.clipboard.writeText(textToCopy);
+                if (btn) showShareFeedback(btn);
+            } catch (error) {
+                console.error("Failed to copy:", error);
+            }
+        }
+    };
+
+    const showShareFeedback = (btn: HTMLButtonElement) => {
+        if (!btn) return;
+        const originalTitle = btn.getAttribute('title') || 'Share';
+        btn.setAttribute('title', '✓ คัดลอกลิงก์แล้ว!');
+        btn.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            btn.setAttribute('title', originalTitle);
+            btn.style.transform = 'scale(1)';
+        }, 2000);
+    };
 
     return (
         // Hero container with absolute positioning for overlays (image, gradient, nav, content)
         <section className="shop-hero-section position-relative overflow-hidden w-100 bg-dark">
-            {/* Background image - uses cover image if available, falls back to main image, then default */}
-            <img src={shop.coverImage || shop.image || "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80"} alt={shop.name} className="w-100 h-100 hero-image" />
+            {/* Background image with smart fallback - tries direct URL, then proxy, then placeholder */}
+            {isLoading && !hasError && (
+                <div className="position-absolute w-100 h-100 d-flex align-items-center justify-content-center" style={{ background: '#3d302a', zIndex: 1 }}>
+                    <div className="spinner-border" style={{ color: '#e8b94a', width: '2rem', height: '2rem' }} role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            )}
+            <img 
+                src={imageSrc} 
+                alt={shop.name} 
+                className="w-100 h-100 hero-image" 
+                onLoad={() => setIsLoading(false)}
+                onError={handleImageError}
+            />
             {/* Dark gradient overlay to ensure text readability over image */}
             <div className="position-absolute top-0 start-0 w-100 h-100 hero-gradient"></div>
 
@@ -62,7 +163,6 @@ export const ShopHero: React.FC<ShopHeroProps> = ({
                 <nav className="d-none d-lg-flex align-items-center gap-4">
                     <Link to="/" className="text-decoration-none d-flex align-items-center gap-2 small fw-medium nav-link-hover px-4 py-2 rounded-pill"><Home size={18} /> Home</Link>
                     <Link to="/search" className="text-decoration-none d-flex align-items-center gap-2 small fw-medium nav-link-hover px-4 py-2 rounded-pill"><Search size={18} /> Search</Link>
-                    <Link to="/ai" className="text-decoration-none d-flex align-items-center gap-2 small fw-medium nav-link-hover px-4 py-2 rounded-pill"><Bot size={18} /> AI</Link>
                     <div className="nav-divider"></div>
                     {isLoggedIn ? (
                         <Link to="/profile">
@@ -78,7 +178,7 @@ export const ShopHero: React.FC<ShopHeroProps> = ({
                     <button onClick={onToggleFavorite} className="btn rounded-circle p-2 d-flex align-items-center justify-content-center text-white hero-mobile-btn" title={isFavorited ? "Remove from favorites" : "Add to favorites"} aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}>
                         <Heart size={20} className={isFavorited ? "fill-danger text-danger" : ""} />
                     </button>
-                    <button className="btn rounded-circle p-2 d-flex align-items-center justify-content-center text-white hero-mobile-btn" title="Share" aria-label="Share"><Share2 size={20} /></button>
+                    <button onClick={handleShare} className="btn rounded-circle p-2 d-flex align-items-center justify-content-center text-white hero-mobile-btn" title="Share" aria-label="Share"><Share2 size={20} /></button>
                 </div>
             </div>
 

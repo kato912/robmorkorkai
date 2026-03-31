@@ -25,9 +25,9 @@ export const ZoneFilter: React.FC<Props> = ({ zones = [], selectedZone, setSelec
                 style={{
                     height: isMobile ? '38px' : 'auto', 
                     fontSize: '14px',
-                    border: selectedZone === null ? 'none' : '1px solid #3d302a',
+                    border: selectedZone === null ? '1px solid #c9943a' : '1px solid #3d302a',
                     backgroundColor: selectedZone === null ? '#A73B24' : '#2d2320', 
-                    color: selectedZone === null ? '#fff5f0' : '#f5ebe4', 
+                    color: selectedZone === null ? '#e8b94a' : '#c9943a', 
                     fontWeight: selectedZone === null ? 'bold' : 'normal'
                 }}
             >
@@ -45,19 +45,19 @@ export const ZoneFilter: React.FC<Props> = ({ zones = [], selectedZone, setSelec
                     style={{
                         height: isMobile ? '38px' : 'auto', 
                         fontSize: '14px',
-                        border: selectedZone === zone.id ? 'none' : '1px solid #3d302a',
+                        border: selectedZone === zone.id ? '1px solid #c9943a' : '1px solid #3d302a',
                         backgroundColor: selectedZone === zone.id ? '#A73B24' : '#2d2320',
-                        color: selectedZone === zone.id ? '#fff5f0' : '#f5ebe4',
+                        color: selectedZone === zone.id ? '#e8b94a' : '#c9943a',
                         fontWeight: selectedZone === zone.id ? 'bold' : 'normal'
                     }}
                 >
                     <div className="d-flex align-items-center gap-2">
-                        <MapPin size={16} style={{ color: selectedZone === zone.id ? '#fff5f0' : '#8a7b72' }} />
+                        <MapPin size={16} style={{ color: selectedZone === zone.id ? '#e8b94a' : '#c9943a' }} />
                         <span>{zone.label.replace('📍', '').trim()}</span>
                     </div>
                     
                     {!isMobile && (
-                        <span style={{ fontSize: '12px', fontWeight: 'bold', color: selectedZone === zone.id ? '#fff5f0' : '#8a7b72' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 'bold', color: selectedZone === zone.id ? '#e8b94a' : '#8a7b72' }}>
                             {zone.count || '0'}
                         </span>
                     )}

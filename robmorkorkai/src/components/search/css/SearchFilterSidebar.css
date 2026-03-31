@@ -68,7 +68,7 @@
     font-size: 0.75rem;
     margin-bottom: 0.5rem;
     display: block;
-    color: #8a7b72;
+    color: #e8b94a;
     letter-spacing: 1px;
     text-transform: uppercase;
 }
@@ -98,14 +98,12 @@
     border-radius: 1rem;
     transition: all 0.3s ease;
     border: 1px solid #3d302a;
-    background-color: #2d2320;
-    color: #9a8a7e;
 }
 
 /* Zone Button - Inactive state (not selected) */
 .filter-zone-btn-inactive {
-    background-color: #2d2320;
-    color: #9a8a7e;
+    background-color: #3d302a;
+    color: #fff5f0;
     border: 1px solid #3d302a;
     font-weight: normal;
 }
@@ -119,10 +117,16 @@
 /* Zone Button - Active state (selected) */
 .filter-zone-btn-active {
     background-color: #A73B24;
-    color: #f5ebe4;
+    color: #e8b94a;
     border: 1px solid #A73B24;
     font-weight: bold;
     box-shadow: 0 4px 12px rgba(167, 59, 36, 0.3);
+}
+
+.filter-zone-btn-active:hover {
+    background-color: #c9501e;
+    border-color: #e8b94a;
+    color: #fff5f0;
 }
 
 /* Zone Button Icon - MapPin icon positioning */

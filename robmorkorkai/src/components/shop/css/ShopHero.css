@@ -67,6 +67,24 @@
     opacity: 0.8;               /* Slightly more transparent on hover */
 }
 
+/* Desktop icon buttons (heart/share icons) */
+.hero-icon-btn {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(8px);
+    border: none !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hero-icon-btn:hover {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    transform: scale(1.1);
+}
+
+.hero-icon-btn:active {
+    transform: scale(0.95);
+}
+
 /* Content positioned at bottom of hero section */
 .hero-content-bottom {
     z-index: 1010;              /* Appear on top of gradient */

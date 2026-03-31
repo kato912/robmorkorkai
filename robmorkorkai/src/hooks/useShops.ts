@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import type { Shop } from "../types/shop";
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 export const useShops = () => {
     // State สำหรับ API
     const [shops, setShops] = useState<Shop[]>([]);
@@ -19,11 +21,10 @@ export const useShops = () => {
                 setIsLoading(true);
                 setError(null);
                 
-                const response = await fetch("http://localhost:3000/api/shops");
+                const response = await fetch(`${API_BASE}/api/shops`);
                 if (!response.ok) throw new Error("ดึงข้อมูลร้านค้าไม่สำเร็จ");
 
                 const data = await response.json();
-                console.log("📸 Shop data from API:", data[0]); // ตรวจสอบฟิลด์ที่มาจาก API
                 setShops(data);
             } catch (err: any) {
                 console.error("Fetch Error:", err);

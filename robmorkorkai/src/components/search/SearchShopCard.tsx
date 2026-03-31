@@ -23,7 +23,7 @@
  * - search-card-info-row: Location and hours info
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Star, Clock, Loader2 } from "lucide-react";
 import type { Shop } from "../../types/shop";
@@ -35,28 +35,59 @@ interface Props {
 
 const DEFAULT_IMAGE_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='130'%3E%3Crect fill='%232d2320' width='160' height='130'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='24' fill='%238a7b72'%3E🍽️%3C/text%3E%3C/svg%3E";
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
+// Convert image URL to proxy URL to avoid rate limiting
+const getProxyImageUrl = (url: string): string => {
+    if (!url) return DEFAULT_IMAGE_SVG;
+    return `${API_BASE}/api/images/proxy?url=${encodeURIComponent(url)}`;
+};
+
 export const SearchShopCard: React.FC<Props> = ({ shop }) => {
     // Format rating to 1 decimal place
     const rating = shop.ratingAvg ? Number(shop.ratingAvg).toFixed(1) : "0.0";
     // Get review count, default to 0 if not available
     const reviewCount = shop.reviewCount || 0;
     
+    const imageUrl = shop.coverImage || shop.image;
+    
+    // Try direct URL first for speed, only use proxy if direct fails
+    const initialSrc = imageUrl || DEFAULT_IMAGE_SVG;
+    const proxyUrl = imageUrl ? getProxyImageUrl(imageUrl) : DEFAULT_IMAGE_SVG;
+    
     // State management for image loading
-    const [imageSrc, setImageSrc] = useState(shop.coverImage || shop.image || DEFAULT_IMAGE_SVG);
-    const [isLoading, setIsLoading] = useState(!!shop.coverImage || !!shop.image);
-    const [showPlaceholder, setShowPlaceholder] = useState(false);
+    const [imageSrc, setImageSrc] = useState(initialSrc);
+    const [isLoading, setIsLoading] = useState(!!imageUrl);
+    const [hasError, setHasError] = useState(false);
+
+    useEffect(() => {
+        if (!imageUrl) {
+            setIsLoading(false);
+            setImageSrc(DEFAULT_IMAGE_SVG);
+            return;
+        }
+        // Reset state when URL changes
+        setIsLoading(true);
+        setHasError(false);
+        setImageSrc(initialSrc); // Try direct URL first
+    }, [imageUrl]);
 
     // Callback when image successfully loads - hide loader spinner
     const handleImageLoad = () => {
         setIsLoading(false);
     };
 
-    // Callback when image fails to load (404, CORS error, network issue, etc.)
-    // Displays SVG placeholder with restaurant emoji and stops loading spinner
+    // Callback when image fails to load - fall back to proxy
     const handleImageError = () => {
-        setImageSrc(DEFAULT_IMAGE_SVG);
-        setShowPlaceholder(true);
-        setIsLoading(false);
+        if (!hasError && imageSrc !== proxyUrl) {
+            // Try proxy as fallback
+            setImageSrc(proxyUrl);
+            setHasError(true);
+        } else {
+            // Proxy also failed, show placeholder
+            setImageSrc(DEFAULT_IMAGE_SVG);
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -67,7 +98,7 @@ export const SearchShopCard: React.FC<Props> = ({ shop }) => {
                     {/* Shop Image Section - Left side (35% width) */}
                     <div className="search-card-image-container position-relative d-flex align-items-center justify-content-center">
                         {/* Loading spinner shown while image loads */}
-                        {isLoading && (
+                        {isLoading && !hasError && (
                             <div className="search-card-image-loading">
                                 <Loader2 size={24} className="animate-spin" style={{ color: '#c9943a' }} />
                             </div>

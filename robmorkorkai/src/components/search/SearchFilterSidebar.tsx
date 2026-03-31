@@ -66,7 +66,7 @@ export const SearchFilterSidebar: React.FC<Props> = ({
                 <h5 className="filter-title">ตัวกรอง</h5>
                 <button onClick={clearFilters} className="filter-clear-btn">ล้างค่า</button>
             </div>
-            
+
             {/* Zone filter section */}
             <div className="filter-zone-section">
                 <label className="filter-label">โซน (Zone)</label>
@@ -106,10 +106,19 @@ export const SearchFilterSidebar: React.FC<Props> = ({
                     {/* Individual category buttons */}
                     {(categoriesWithCount.length > 0 ? categoriesWithCount : CATEGORIES).map(c => {
                         const isSelected = selectedCategory === c.id;
+                        const Icon = c.icon; // ดึง Icon ออกมา
                         return (
                             <button key={c.id} onClick={() => setSelectedCategory(isSelected ? null : c.id)}
-                                className={`btn btn-sm filter-category-btn rounded-3 py-2 px-3 transition-all ${!isSelected ? 'filter-cat-btn filter-category-btn-inactive' : 'filter-category-btn-active'}`}>
-                                {c.label}
+                                className={`btn btn-sm filter-category-btn rounded-pill py-2 px-3 transition-all d-flex align-items-center gap-2 ${!isSelected ? 'filter-category-btn-inactive' : 'filter-category-btn-active'}`}
+                                style={{
+                                    fontSize: '0.85rem',
+                                    height: '36px',
+                                    ...(isSelected
+                                        ? { backgroundColor: '#A73B24', opacity: 15, color: '#e8b94a', fontWeight: 'bold', border: `1px solid #c9943a` }
+                                        : { backgroundColor: '#2d2320', color: '#c9943a', border: '1px solid #3d302a' })
+                                }}>
+                                {Icon && <Icon size={16} />}
+                                <span>{c.label}</span>
                             </button>
                         );
                     })}

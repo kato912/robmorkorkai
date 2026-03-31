@@ -29,7 +29,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const checkSession = async () => {
         try {
             // เรียก API ไปที่ /api/auth/session
-            const res = await fetch("/api/auth/session");
+            const res = await fetch(`/api/auth/session`, {
+                credentials: 'include'
+            });
             const session = await res.json();
 
             if (session && Object.keys(session).length > 0) {
@@ -55,13 +57,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const login = async () => { 
         try {
             // 1. ขอ CSRF Token จาก Backend ก่อน 
-            const res = await fetch("/api/auth/csrf");
+            const res = await fetch(`/api/auth/csrf`, {
+                credentials: 'include'
+            });
             const { csrfToken } = await res.json();
 
             //สร้าง Form จำลองขึ้นมาเพื่อส่ง POST Request ไปที่ /api/auth/signin/google
             const form = document.createElement("form");
             form.method = "post";
-            form.action = "/api/auth/signin/google"; // ระบุ Provider เป็น google
+            form.action = `/api/auth/signin/google`; // ระบุ Provider เป็น google
 
             // ใส่ CSRF Token ลงใน Form
             const csrfInput = document.createElement("input");
@@ -88,12 +92,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         // แนะนำให้ใช้ CSRF Token เหมือนกันถ้าทำได้ แต่ถ้า Auth.js ยอมรับ GET ก็ใช้แบบเดิมได้
         // เพื่อความชัวร์ ใช้แบบ Form Submit เหมือน Login ก็ดีครับ
         try {
-            const res = await fetch("/api/auth/csrf");
+            const res = await fetch(`/api/auth/csrf`, {
+                credentials: 'include'
+            });
             const { csrfToken } = await res.json();
 
             const form = document.createElement("form");
             form.method = "post";
-            form.action = "/api/auth/signout";
+            form.action = `/api/auth/signout`;
 
             const csrfInput = document.createElement("input");
             csrfInput.type = "hidden";
@@ -111,7 +117,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             document.body.appendChild(form);
             form.submit();
         } catch (error) {
-            window.location.href = "/api/auth/signout"; // Fallback
+            window.location.href = `/api/auth/signout`; // Fallback
         }
     };
 

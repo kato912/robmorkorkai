@@ -10,7 +10,7 @@ import { useTypingEffect } from "../../hooks/useTypingEffect";
 import { ShopCard } from "./ShopCard";
 import { CategoryFilter } from "./CategoryFilter";
 import { TopNavbar } from "../layout/TopNavbar";
-import { RandomShopButton } from "./RandomShopButton";
+import { FloatingActionButton } from "./FloatingActionButton";
 
 // Assets
 import HeroImage from "../../assets/hero-campus-life.jpg"
@@ -61,7 +61,7 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
                 <main className="container pt-4">
 
                     {/* Hero Section */}
-                    <div className="position-relative rounded-4 overflow-hidden mb-5 shadow-sm" style={{ height: '320px' }}>
+                    <div className="position-relative rounded-4 overflow-hidden mb-4 shadow-sm" style={{ height: '320px' }}>
                         {/* Background Image */}
                         <img 
                             src={HeroImage} 
@@ -117,7 +117,7 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
                                 <div>
                                     <h6 className="text-uppercase fw-bold mb-3" style={{color: "#c9943a", fontSize: '0.9rem', letterSpacing: '1px' }}>โซน</h6>
                                     <div className="d-flex flex-column gap-2">
-                                        <button onClick={() => setSelectedZone(null)} className="btn text-start rounded-4 px-4 py-3 fw-bold transition-all border-0" style={selectedZone === null ? { backgroundColor: '#A73B24', color: 'white' } : { backgroundColor: '#2d2320', color: '#fff5f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', border: '#3d302a' }}>ทั้งหมด</button>
+                                        <button onClick={() => setSelectedZone(null)} className="btn text-start rounded-4 px-4 py-3 fw-bold transition-all border-0" style={selectedZone === null ? { backgroundColor: '#A73B24', color: 'white' } : { backgroundColor: '#3d302a', color: '#fff5f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', border: '#3d302a' }}>ทั้งหมด</button>
                                         {zone && zone.map((z: any) => (
                                             <button key={z.id} onClick={() => setSelectedZone(selectedZone === z.id ? null : z.id)} className="btn text-start rounded-4 px-4 py-3 fw-medium transition-all d-flex align-items-center justify-content-between border-0" style={selectedZone === z.id ? { backgroundColor: '#A73B24', color: '#fff5f0', fontWeight: 'bold' } : { backgroundColor: '#3d302a', color: '#f5ebe4', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
                                                 <div className="d-flex align-items-center gap-3">
@@ -134,10 +134,10 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
 
                         {/* Right Content: Main Area */}
                         <div className="col-lg-9">
-                            <div className="mb-4">
+                            <div className="mb-1">
                                 <CategoryFilter categories={categorie} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
                             </div>
-                            <div className="d-flex align-items-end justify-content-between mb-4 mt-2">
+                            <div className="d-flex align-items-end justify-content-between mb-4 mt-0">
                                 <div>
                                     <h4 className="fw-bold m-0" style={{ color: '#f5ebe4' }}>{searchQuery ? `ผลการค้นหา "${searchQuery}"` : "ร้านยอดนิยม"}</h4>
                                     <p className="text-secondary small m-0 mt-1">{searchQuery ? `${filteredShops.length} ผลลัพธ์` : `${filteredShops.length} ร้านที่แนะนำ`}</p>
@@ -164,7 +164,7 @@ const HomeDesktopView: React.FC<HomeViewProps> = ({
                 </main>
             </div>
 
-            <RandomShopButton shops={filteredShops} />
+            <FloatingActionButton shops={filteredShops} />
         </div>
     );
 };

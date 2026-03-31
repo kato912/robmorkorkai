@@ -48,10 +48,11 @@ interface ShopSidebarProps {
     isFavorited: boolean;
     onToggleFavorite: () => void;
     onOpenReviewModal: () => void;
+    onShare: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const ShopSidebar: React.FC<ShopSidebarProps> = ({
-    shop, averageRating, reviewsCount, isLoggedIn, isFavorited, onToggleFavorite, onOpenReviewModal
+    shop, averageRating, reviewsCount, isLoggedIn, isFavorited, onToggleFavorite, onOpenReviewModal, onShare
 }) => {
     return (
         // Sidebar container - Flexbox column layout for vertical stacking
@@ -140,7 +141,7 @@ export const ShopSidebar: React.FC<ShopSidebarProps> = ({
                         </button>
 
                         {/* Share Button - Opens share functionality */}
-                        <button className="btn rounded-pill px-4 hover-scale shadow-sm flex-shrink-0" title="แชร์ร้านนี้" style={{ backgroundColor: '#2d2320', color: '#e8b94a', border: '1px solid #3d302a' }}>
+                        <button onClick={onShare} className="btn rounded-pill px-4 hover-scale shadow-sm flex-shrink-0" title="แชร์ร้านนี้" style={{ backgroundColor: '#2d2320', color: '#e8b94a', border: '1px solid #3d302a' }}>
                             <Share2 size={18} />
                         </button>
                     </div>

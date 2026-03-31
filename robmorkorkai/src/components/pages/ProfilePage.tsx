@@ -36,6 +36,8 @@ import { MyStoreList } from "../profile/MyStoreList";
 import { BottomNav } from "../../components/layout/BottomNav";
 import "./css/ProfilePage.css";
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 export interface ProfileData {
     name: string;
     email: string;
@@ -78,13 +80,35 @@ const ProfilePage: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [myReviews, setMyReviews] = useState<any[]>([]);
     const [favoriteShops, setFavoriteShops] = useState<any[]>([]);
-    const [isLoadingReviews, setIsLoadingReviews] = useState(false);
-    const [isLoadingFavorites, setIsLoadingFavorites] = useState(false);
+
+    /**
+     * Format user image URL to be CORS-safe
+     * Adds cache busting parameter for retries
+     */
+    const formatImageUrl = (url: string | undefined | null): string => {
+        if (!url) return "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80";
+        // Add cache busting parameter to force reload
+        const separator = url.includes('?') ? '&' : '?';
+        return `${url}${separator}t=${Date.now()}`;
+    };
+
+    /**
+     * Ensure shop image URL is valid and use proxy endpoint to avoid rate limiting
+     */
+    const getShopImageUrl = (coverImage?: string, image?: string): string => {
+        const fallbackUrl = 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=400&q=80';
+        const url = coverImage || image;
+        if (!url || url.trim() === '') {
+            return fallbackUrl;
+        }
+        // Use proxy endpoint to avoid rate limiting and CORS issues
+        return `${API_BASE}/api/images/proxy?url=${encodeURIComponent(url)}`;
+    };
 
     const [profile, setProfile] = useState<ProfileData>({
         name: user?.name || "สมชาย ใจดี",
         email: user?.email || "somchai@kkumail.com",
-        imageUrl: user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300",
+        imageUrl: formatImageUrl(user?.image),
         role: user?.role || "USER",
         phone: "081-234-5678",
         isVerifiedStudent: user?.isVerifiedStudent || true
@@ -97,28 +121,27 @@ const ProfilePage: React.FC = () => {
     useEffect(() => {
         const fetchFavorites = async () => {
             try {
-                setIsLoadingFavorites(true);
-                const response = await fetch("http://localhost:3000/api/user/favorites", {
+                const response = await fetch(`${API_BASE}/api/user/favorites`, {
                     credentials: "include"
                 });
                 if (!response.ok) throw new Error("Failed to fetch favorites");
                 const data = await response.json();
                 // Transform API data to component format
-                const formatted = data.map((shop: any) => ({
-                    id: shop.id,
-                    name: shop.name,
-                    image: shop.coverImage || shop.image,
-                    rating: shop.ratingAvg || 0,
-                    category: shop.type || shop.category,
-                    zone: shop.zone,
-                    reviews: shop.reviewCount || 0
-                }));
+                const formatted = data.map((shop: any) => {
+                    const imageUrl = getShopImageUrl(shop.coverImage, shop.image);
+                    return {
+                        id: shop.id,
+                        shopName: shop.name,
+                        image: imageUrl,
+                        rating: shop.ratingAvg || 0,
+                        category: shop.type || shop.category,
+                        zone: shop.zone,
+                        reviews: shop.reviewCount || 0
+                    };
+                });
                 setFavoriteShops(formatted);
             } catch (error) {
-                console.error("Error fetching favorites:", error);
                 setFavoriteShops([]);
-            } finally {
-                setIsLoadingFavorites(false);
             }
         };
 
@@ -132,25 +155,24 @@ const ProfilePage: React.FC = () => {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                setIsLoadingReviews(true);
                 const response = await api.get("/api/user/reviews");
                 const data = response.data;
                 // Transform API data to component format with relative time formatting
-                const formatted = data.map((review: any) => ({
-                    id: review.id,
-                    shopName: review.name,
-                    shopImage: review.coverImage || review.image,
-                    rating: review.userReview.rating,
-                    comment: review.userReview.comment,
-                    date: formatRelativeTime(review.userReview.createdAt),
-                    helpful: 0 // Helpful count not yet available in system
-                }));
+                const formatted = data.map((review: any) => {
+                    const imageUrl = getShopImageUrl(review.coverImage, review.image);
+                    return {
+                        id: review.id,
+                        shopName: review.name,
+                        shopImage: imageUrl,
+                        rating: review.userReview.rating,
+                        comment: review.userReview.comment,
+                        date: formatRelativeTime(review.userReview.createdAt)
+                    };
+                });
                 setMyReviews(formatted);
             } catch (error) {
                 console.error("Error fetching reviews:", error);
                 setMyReviews([]);
-            } finally {
-                setIsLoadingReviews(false);
             }
         };
 
@@ -167,7 +189,7 @@ const ProfilePage: React.FC = () => {
                 ...prev,
                 name: user.name || prev.name,
                 email: user.email || prev.email,
-                imageUrl: user.image || prev.imageUrl
+                imageUrl: formatImageUrl(user.image) || prev.imageUrl
             }));
         }
     }, [user]);
@@ -180,7 +202,7 @@ const ProfilePage: React.FC = () => {
         AlertUtils.confirm("คุณต้องการออกจากระบบใช่หรือไม่?", "", "ยืนยัน", "ยกเลิก").then((c) => {
             if (c) {
                 logout();
-                navigate("/login");
+                navigate("/");
             }
         });
     };
@@ -215,8 +237,7 @@ const ProfilePage: React.FC = () => {
                 onLogout={handleLogout}
                 stats={{
                     reviews: myReviews.length,
-                    favorites: favoriteShops.length,
-                    helpful: 35
+                    favorites: favoriteShops.length
                 }}
             />
 

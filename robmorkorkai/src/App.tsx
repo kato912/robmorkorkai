@@ -18,8 +18,18 @@ import { SearchPage } from "./components/pages/SearchPage";
 
 // สร้าง Component Wrapper สำหรับ Route ที่ต้อง Login (Protected Route)
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, loading } = useAuth();
+  
+  if (loading) {
+    return null; // รอให้ session load เสร็จก่อน
+  }
+  
   return isLoggedIn ? children : <Navigate to="/login" replace />;
+};
+
+// แสดง HomePage เสมอ ไม่ต้องตัดสินใจ redirect
+const HomeRedirect = ({ shops }: { shops: Shop[] }) => {
+  return <HomePage />;
 };
 
 const AppContent = () => {
@@ -33,7 +43,7 @@ const AppContent = () => {
   return (
     <Routes>
 
-      <Route path="/" element={<HomePage shops={shops}/>} />
+      <Route path="/" element={<HomeRedirect shops={shops}/>} />
       <Route path="/search" element={<SearchPage shops={shops}/>} />
       <Route path='/ai' element={<AIPage />} />
 
@@ -49,11 +59,13 @@ const AppContent = () => {
       } />
 
       <Route path="/admin" element={
-        <AdminPage 
-          shops={shops} 
-          onUpdateShop={handleUpdateShop} 
-          onDeleteShop={handleDeleteShop} 
-        />
+        <ProtectedRoute>
+          <AdminPage 
+            shops={shops} 
+            onUpdateShop={handleUpdateShop} 
+            onDeleteShop={handleDeleteShop} 
+          />
+        </ProtectedRoute>
       } />
     </Routes>
   );

@@ -14,6 +14,13 @@
     max-width: 1140px;
     margin: 0 auto;
     padding: 0 1rem;
+    width: 100%;
+}
+
+@media (max-width: 991px) {
+    .location-container {
+        padding: 0 1rem;
+    }
 }
 
 /* Main layout row - flexbox with equal spacing between map and sidebar */
@@ -29,7 +36,8 @@
 @media (max-width: 991px) {
     .location-row {
         flex-direction: column;
-        gap: 0;
+        gap: 2rem;
+        width: 100%;
     }
 }
 
@@ -37,13 +45,15 @@
 .location-map-col {
     flex: 1;
     min-width: 0;   /* Prevent flex overflow */
+    width: 100%;
 }
 
 @media (max-width: 991px) {
     .location-map-col {
         flex: 0 0 100%;
+        width: 100%;
         padding-right: 0;
-        margin-bottom: 3rem;
+        margin-bottom: 0;
     }
 }
 
@@ -64,6 +74,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border: none;
     background-color: transparent;
+    width: 100%;
 }
 
 /* Google Maps iframe styling */
@@ -73,6 +84,13 @@
     border-radius: 1rem;
     width: 100%;
     height: 280px;
+    display: block;
+}
+
+@media (max-width: 576px) {
+    .map-iframe {
+        height: 250px;
+    }
 }
 
 /* Placeholder when coordinates are not available */
@@ -85,6 +103,13 @@
     align-items: center;
     justify-content: center;
     color: #8a7b72;
+    width: 100%;
+}
+
+@media (max-width: 576px) {
+    .map-placeholder {
+        height: 250px;
+    }
 }
 
 .map-placeholder-icon {
@@ -108,6 +133,7 @@
     gap: 0.5rem;
     margin-top: 1.5rem;
     transition: all 0.3s ease;
+    font-size: 0.95rem;
 }
 
 .map-button:hover {
@@ -115,16 +141,25 @@
     transform: translateY(-2px);
 }
 
+@media (max-width: 576px) {
+    .map-button {
+        font-size: 0.85rem;
+        padding: 0.65rem 0.75rem;
+    }
+}
+
 /* Sidebar column - takes up 50% on desktop, 100% on mobile */
 .location-sidebar-col {
     flex: 1;
     min-width: 0;   /* Prevent flex overflow */
+    width: 100%;
 }
 
 /* Responsive: Full width on mobile */
 @media (max-width: 991px) {
     .location-sidebar-col {
         flex: 0 0 100%;
+        width: 100%;
         padding-right: 0;
     }
 }

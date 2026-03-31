@@ -129,6 +129,54 @@ export const ShopDetailPage: React.FC = () => {
         }
     };
 
+    // Handle share functionality
+    const handleShare = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (!shop) return;
+        const btn = e.currentTarget;
+        const shareUrl = window.location.href;
+        const shareText = `${shop.name} - ${shop.category} ที่ ${shop.zone}`;
+        const textToCopy = `${shareText}\n${shareUrl}`;
+
+        // Try using native Web Share API if available (mainly on mobile)
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: "RobMorKorKai",
+                    text: shareText,
+                    url: shareUrl,
+                });
+            } catch (error) {
+                // User cancelled share - fallback to clipboard
+                try {
+                    await navigator.clipboard.writeText(textToCopy);
+                    if (btn) showShareFeedback(btn);
+                } catch (clipError) {
+                    console.error("Share failed:", clipError);
+                }
+            }
+        } else {
+            // Fallback: Copy to clipboard (mainly for desktop)
+            try {
+                await navigator.clipboard.writeText(textToCopy);
+                if (btn) showShareFeedback(btn);
+            } catch (error) {
+                console.error("Failed to copy:", error);
+            }
+        }
+    };
+
+    const showShareFeedback = (btn: HTMLButtonElement) => {
+        if (!btn) return;
+        const originalTitle = btn.getAttribute('title') || 'Share';
+        btn.setAttribute('title', '✓ คัดลอกลิงก์แล้ว!');
+        btn.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            btn.setAttribute('title', originalTitle);
+            btn.style.transform = 'scale(1)';
+        }, 2000);
+    };
+
     // Loading state
     if (isLoading) {
         return (
@@ -180,6 +228,7 @@ export const ShopDetailPage: React.FC = () => {
                     onToggleFavorite={handleToggleFavorite}
                     onOpenReviewModal={handleOpenReviewModal}
                     onOpenGoogleMaps={handleOpenGoogleMaps}
+                    onShare={handleShare}
                 />
                 
                 <ShopReviewsSection 

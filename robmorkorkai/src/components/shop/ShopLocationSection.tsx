@@ -13,6 +13,7 @@ interface ShopLocationSectionProps {
     onToggleFavorite: () => void;
     onOpenReviewModal: () => void;
     onOpenGoogleMaps: () => void;
+    onShare: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 /**
@@ -54,7 +55,8 @@ export const ShopLocationSection: React.FC<ShopLocationSectionProps> = ({
     isFavorited,
     onToggleFavorite,
     onOpenReviewModal,
-    onOpenGoogleMaps
+    onOpenGoogleMaps,
+    onShare
 }) => {
     return (
         // Location section with centered container and flexible row layout
@@ -108,7 +110,8 @@ export const ShopLocationSection: React.FC<ShopLocationSectionProps> = ({
                             isLoggedIn={isLoggedIn} 
                             isFavorited={isFavorited} 
                             onToggleFavorite={onToggleFavorite} 
-                            onOpenReviewModal={onOpenReviewModal} 
+                            onOpenReviewModal={onOpenReviewModal}
+                            onShare={onShare}
                         />
                     </div>
                 </div>
