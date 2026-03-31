@@ -6,7 +6,29 @@ import {
 } from "lucide-react";
 import { type AdminViewProps, adminTheme as theme } from "./types";
 import { StatCardMobile } from "./AdminComponents";
+import "./css/AdminMobile.css";
 
+/**
+ * AdminMobile
+ * 
+ * Mobile-optimized admin dashboard component for small screens.
+ * Only displays below large screens (d-lg-none).
+ * 
+ * Layout:
+ * - Sticky header (60px) with Admin Panel branding and hamburger menu
+ * - Menu overlay sidebar with navigation and logout
+ * - Main content area with two tabs: Overview and Stores
+ * - Fixed bottom navigation bar for tab switching
+ * 
+ * Features:
+ * - Overview tab: Stat cards + preview of recent shops
+ * - Stores tab: Search bar + category filter + shop cards
+ * - Menu overlay for hamburger navigation
+ * - Bottom navigation for quick tab access
+ * - Responsive grid layout for stat cards
+ * 
+ * Props: AdminViewProps
+ */
 export const AdminMobile: React.FC<AdminViewProps> = ({
     activeTab, setActiveTab, filteredStores, stats,
     searchQuery, setSearchQuery, selectedCategory, setSelectedCategory,
@@ -14,47 +36,104 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
 }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    // ========== COMPONENTS ==========
+
+    /**
+     * NavBtn
+     * Single bottom navigation button with active state styling
+     */
     const NavBtn = ({ icon: Icon, label, active, onClick }: any) => (
-        <button onClick={onClick} className="btn border-0 d-flex flex-column align-items-center gap-1" style={{ color: active ? theme.activeBlue : theme.textGray }}>
-            <Icon size={24} strokeWidth={active ? 2.5 : 2} /><span style={{ fontSize: '0.65rem', fontWeight: active ? 'bold' : 'normal' }}>{label}</span>
+        <button onClick={onClick} className="admin-mobile-nav-btn" style={{ color: active ? theme.activeBlue : theme.textGray }}>
+            <Icon size={24} strokeWidth={active ? 2.5 : 2} />
+            <span className={`admin-mobile-nav-btn-label ${active ? 'active' : ''}`}>{label}</span>
         </button>
     );
 
+    // ========== RENDER ==========
     return (
-        <div className="d-lg-none d-flex flex-column min-vh-100 w-100">
-            {/* Header */}
-            <div className="px-3 py-3 d-flex justify-content-between align-items-center sticky-top shadow-sm" style={{ backgroundColor: theme.sidebarBg, zIndex: 1040, height: '60px' }}>
-                <div className="d-flex align-items-center gap-2"><div className="bg-primary text-white p-1 rounded"><Shield size={18} /></div><span className="fw-bold text-white">Admin Panel</span></div>
-                <button className="btn text-white p-0" onClick={() => setIsMenuOpen(true)}><Menu size={24} /></button>
+        <div className="admin-mobile-container">
+            {/* ========== HEADER ========== */}
+            <div className="admin-mobile-header" style={{ backgroundColor: theme.sidebarBg }}>
+                <div className="admin-mobile-header-brand">
+                    <div className="admin-mobile-header-brand-icon">
+                        <Shield size={18} />
+                    </div>
+                    <span className="admin-mobile-header-brand-text">Admin Panel</span>
+                </div>
+                <button className="admin-mobile-header-menu-btn" onClick={() => setIsMenuOpen(true)}>
+                    <Menu size={24} />
+                </button>
             </div>
 
-            {/* Menu Overlay */}
-            {isMenuOpen && <div className="position-fixed top-0 start-0 w-100 h-100 bg-black bg-opacity-50" style={{ zIndex: 1050 }} onClick={() => setIsMenuOpen(false)}><div className="h-100 w-75 p-4 shadow" style={{ backgroundColor: theme.sidebarBg }} onClick={e => e.stopPropagation()}><div className="d-flex justify-content-between align-items-center mb-4"><h5 className="fw-bold m-0 text-white">เมนู</h5><button className="btn p-0 text-white" onClick={() => setIsMenuOpen(false)}><X size={24} /></button></div><nav className="d-flex flex-column gap-3"><button onClick={() => { setActiveTab('overview'); setIsMenuOpen(false); }} className="btn text-start text-white"><BarChart3 size={20} className="me-2" /> ภาพรวม</button><button onClick={() => { setActiveTab('stores'); setIsMenuOpen(false); }} className="btn text-start text-white"><Store size={20} className="me-2" /> ร้านค้า</button><hr className="border-secondary" /><button onClick={logout} className="btn text-start text-danger"><LogOut size={20} className="me-2" /> ออกจากระบบ</button></nav></div></div>}
+            {/* ========== MENU OVERLAY ========== */}
+            {isMenuOpen && (
+                <div className="admin-mobile-menu-overlay" onClick={() => setIsMenuOpen(false)}>
+                    <div className="admin-mobile-menu-sidebar" style={{ backgroundColor: theme.sidebarBg }} onClick={e => e.stopPropagation()}>
+                        <div className="admin-mobile-menu-header">
+                            <h5 className="admin-mobile-menu-title">เมนู</h5>
+                            <button className="admin-mobile-menu-close-btn" onClick={() => setIsMenuOpen(false)}>
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <nav className="admin-mobile-menu-nav">
+                            <button onClick={() => { setActiveTab('overview'); setIsMenuOpen(false); }} className="admin-mobile-menu-nav-btn">
+                                <BarChart3 size={20} className="admin-mobile-menu-nav-btn-icon" /> ภาพรวม
+                            </button>
+                            <button onClick={() => { setActiveTab('stores'); setIsMenuOpen(false); }} className="admin-mobile-menu-nav-btn">
+                                <Store size={20} className="admin-mobile-menu-nav-btn-icon" /> ร้านค้า
+                            </button>
+                            <hr className="admin-mobile-menu-divider" />
+                            <button onClick={logout} className="admin-mobile-menu-logout-btn">
+                                <LogOut size={20} className="admin-mobile-menu-nav-btn-icon" /> ออกจากระบบ
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            )}
 
-            <main className="p-3 pb-5 mb-5 flex-grow-1">
+            {/* ========== MAIN CONTENT ========== */}
+            <main className="admin-mobile-main">
+                {/* ========== OVERVIEW TAB ========== */}
                 {activeTab === 'overview' && (
-                    <div className="d-flex flex-column gap-3">
-                        <div className="row g-3">
-                            <div className="col-12">
+                    <div className="admin-mobile-overview">
+                        {/* Stat Cards */}
+                        <div className="admin-mobile-stat-grid">
+                            <div>
                                 <StatCardMobile icon={Store} value={stats.totalStores} label="ร้านค้าทั้งหมด" bg="#dbeafe" color="#2563eb" />
                             </div>
-                            <div className="col-6">
+                        </div>
+                        <div className="admin-mobile-stat-grid two-column">
+                            <div>
                                 <StatCardMobile icon={MessageSquare} value={stats.totalReviews} label="รีวิวทั้งหมด" bg="#dcfce7" color="#16a34a" />
                             </div>
-                            <div className="col-6">
+                            <div>
                                 <StatCardMobile icon={User} value={stats.totalUsers} label="ผู้ใช้งาน" bg="#f3e8ff" color="#9333ea" />
                             </div>
                         </div>
-                        <div className="card border-0 shadow-sm rounded-4 p-3 mt-2 bg-white">
-                            <h6 className="fw-bold mb-3" style={{ color: theme.sidebarBg }}>ร้านค้า</h6>
-                            <div className="d-flex flex-column gap-3">
+
+                        {/* Recent Shops Card */}
+                        <div className="admin-mobile-shops-card">
+                            <h6 className="admin-mobile-shops-card-title" style={{ color: theme.sidebarBg }}>ร้านค้า</h6>
+                            <div className="admin-mobile-shops-list">
                                 {filteredStores.slice(0, 5).map(store => (
-                                    <div key={store.id} className="d-flex align-items-center justify-content-between p-2 border-bottom">
-                                        <div className="d-flex align-items-center gap-3"><img src={store.coverImage || store.image} className="rounded-3 object-fit-cover" width="48" height="48" alt="" /><div><div className="fw-bold small text-dark">{store.name}</div><div className="small text-secondary" style={{ fontSize: '0.75rem' }}>{store.owner}</div></div></div>
-                                        <div className="d-flex gap-2">
-                                            <button onClick={() => onViewDetail(store)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#e2e8f0', color: '#475569' }}><Eye size={18} /></button>
-                                            <button onClick={() => onEdit(store)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#dcfce7', color: '#16a34a' }}><Edit size={18} /></button>
-                                            <button onClick={() => onDelete(store.id)} className="btn rounded-circle p-0 d-flex align-items-center justify-content-center border-0" style={{ width: '32px', height: '32px', backgroundColor: '#fee2e2', color: '#ef4444' }}><Trash2 size={18} /></button>
+                                    <div key={store.id} className="admin-mobile-shop-item">
+                                        <div className="admin-mobile-shop-item-info">
+                                            <img src={store.coverImage || store.image} className="admin-mobile-shop-item-image object-fit-cover" width="48" height="48" alt="" />
+                                            <div>
+                                                <div className="admin-mobile-shop-item-name">{store.name}</div>
+                                                <div className="admin-mobile-shop-item-owner">{store.owner}</div>
+                                            </div>
+                                        </div>
+                                        <div className="admin-mobile-shop-item-actions">
+                                            <button onClick={() => onViewDetail(store)} className="admin-mobile-shop-item-action-btn view" title="ดูรายละเอียด">
+                                                <Eye size={18} />
+                                            </button>
+                                            <button onClick={() => onEdit(store)} className="admin-mobile-shop-item-action-btn edit" title="แก้ไข">
+                                                <Edit size={18} />
+                                            </button>
+                                            <button onClick={() => onDelete(store.id)} className="admin-mobile-shop-item-action-btn delete" title="ลบ">
+                                                <Trash2 size={18} />
+                                            </button>
                                         </div>
                                     </div>
                                 ))}
@@ -63,22 +142,48 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
                     </div>
                 )}
 
+                {/* ========== STORES TAB ========== */}
                 {activeTab === 'stores' && (
-                    <div className="d-flex flex-column gap-3">
-                        <div className="position-relative"><Search className="position-absolute text-secondary" size={18} style={{ top: '10px', left: '12px' }} /><input className="form-control ps-5 border-0 shadow-sm" placeholder="ค้นหา..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} /></div>
-                        <div className="d-flex gap-2 overflow-auto pb-2" style={{ whiteSpace: 'nowrap' }}>{categories.map(cat => (<button key={cat} onClick={() => setSelectedCategory(cat)} className={`btn btn-sm rounded-pill px-3 border-0 ${selectedCategory === cat ? 'bg-primary text-white' : 'bg-white text-secondary shadow-sm'}`}>{cat === 'all' ? 'ทั้งหมด' : cat}</button>))}</div>
+                    <div className="admin-mobile-stores">
+                        {/* Search Bar */}
+                        <div className="admin-mobile-search-wrapper">
+                            <Search className="admin-mobile-search-icon" size={18} />
+                            <input className="form-control admin-mobile-search-input" placeholder="ค้นหา..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                        </div>
+
+                        {/* Category Filter */}
+                        <div className="admin-mobile-category-filter">
+                            {categories.map(cat => (
+                                <button 
+                                    key={cat} 
+                                    onClick={() => setSelectedCategory(cat)} 
+                                    className={`admin-mobile-category-btn ${selectedCategory === cat ? 'active' : 'inactive'}`}
+                                >
+                                    {cat === 'all' ? 'ทั้งหมด' : cat}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Store Cards */}
                         {filteredStores.map(store => (
-                            <div key={store.id} className="card border-0 shadow-sm p-3 rounded-4 bg-white">
-                                <div className="d-flex align-items-center gap-3 mb-2">
-                                    <img src={store.coverImage || store.image} className="rounded-3 object-fit-cover" width="56" height="56" alt="" />
-                                    <div className="flex-grow-1"><div className="fw-bold small text-dark">{store.name}</div>
-                                        <div className="small text-secondary mb-1">{store.owner}</div>
+                            <div key={store.id} className="admin-mobile-store-card">
+                                <div className="admin-mobile-store-card-header">
+                                    <img src={store.coverImage || store.image} className="admin-mobile-store-card-image object-fit-cover" width="56" height="56" alt="" />
+                                    <div className="admin-mobile-store-card-info">
+                                        <div className="admin-mobile-store-card-name">{store.name}</div>
+                                        <div className="admin-mobile-store-card-owner">{store.owner}</div>
                                     </div>
                                 </div>
-                                <div className="d-flex gap-2 mt-2 border-top pt-2">
-                                    <button onClick={() => onViewDetail(store)} className="btn btn-light btn-sm text-secondary border flex-grow-1"><Eye size={16} /> ดู</button>
-                                    <button onClick={() => onEdit(store)} className="btn btn-light btn-sm flex-grow-1 text-primary border"><Edit size={16} /> แก้ไข</button>
-                                    <button onClick={() => onDelete(store.id)} className="btn btn-light btn-sm text-secondary border" title="ลบร้านค้า"><Trash2 size={16} /></button>
+                                <div className="admin-mobile-store-card-actions">
+                                    <button onClick={() => onViewDetail(store)} className="admin-mobile-store-card-action-btn view" title="ดูรายละเอียด">
+                                        <Eye size={16} /> ดู
+                                    </button>
+                                    <button onClick={() => onEdit(store)} className="admin-mobile-store-card-action-btn edit" title="แก้ไข">
+                                        <Edit size={16} /> แก้ไข
+                                    </button>
+                                    <button onClick={() => onDelete(store.id)} className="admin-mobile-store-card-action-btn delete" title="ลบร้านค้า">
+                                        <Trash2 size={16} />
+                                    </button>
                                 </div>
                             </div>
                         ))}
@@ -86,10 +191,14 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
                 )}
             </main>
 
-            <nav className="fixed-bottom bg-white border-top shadow-lg d-flex justify-content-around py-2" style={{ zIndex: 1060 }}>
+            {/* ========== BOTTOM NAVIGATION ========== */}
+            <nav className="admin-mobile-bottom-nav">
                 <NavBtn icon={BarChart3} label="ภาพรวม" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
                 <NavBtn icon={Store} label="ร้านค้า" active={activeTab === 'stores'} onClick={() => setActiveTab('stores')} />
-                <button onClick={logout} className="btn border-0 d-flex flex-column align-items-center gap-1" style={{ color: '#ef4444' }}><LogOut size={24} strokeWidth={2} /><span style={{ fontSize: '0.65rem', fontWeight: 'normal' }}>ออกระบบ</span></button>
+                <button onClick={logout} className="admin-mobile-nav-logout-btn">
+                    <LogOut size={24} strokeWidth={2} />
+                    <span className="admin-mobile-nav-logout-btn-label">ออกระบบ</span>
+                </button>
             </nav>
         </div>
     );

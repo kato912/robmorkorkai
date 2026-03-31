@@ -7,16 +7,32 @@ import { AdminMobile } from "../admin/AdminMobile";
 import type { TabType } from "../admin/types";
 import type { Shop } from "../../types/shop";
 
+/**
+ * AdminPage
+ * 
+ * Main admin dashboard component that manages shop data and admin interface.
+ * Handles fetching shops, users count, filtering, searching, and modal interactions.
+ * Renders responsive views for both desktop and mobile layouts.
+ * 
+ * Key responsibilities:
+ * - Fetch shops from API on mount
+ * - Fetch total user count from stats API
+ * - Manage tab navigation (overview/stores)
+ * - Handle shop search and category filtering
+ * - Manage modals for viewing and editing shops
+ * - Handle shop deletion
+ * - Pass props to desktop/mobile view components
+ */
 export const AdminPage: React.FC = () => {
     const { logout } = useAuth();
     const [activeTab, setActiveTab] = useState<TabType>("overview");
 
-    // --- API State ---
+    // ========== API/DATA STATE ==========
     const [shops, setShops] = useState<Shop[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [totalUsers, setTotalUsers] = useState(0);
 
-    // --- UI State ---
+    // ========== UI/MODAL STATE ==========
     const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
     const [editingShop, setEditingShop] = useState<Shop | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
@@ -31,8 +47,11 @@ export const AdminPage: React.FC = () => {
         console.log("📋 User role:", user?.role);
     }, []);
 
-    // ดึงข้อมูลร้านค้า (GET)
-    // ==========================================
+    /**
+     * Fetch all shops from API endpoint
+     * Sets shops state with fetched data or empty array on error
+     * Shows loading state during fetch
+     */
     const fetchShops = async () => {
         try {
             setIsLoading(true);
@@ -56,7 +75,10 @@ export const AdminPage: React.FC = () => {
         fetchShops();
     }, []);
 
-    // ฟ้งข้อมูลจำนวนผู้ใช้
+    /**
+     * Fetch total user count from admin stats API
+     * Updates totalUsers state
+     */
     const fetchUserCount = async () => {
         try {
             const res = await api.get("/api/admin/stats");
@@ -71,7 +93,11 @@ export const AdminPage: React.FC = () => {
         fetchUserCount();
     }, []);
 
-    // ลบร้านค้า (DELETE)
+    /**
+     * Delete shop by ID with confirmation dialog
+     * Removes shop from shops array on success
+     * @param id - Shop ID to delete
+     */
     const handleDeleteStore = async (id: string) => {
         if (!window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบร้านค้านี้?")) return;
 
@@ -86,7 +112,11 @@ export const AdminPage: React.FC = () => {
         }
     };
 
-    // แก้ไขข้อมูลร้านค้า (PUT)
+    /**
+     * Update shop data via PUT request
+     * Re-fetches shops after successful update
+     * @param updatedShop - Shop object with updated values
+     */
     const handleSaveEdit = async (updatedShop: Shop) => {
         try {
             const payload = {
@@ -122,9 +152,15 @@ export const AdminPage: React.FC = () => {
         }
     };
 
-    // --- Logic กรองข้อมูลเพื่อแสดงบนตาราง ---
+    /**
+     * Extract unique categories from shops for filter dropdown
+     */
     const categories = ["all", ...new Set(shops.map(s => s.category || s.type || "ไม่ระบุหมวดหมู่"))];
 
+    /**
+     * Filter shops by search query and selected category
+     * Memoized to prevent unnecessary recalculations on every render
+     */
     const filteredStores = useMemo(() => {
         return shops.filter(shop => {
             const shopName = shop.name || "";
@@ -139,14 +175,22 @@ export const AdminPage: React.FC = () => {
         });
     }, [shops, searchQuery, selectedCategory]);
 
-    // --- สรุปตัวเลข Stats ---
+    /**
+     * Calculate statistics from shops and user data
+     * totalStores: Count of all shops
+     * totalReviews: Sum of all review counts
+     * totalUsers: Total user count from API
+     */
     const stats = {
         totalStores: shops.length,
         totalReviews: shops.reduce((sum, shop) => sum + (shop.reviewCount || 0), 0),
         totalUsers: totalUsers,
     };
 
-    // --- รวม Props ส่งให้ View ---
+    /**
+     * Combine all props needed for both desktop and mobile views
+     * Includes state, handlers, and derived data (filtered stores, stats)
+     */
     const viewProps = {
         activeTab, setActiveTab,
         storeRequests: filteredStores.map(shop => ({ ...shop, status: "active" })),
@@ -166,6 +210,9 @@ export const AdminPage: React.FC = () => {
         return <div className="min-vh-100 d-flex justify-content-center align-items-center">กำลังโหลดข้อมูลแอดมิน...</div>;
     }
 
+    // Render responsive layout with desktop/mobile views
+    // Desktop view shows on large screens, mobile view shows on small screens
+    // Both share the same shop modals for detail and edit operations
     return (
         <div className="font-sans" style={{ backgroundColor: theme.bgMain }}>
             {/* Desktop View */}

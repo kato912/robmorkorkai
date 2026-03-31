@@ -5,7 +5,27 @@ import {
 } from "lucide-react";
 import { type AdminViewProps, adminTheme as theme } from "./types";
 import { StatCard } from "./AdminComponents";
+import "./css/AdminDesktop.css";
 
+/**
+ * AdminDesktop
+ * 
+ * Desktop-optimized admin dashboard component with fixed sidebar and responsive main content.
+ * Only displays on large screens (d-lg-flex).
+ * 
+ * Layout:
+ * - Fixed left sidebar (260px): Navigation tabs and logout button
+ * - Main content area: Header with search/filter, then overview or stores tab content
+ * 
+ * Features:
+ * - Overview tab: 3 stat cards (stores, reviews, users) + preview of recent 5 shops
+ * - Stores tab: Full searchable/filterable table of all shops
+ * - Search functionality (by shop name or owner)
+ * - Category filter dropdown
+ * - Shop actions: View detail, Edit, Delete
+ * 
+ * Props: AdminViewProps
+ */
 export const AdminDesktop: React.FC<AdminViewProps> = ({
     activeTab, setActiveTab, 
     filteredStores,
@@ -14,7 +34,12 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
     categories, isFilterDropdownOpen, setIsFilterDropdownOpen,
     onDelete, onViewDetail, onEdit, logout
 }) => {
-    
+    // ========== COMPONENTS ==========
+
+    /**
+     * SidebarItem
+     * Single navigation button in sidebar with active state styling
+     */
     const SidebarItem = ({ id, label, icon: Icon, active }: any) => (
         <button onClick={() => setActiveTab(id)} className="w-100 d-flex align-items-center gap-3 px-3 py-3 rounded-3 border-0 transition text-decoration-none mb-1"
             style={{ backgroundColor: active ? theme.activeBlue : "transparent", color: active ? "#ffffff" : theme.textGray }}>
@@ -22,11 +47,12 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
         </button>
     );
 
+    // ========== RENDER ==========
     return (
-        <div className="d-none d-lg-flex min-vh-100 w-100">
-            {/* Sidebar */}
-            <aside className="position-fixed h-100 flex-column" style={{ width: '260px', backgroundColor: theme.sidebarBg, zIndex: 1030 }}>
-                <div className="p-4 mb-2">
+        <div className="admin-desktop-container">
+            {/* ========== SIDEBAR ========== */}
+            <aside className="admin-desktop-sidebar" style={{ backgroundColor: theme.sidebarBg }}>
+                <div className="admin-desktop-sidebar-header">
                     <div className="d-flex align-items-center gap-3">
                         <div className="bg-primary rounded-3 p-2 d-flex align-items-center justify-content-center">
                             <Shield size={24} className="text-white" />
@@ -37,40 +63,42 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
                         </div>
                     </div>
                 </div>
-                <nav className="px-3 flex-grow-1 d-flex flex-column gap-1">
+                <nav className="admin-desktop-sidebar-nav">
                     <SidebarItem id="overview" label="ภาพรวม" icon={BarChart3} active={activeTab === 'overview'} />
-                    {/* ✅ เปลี่ยน id tab เป็น shops ด้วยให้ตรงกัน */}
                     <SidebarItem id="stores" label="จัดการร้านค้า" icon={Store} active={activeTab === 'stores'} />
                 </nav>
-                <div className="p-3 mt-auto border-top border-secondary border-opacity-25">
+                <div className="admin-desktop-sidebar-footer">
                     <button onClick={logout} className="btn w-100 d-flex align-items-center gap-3 px-3 py-3 rounded-3 border-0 transition text-decoration-none" style={{ color: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)' }}>
                         <LogOut size={20} /> <span className="fw-medium">ออกจากระบบ</span>
                     </button>
                 </div>
             </aside>
 
-            {/* Main Content */}
-            <main className="flex-grow-1 p-5" style={{ marginLeft: '260px' }}>
-                {/* Header & Search */}
-                <div className="d-flex justify-content-between align-items-center mb-5">
+            {/* ========== MAIN CONTENT ========== */}
+            <main className="admin-desktop-main">
+                {/* Header with Search & Filter */}
+                <div className="admin-desktop-header">
                     <div>
-                        <h3 className="fw-bold m-0 text-dark">{activeTab === 'overview' ? 'ภาพรวมระบบ' : 'จัดการร้านค้า'}</h3>
-                        <p className="text-secondary m-0 small">จัดการข้อมูลทั้งหมดในระบบ</p>
+                        <h3 className="admin-desktop-header-title">{activeTab === 'overview' ? 'ภาพรวมระบบ' : 'จัดการร้านค้า'}</h3>
+                        <p className="admin-desktop-header-subtitle">จัดการข้อมูลทั้งหมดในระบบ</p>
                     </div>
-                    <div className="d-flex gap-2 position-relative">
-                        <div className="position-relative">
-                            <Search className="position-absolute text-secondary" size={18} style={{ top: '10px', left: '12px' }} />
-                            <input className="form-control ps-5 border-0 shadow-sm" placeholder="ค้นหา..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ width: '250px', backgroundColor: 'white' }} />
+                    <div className="admin-desktop-search-filter">
+                        {/* Search Bar */}
+                        <div className="admin-desktop-search-wrapper">
+                            <Search className="admin-desktop-search-icon" size={18} />
+                            <input className="form-control admin-desktop-search-input border-0 shadow-sm" placeholder="ค้นหา..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                         </div>
+                        
+                        {/* Filter Dropdown */}
                         <div className="position-relative">
-                            <button onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)} className={`btn shadow-sm border-0 d-flex align-items-center gap-2 px-3 ${isFilterDropdownOpen || selectedCategory !== 'all' ? 'bg-primary text-white' : 'bg-white text-secondary'}`}>
+                            <button onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)} className={`admin-desktop-filter-btn ${isFilterDropdownOpen || selectedCategory !== 'all' ? 'bg-primary text-white' : 'bg-white text-secondary'}`}>
                                 <Filter size={18} /> กรอง
                             </button>
                             {isFilterDropdownOpen && (
-                                <div className="position-absolute end-0 mt-2 bg-white rounded-3 shadow-lg p-3 border" style={{ width: '200px', zIndex: 1050 }}>
-                                    <h6 className="fw-bold small text-muted mb-2">หมวดหมู่</h6>
+                                <div className="admin-desktop-filter-dropdown">
+                                    <h6 className="admin-desktop-filter-dropdown-title">หมวดหมู่</h6>
                                     {categories.map(cat => (
-                                        <div key={cat} onClick={() => { setSelectedCategory(cat); setIsFilterDropdownOpen(false); }} className={`p-2 rounded cursor-pointer small ${selectedCategory === cat ? 'bg-primary text-white' : 'text-dark hover-bg-light'}`}>
+                                        <div key={cat} onClick={() => { setSelectedCategory(cat); setIsFilterDropdownOpen(false); }} className={`admin-desktop-filter-option ${selectedCategory === cat ? 'active' : 'inactive'}`}>
                                             {cat === 'all' ? 'ทั้งหมด' : cat}
                                         </div>
                                     ))}
@@ -80,80 +108,81 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
                     </div>
                 </div>
 
-                {/* Content Logic */}
+                {/* ========== CONTENT: OVERVIEW TAB ========== */}
                 {activeTab === 'overview' && (
-                    <div className="animate-fade-in">
-                        <div className="row g-4 mb-4">
-                            <div className="col-4"><StatCard title="ร้านค้าทั้งหมด" value={stats.totalStores} icon={Store} color="blue" /></div>
-                            <div className="col-4"><StatCard title="รีวิวทั้งหมด" value={stats.totalReviews} icon={MessageSquare} color="green" /></div>
-                            <div className="col-4"><StatCard title="ผู้ใช้งาน" value={stats.totalUsers} icon={User} color="purple" /></div>
+                    <div className="admin-desktop-overview">
+                        {/* Stat Cards Row */}
+                        <div className="admin-desktop-stat-row">
+                            <div className="admin-desktop-stat-col"><StatCard title="ร้านค้าทั้งหมด" value={stats.totalStores} icon={Store} color="blue" /></div>
+                            <div className="admin-desktop-stat-col"><StatCard title="รีวิวทั้งหมด" value={stats.totalReviews} icon={MessageSquare} color="green" /></div>
+                            <div className="admin-desktop-stat-col"><StatCard title="ผู้ใช้งาน" value={stats.totalUsers} icon={User} color="purple" /></div>
                         </div>
 
-                        <div className="card border-0 shadow-sm rounded-4 h-100 p-4" style={{ backgroundColor: theme.cardBg }}>
-                            <div className="d-flex justify-content-between align-items-center mb-4">
-                                <h6 className="fw-bold m-0 text-dark">ร้านค้า</h6>
+                        {/* Recent Shops Preview Card */}
+                        <div className="admin-desktop-shops-card" style={{ backgroundColor: theme.cardBg }}>
+                            <div className="admin-desktop-shops-header">
+                                <h6 className="admin-desktop-shops-title">ร้านค้า</h6>
                                 <button className="btn btn-link btn-sm fw-bold" onClick={() => setActiveTab('stores')}>ดูตารางแบบเต็ม</button>
                             </div>
-                            <div className="d-flex flex-column gap-3">
-                                {/* ✅ เปลี่ยนตัวแปรตอนวนลูปเป็น shop */}
+                            <div className="admin-desktop-shops-list">
                                 {filteredStores.slice(0, 5).map(shop => (
-                                    <div key={shop.id} className="d-flex align-items-center justify-content-between p-3 rounded-3" style={{ backgroundColor: theme.bgMain }}>
-                                        <div className="d-flex align-items-center gap-3">
-                                            <img src={shop.coverImage || shop.image} className="rounded-3 object-fit-cover" width="48" height="48" alt=""/>
-                                            <div>
-                                                <h6 className="fw-bold m-0 text-dark small">{shop.name}</h6>
-                                                <small className="text-secondary">{shop.owner}</small>
+                                    <div key={shop.id} className="admin-desktop-shop-item" style={{ backgroundColor: theme.bgMain }}>
+                                        <div className="admin-desktop-shop-item-info">
+                                            <img src={shop.coverImage || shop.image} className="admin-desktop-shop-item-image object-fit-cover" width="48" height="48" alt=""/>
+                                            <div className="admin-desktop-shop-item-details">
+                                                <h6>{shop.name}</h6>
+                                                <small>{shop.owner}</small>
                                             </div>
                                         </div>
-                                        <div className="d-flex gap-2">
-                                            <button onClick={() => onViewDetail(shop)} className="btn btn-sm btn-light rounded-circle text-primary p-1 border hover-scale" title="ดูรายละเอียด"><Eye size={20}/></button>
-                                            <button onClick={() => onEdit(shop)} className="btn btn-sm btn-light rounded-circle text-success p-1 border hover-scale" title="แก้ไข"><Edit size={20}/></button>
-                                            <button onClick={() => onDelete(shop.id)} className="btn btn-sm btn-light rounded-circle text-danger p-1 border hover-scale" title="ลบ"><Trash2 size={20}/></button>
+                                        <div className="admin-desktop-shop-item-actions">
+                                            <button onClick={() => onViewDetail(shop)} className="admin-desktop-shop-item-action-btn view" title="ดูรายละเอียด"><Eye size={20}/></button>
+                                            <button onClick={() => onEdit(shop)} className="admin-desktop-shop-item-action-btn edit" title="แก้ไข"><Edit size={20}/></button>
+                                            <button onClick={() => onDelete(shop.id)} className="admin-desktop-shop-item-action-btn delete" title="ลบ"><Trash2 size={20}/></button>
                                         </div>
                                     </div>
                                 ))}
-                                {filteredStores.length === 0 && <div className="text-center text-muted py-5">ไม่มีร้านค้าในระบบ</div>}
+                                {filteredStores.length === 0 && <div className="admin-desktop-empty-state">ไม่มีร้านค้าในระบบ</div>}
                             </div>
                         </div>
                     </div>
                 )}
 
+                {/* ========== CONTENT: STORES TAB ========== */}
                 {activeTab === 'stores' && (
-                    <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div className="admin-desktop-table-wrapper">
                         <div className="table-responsive">
-                            <table className="table table-hover mb-0 align-middle">
-                                <thead className="bg-light">
+                            <table className="table table-hover mb-0 align-middle admin-desktop-table">
+                                <thead>
                                     <tr>
-                                        <th className="px-4 py-3 text-secondary small">ร้านค้า</th>
-                                        <th className="px-4 py-3 text-secondary small">โซน</th>
-                                        <th className="px-4 py-3 text-secondary small">หมวดหมู่</th>
-                                        <th className="px-4 py-3 text-secondary small text-end">จัดการ</th>
+                                        <th className="admin-desktop-table-header">ร้านค้า</th>
+                                        <th className="admin-desktop-table-header">โซน</th>
+                                        <th className="admin-desktop-table-header">หมวดหมู่</th>
+                                        <th className="admin-desktop-table-header text-end">จัดการ</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {/* ✅ เปลี่ยนตัวแปรตอนวนลูปเป็น shop */}
                                     {filteredStores.map(shop => (
                                         <tr key={shop.id}>
                                             <td className="px-4">
-                                                <div className="d-flex align-items-center gap-3">
-                                                    <img src={shop.coverImage || shop.image} className="rounded-3" width="40" height="40" alt=""/>
+                                                <div className="admin-desktop-table-shop">
+                                                    <img src={shop.coverImage || shop.image} className="admin-desktop-table-shop-image" alt=""/>
                                                     <div>
-                                                        <div className="fw-bold small">{shop.name}</div>
-                                                        <div className="text-muted small">{shop.owner}</div>
+                                                        <div className="admin-desktop-table-shop-name">{shop.name}</div>
+                                                        <div className="admin-desktop-table-shop-owner">{shop.owner}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-4"><div className="small text-dark">{shop.zone}</div></td>
-                                            <td className="px-4"><div className ="small text-dark">{shop.category}</div></td>
-                                            <td className="px-4 text-end">
-                                                <div className="d-flex justify-content-end gap-2">
-                                                    <button onClick={() => onViewDetail(shop)} className="btn btn-sm btn-light border text-secondary hover-scale">
+                                            <td className="px-4"><div className="admin-desktop-table-zone">{shop.zone}</div></td>
+                                            <td className="px-4"><div className="admin-desktop-table-category">{shop.category}</div></td>
+                                            <td className="admin-desktop-table-actions">
+                                                <div className="admin-desktop-table-action-group">
+                                                    <button onClick={() => onViewDetail(shop)} className="admin-desktop-table-action-btn view" title="ดูรายละเอียด">
                                                         <Eye size={14}/> ดู
                                                     </button>
-                                                    <button onClick={() => onEdit(shop)} className="btn btn-sm btn-light border text-primary d-flex align-items-center gap-1 hover-scale">
+                                                    <button onClick={() => onEdit(shop)} className="admin-desktop-table-action-btn edit" title="แก้ไข">
                                                         <Edit size={14}/> แก้ไข
                                                     </button>
-                                                    <button onClick={() => onDelete(shop.id)} className="btn btn-sm btn-light border text-danger hover-scale" title="ลบร้านค้า">
+                                                    <button onClick={() => onDelete(shop.id)} className="admin-desktop-table-action-btn delete" title="ลบร้านค้า">
                                                         <Trash2 size={14}/>
                                                     </button>
                                                 </div>
@@ -163,6 +192,11 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
                                 </tbody>
                             </table>
                         </div>
+                        {filteredStores.length === 0 && (
+                            <div className="d-flex align-items-center justify-content-center p-5">
+                                <div className="admin-desktop-empty-state">ไม่มีร้านค้าในระบบ</div>
+                            </div>
+                        )}
                     </div>
                 )}
             </main>
