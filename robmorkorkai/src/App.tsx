@@ -29,6 +29,12 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 
 // แสดง HomePage เสมอ ไม่ต้องตัดสินใจ redirect
 const HomeRedirect = ({ shops }: { shops: Shop[] }) => {
+  const { loading } = useAuth();
+  
+  if (loading) {
+    return null; // รอให้ session load เสร็จก่อน
+  }
+  
   return <HomePage />;
 };
 
@@ -73,11 +79,11 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <AuthProvider>
+    <AuthProvider>
+      <BrowserRouter>
         <AppContent />
-      </AuthProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

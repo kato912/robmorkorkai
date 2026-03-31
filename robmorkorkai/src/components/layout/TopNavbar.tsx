@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Search, Home } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { getInitialAvatar } from "../../utils/avatarUtils";
+import { getProxyImageUrl } from "../../utils/imageProxyUtils";
 import '../../assets/css/Topnavbar.css'
 
 interface Props {
@@ -16,8 +18,8 @@ interface Props {
 export const TopNavbar: React.FC<Props> = ({
     activePage, showSearchBar = false, searchQuery, setSearchQuery, handleSearch, placeholderText
 }) => {
-    const { isLoggedIn, user } = useAuth();
-    const profileImage = user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
+    const { isLoggedIn, user, loading } = useAuth();
+    const profileImage = getProxyImageUrl(user?.image) || getInitialAvatar(user?.name, user?.email);
 
     return (
         <nav className="sticky-top" style={{ zIndex: 1020, background: '#231c18', borderBottom: '1px solid rgba(201, 148, 58, 0.2)' }}>
@@ -70,7 +72,17 @@ export const TopNavbar: React.FC<Props> = ({
                     {/* Profile Section */}
                     {isLoggedIn ? (
                         <Link to="/profile" className="d-flex align-items-center gap-2 text-decoration-none px-2 py-1 rounded-pill custom-nav-link transition-all">
-                            <img src={profileImage} alt="Profile" className="rounded-circle object-fit-cover" style={{ width: '32px', height: '32px' }} />
+                            <img 
+                                src={profileImage} 
+                                alt="Profile" 
+                                referrerPolicy="no-referrer"
+                                className="rounded-circle object-fit-cover" 
+                                style={{ width: '32px', height: '32px' }} 
+                                onError={(e) => {
+                                    const img = e.target as HTMLImageElement;
+                                    img.src = getInitialAvatar(user?.name, user?.email);
+                                }}
+                            />
                         </Link>
                     ) : (
                         /* 👇 เรียกใช้คลาส custom-login-btn ตรงนี้ */

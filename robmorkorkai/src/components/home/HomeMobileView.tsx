@@ -9,6 +9,10 @@ import { useAuth } from "../../context/AuthContext";
 // Custom Hooks
 import { useTypingEffect } from "../../hooks/useTypingEffect";
 
+// Utils
+import { getInitialAvatar } from "../../utils/avatarUtils";
+import { getProxyImageUrl } from "../../utils/imageProxyUtils";
+
 // Components
 import { ShopCard } from "./ShopCard";
 import { ZoneFilter } from "./ZoneFilter";
@@ -44,7 +48,7 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
     const [searchText, setSearchText] = useState("");
 
     const placeholderText = useTypingEffect(TYPING_PHRASES);
-    const profileImage = user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100";
+    const profileImage = getProxyImageUrl(user?.image) || getInitialAvatar(user?.name, user?.email);
 
     const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && searchText.trim() !== "") {
@@ -72,7 +76,16 @@ const HomeMobileView: React.FC<HomeViewProps> = ({
 
                         {isLoggedIn ? (
                             <Link to="/profile">
-                                <img src={profileImage} alt="Profile" className="rounded-circle object-fit-cover custom-mobile-profile" style={{ width: '36px', height: '36px' }} />
+                                <img 
+                                    src={profileImage} 
+                                    alt="Profile" 
+                                    className="rounded-circle object-fit-cover custom-mobile-profile" 
+                                    style={{ width: '36px', height: '36px' }}
+                                    onError={(e) => {
+                                        const img = e.target as HTMLImageElement;
+                                        img.src = getInitialAvatar(user?.name, user?.email);
+                                    }}
+                                />
                             </Link>
                         ) : (
                             <Link to="/login" className="btn btn-sm rounded-pill px-4 fw-medium custom-mobile-login" style={{ backgroundColor: '#A73B24', color: '#f5ebe4' }}>เข้าสู่ระบบ</Link>

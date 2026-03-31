@@ -31,9 +31,9 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, Edit2, LogOut, Check, BadgeCheck, Home, Search, User } from "lucide-react";
 import type { ProfileData } from "../pages/ProfilePage";
+import { getInitialAvatarLarge } from "../../utils/avatarUtils";
+import { getProxyImageUrl } from "../../utils/imageProxyUtils";
 import "./css/ProfileHeader.css";
-
-const FALLBACK_AVATAR = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80";
 
 interface Props {
     profile: ProfileData;
@@ -47,35 +47,38 @@ export const ProfileHeader: React.FC<Props> = ({
     profile, isEditing, setIsEditing, onLogout, stats
 }) => {
     const navigate = useNavigate();
-    const [imageSrc, setImageSrc] = useState(profile.imageUrl || FALLBACK_AVATAR);
-    const [isLoading, setIsLoading] = useState(!!profile.imageUrl && profile.imageUrl !== FALLBACK_AVATAR);
+    const fallbackAvatar = getInitialAvatarLarge(profile.name, profile.email, 120);
+    const proxyImageUrl = getProxyImageUrl(profile.imageUrl);
+    const [imageSrc, setImageSrc] = useState(proxyImageUrl || fallbackAvatar);
+    const [isLoading, setIsLoading] = useState(!!profile.imageUrl && profile.imageUrl !== fallbackAvatar);
     const [hasError, setHasError] = useState(false);
     const [retryCount, setRetryCount] = useState(0);
 
     useEffect(() => {
-        if (!profile.imageUrl || profile.imageUrl === FALLBACK_AVATAR) {
-            setImageSrc(FALLBACK_AVATAR);
+        if (!profile.imageUrl || profile.imageUrl === fallbackAvatar) {
+            setImageSrc(fallbackAvatar);
             setIsLoading(false);
             setHasError(false);
             setRetryCount(0);
             return;
         }
-        // Try direct URL
-        setImageSrc(profile.imageUrl);
+        // Use proxy URL
+        const proxiedUrl = getProxyImageUrl(profile.imageUrl);
+        setImageSrc(proxiedUrl || fallbackAvatar);
         setIsLoading(true);
         setHasError(false);
-    }, [profile.imageUrl]);
+    }, [profile.imageUrl, fallbackAvatar]);
 
     const handleImageError = () => {
         if (retryCount < 1) {
             // First attempt failed, retry with different params
-            const retryUrl = new URL(profile.imageUrl || FALLBACK_AVATAR);
+            const retryUrl = new URL(profile.imageUrl || fallbackAvatar);
             retryUrl.searchParams.set('cache', Date.now().toString());
             setImageSrc(retryUrl.toString());
             setRetryCount(retryCount + 1);
         } else {
             // Retry failed, use fallback
-            setImageSrc(FALLBACK_AVATAR);
+            setImageSrc(fallbackAvatar);
             setIsLoading(false);
             setHasError(true);
         }
