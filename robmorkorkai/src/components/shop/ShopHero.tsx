@@ -22,7 +22,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, Home, Search, Bot, Heart, Share2, Star, MapPin, Clock } from "lucide-react";
+import { ChevronLeft, Home, Search, Heart, Share2, Star, MapPin, Clock } from "lucide-react";
 import type { Shop } from "../../types/shop";
 import "./css/ShopHero.css";
 
@@ -51,11 +51,10 @@ export const ShopHero: React.FC<ShopHeroProps> = ({
     const navigate = useNavigate();
     const imageUrl = shop.coverImage || shop.image;
     
-    // Try direct URL first for speed, only use proxy if direct fails
-    const initialSrc = imageUrl || FALLBACK_IMAGE;
+    // Always use proxy URL for faster, consistent loading (avoids Google rate limiting delays)
     const proxyUrl = imageUrl ? getProxyImageUrl(imageUrl) : FALLBACK_IMAGE;
     
-    const [imageSrc, setImageSrc] = useState(initialSrc);
+    const [imageSrc, setImageSrc] = useState(proxyUrl);
     const [isLoading, setIsLoading] = useState(!!imageUrl);
     const [hasError, setHasError] = useState(false);
 
@@ -68,19 +67,13 @@ export const ShopHero: React.FC<ShopHeroProps> = ({
         // Reset state when URL changes
         setIsLoading(true);
         setHasError(false);
-        setImageSrc(initialSrc); // Try direct URL first
+        setImageSrc(proxyUrl); // Use proxy URL directly for faster loading
     }, [imageUrl]);
 
     const handleImageError = () => {
-        if (!hasError && imageSrc !== proxyUrl) {
-            // Try proxy as fallback
-            setImageSrc(proxyUrl);
-            setHasError(true);
-        } else {
-            // Proxy also failed, show fallback
-            setImageSrc(FALLBACK_IMAGE);
-            setIsLoading(false);
-        }
+        // Proxy failed, show fallback
+        setImageSrc(FALLBACK_IMAGE);
+        setIsLoading(false);
     };
 
     const handleShare = async (e: React.MouseEvent<HTMLButtonElement>) => {
