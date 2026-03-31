@@ -52,7 +52,16 @@ export const getShopsAdmin = async (req: Request, res: Response) => {
             orderBy: { createdAt: 'desc' },
         });
 
-        res.json(shops);
+        // Map type to category for frontend compatibility
+        const shopsWithCategory = shops.map(shop => ({
+            ...shop,
+            category: shop.type || "ไม่ระบุหมวดหมู่",
+            reviewCount: shop._count.reviews,
+            // Remove _count from response
+            _count: undefined
+        }));
+
+        res.json(shopsWithCategory);
     } catch (error) {
         console.error("Error fetching shops for admin:", error);
         res.status(500).json({ message: "Internal Server Error" });
@@ -182,7 +191,16 @@ export const getShopByIdAdmin = async (req: Request, res: Response) => {
             return res.status(404).json({ message: "Shop not found" });
         }
 
-        res.json(shop);
+        // Map type to category for frontend compatibility
+        const shopWithCategory = {
+            ...shop,
+            category: shop.type || "ไม่ระบุหมวดหมู่",
+            reviewCount: shop._count.reviews,
+            // Remove _count from response
+            _count: undefined
+        };
+
+        res.json(shopWithCategory);
     } catch (error) {
         console.error("Error fetching shop details:", error);
         res.status(500).json({ message: "Internal Server Error" });
