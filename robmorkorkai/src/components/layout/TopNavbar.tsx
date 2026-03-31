@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { MapPin, Search, Home } from "lucide-react";
+import { MapPin, Search, Home, Shield } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { getInitialAvatar } from "../../utils/avatarUtils";
 import { getProxyImageUrl } from "../../utils/imageProxyUtils";
@@ -66,6 +66,13 @@ export const TopNavbar: React.FC<Props> = ({
                     <Link to="/search" className={`btn btn-sm rounded-pill px-3 d-flex align-items-center gap-2 custom-nav-link ${activePage === 'search' ? 'active' : ''}`}>
                         <Search size={16} /> Search
                     </Link>
+
+                    {/* Admin Dashboard Button - Only for admin */}
+                    {user?.role === "ADMIN" && (
+                        <Link to="/admin" className={`btn btn-sm rounded-pill px-3 d-flex align-items-center gap-2 custom-nav-link ${activePage === 'admin' ? 'active' : ''}`} style={{ backgroundColor: 'rgba(14, 165, 233, 0.15)', color: '#0ea5e9' }}>
+                            <Shield size={16} /> Dashboard
+                        </Link>
+                    )}
 
                     <div className="vr mx-1" style={{ backgroundColor: '#f5ebe4' }}></div>
 

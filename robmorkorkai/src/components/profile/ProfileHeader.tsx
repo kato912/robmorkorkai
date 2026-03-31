@@ -29,10 +29,11 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, Edit2, LogOut, Check, BadgeCheck, Home, Search, User } from "lucide-react";
+import { ChevronLeft, Edit2, LogOut, Check, BadgeCheck, Home, Search, User, Shield } from "lucide-react";
 import type { ProfileData } from "../pages/ProfilePage";
 import { getInitialAvatarLarge } from "../../utils/avatarUtils";
 import { getProxyImageUrl } from "../../utils/imageProxyUtils";
+import { useAuth } from "../../context/AuthContext";
 import "./css/ProfileHeader.css";
 
 interface Props {
@@ -47,6 +48,7 @@ export const ProfileHeader: React.FC<Props> = ({
     profile, isEditing, setIsEditing, onLogout, stats
 }) => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const fallbackAvatar = getInitialAvatarLarge(profile.name, profile.email, 120);
     const proxyImageUrl = getProxyImageUrl(profile.imageUrl);
     const [imageSrc, setImageSrc] = useState(proxyImageUrl || fallbackAvatar);
@@ -107,12 +109,22 @@ export const ProfileHeader: React.FC<Props> = ({
                     <Link to="/search" className="profile-nav-link">
                         <Search size={18} /> Search
                     </Link>
+                    {user?.role === "ADMIN" && (
+                        <Link to="/admin" className="profile-nav-link" style={{ color: "#00b4d8" }}>
+                            <Shield size={18} /> Dashboard
+                        </Link>
+                    )}
                     <div className="profile-nav-divider"></div>
                     <div className="profile-badge">Profile</div>
                 </div>
 
                 {/* Mobile Action Buttons - Edit and logout (small screens only) */}
                 <div className="profile-mobile-actions">
+                    {user?.role === "ADMIN" && (
+                        <Link to="/admin" className="profile-icon-button" style={{ backgroundColor: "rgba(0, 180, 216, 0.05)", borderColor: "rgba(0, 180, 216, 0.2)", color: "#00b4d8" }} title="Dashboard" aria-label="Dashboard">
+                            <Shield size={18} />
+                        </Link>
+                    )}
                     <button
                         onClick={() => setIsEditing(!isEditing)}
                         className="profile-icon-button profile-icon-button-edit"

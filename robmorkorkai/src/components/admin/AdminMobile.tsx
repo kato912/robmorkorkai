@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
     Store,
-    Search, Menu, X, Shield,
+    Search, Menu, X, Shield, Home,
     BarChart3, MessageSquare, Trash2, Edit, Eye, User, LogOut, Plus
 } from "lucide-react";
 import { type AdminViewProps, adminTheme as theme } from "./types";
@@ -76,6 +77,9 @@ export const AdminMobile: React.FC<AdminViewProps> = ({
                             </button>
                         </div>
                         <nav className="admin-mobile-menu-nav">
+                            <Link to="/" className="admin-mobile-menu-nav-btn" style={{ textDecoration: 'none' }} onClick={() => setIsMenuOpen(false)}>
+                                <Home size={20} className="admin-mobile-menu-nav-btn-icon" /> หน้าแรก
+                            </Link>
                             <button onClick={() => { setActiveTab('overview'); setIsMenuOpen(false); }} className="admin-mobile-menu-nav-btn">
                                 <BarChart3 size={20} className="admin-mobile-menu-nav-btn-icon" /> ภาพรวม
                             </button>

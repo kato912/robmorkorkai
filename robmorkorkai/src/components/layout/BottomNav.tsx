@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Home, Search, User, LogIn } from "lucide-react";
+import { Home, Search, User, LogIn, Shield } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const BottomNav: React.FC<Props> = ({ activePage }) => {
-    const { isLoggedIn } = useAuth();
+    const { isLoggedIn, user } = useAuth();
 
     return (
         <nav className="fixed-bottom shadow-lg" style={{
@@ -39,6 +39,14 @@ export const BottomNav: React.FC<Props> = ({ activePage }) => {
                         {isLoggedIn ? 'Profile' : 'Login'}
                     </span>
                 </Link>
+
+                {user?.role === "ADMIN" && (
+                    <Link to="/admin" className="text-decoration-none d-flex flex-column align-items-center"
+                        style={{ color: activePage === 'admin' ? '#00b4d8' : '#8a7b72', transition: 'color 0.2s' }}>
+                        <Shield size={24} strokeWidth={activePage === 'admin' ? 2.5 : 2} />
+                        <span style={{ fontSize: '10px', marginTop: '4px', fontWeight: activePage === 'admin' ? 'bold' : 'normal' }}>Dashboard</span>
+                    </Link>
+                )}
 
             </div>
         </nav>

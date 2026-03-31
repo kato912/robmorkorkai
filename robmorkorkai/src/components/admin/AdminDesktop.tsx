@@ -1,6 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { 
-    Store, Search, Filter, Shield, BarChart3, 
+    Store, Search, Filter, Shield, BarChart3, Home,
     MessageSquare, Trash2, Edit, Eye, User, LogOut, Plus 
 } from "lucide-react";
 import { type AdminViewProps, adminTheme as theme } from "./types";
@@ -64,6 +65,9 @@ export const AdminDesktop: React.FC<AdminViewProps> = ({
                     </div>
                 </div>
                 <nav className="admin-desktop-sidebar-nav">
+                    <Link to="/" className="w-100 d-flex align-items-center gap-3 px-3 py-3 rounded-3 border-0 transition text-decoration-none mb-1" style={{ backgroundColor: "transparent", color: theme.textGray }}>
+                        <Home size={20} /> <span className="fw-medium">หน้าแรก</span>
+                    </Link>
                     <SidebarItem id="overview" label="ภาพรวม" icon={BarChart3} active={activeTab === 'overview'} />
                     <SidebarItem id="stores" label="จัดการร้านค้า" icon={Store} active={activeTab === 'stores'} />
                 </nav>
