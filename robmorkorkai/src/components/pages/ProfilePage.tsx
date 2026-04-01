@@ -4,7 +4,7 @@
  * Main profile page displays user information, edit form, and user activity.
  * Features:
  * - Profile header with avatar, name, and statistics
- * - Edit form for user information (name, phone)
+ * - Edit form for user information (name)
  * - Reviews list - all reviews written by the user
  * - Favorites list - all favorite shops saved by user
  * - Edit/Save functionality with API integration
@@ -43,7 +43,6 @@ export interface ProfileData {
     email: string;
     imageUrl: string;
     role: string;
-    phone?: string;
     isVerifiedStudent: boolean;
 }
 
@@ -110,7 +109,6 @@ const ProfilePage: React.FC = () => {
         email: user?.email || "somchai@kkumail.com",
         imageUrl: formatImageUrl(user?.image),
         role: user?.role || "USER",
-        phone: "081-234-5678",
         isVerifiedStudent: user?.isVerifiedStudent || true
     });
 
