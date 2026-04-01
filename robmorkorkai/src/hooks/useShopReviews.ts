@@ -43,7 +43,7 @@ const formatReviewDate = (createdAt: string) => {
 const mapBackendReview = (review: BackendReview): Review => ({
     id: review.id,
     userId: review.userId,
-    userName: review.user?.name,
+    userName: review.user?.name ?? undefined,
     userImage: (review.user?.image && review.user.image.trim()) ? review.user.image : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300",
     email: review.user?.email,
     rating: review.rating,

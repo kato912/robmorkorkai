@@ -1,5 +1,5 @@
 import React from "react";
-import { Star, MessageSquare, BadgeCheck } from "lucide-react";
+import { Star, MessageSquare, BadgeCheck, ChevronDown } from "lucide-react";
 import { ReviewerAvatar } from "./ReviewerAvatar";
 import "./css/ShopReviewsSection.css";
 
@@ -24,6 +24,8 @@ interface ShopReviewsSectionProps {
     verifiedOnly: boolean;
     onSetVerifiedOnly: (value: boolean) => void;
     ratingDistribution: RatingDistribution[];
+    hasMore?: boolean;
+    onShowMore?: (showAll?: boolean, collapse?: boolean) => void;
 }
 
 /**
@@ -67,7 +69,9 @@ export const ShopReviewsSection: React.FC<ShopReviewsSectionProps> = ({
     averageRating,
     verifiedOnly,
     onSetVerifiedOnly,
-    ratingDistribution
+    ratingDistribution,
+    hasMore = false,
+    onShowMore
 }) => {
     return (
         // Reviews section with dark background and top border accent
@@ -193,6 +197,60 @@ export const ShopReviewsSection: React.FC<ShopReviewsSectionProps> = ({
                             <MessageSquare size={48} className="mb-3 opacity-50 mx-auto" style={{ color: '#c9943a' }} />
                             <h6 className="fw-bold mb-2" style={{ color: '#f5ebe4' }}>ยังไม่มีรีวิวสำหรับร้านนี้</h6>
                             <p style={{ color: '#9a8a7e', fontSize: '0.95rem' }}>มาเป็นคนแรกที่แบ่งปันประสบการณ์ของคุณกันเถอะ!</p>
+                        </div>
+                    )}
+
+                    {/* View More Comments Button */}
+                    {hasMore && onShowMore && (
+                        <div className="text-center mt-4">
+                            <button
+                                onClick={() => onShowMore()}
+                                className="btn btn-outline-gold rounded-pill px-3 px-md-5 py-1 py-md-2 fw-bold d-inline-flex align-items-center gap-2 hover-scale"
+                                style={{
+                                    color: '#c9943a',
+                                    borderColor: '#c9943a',
+                                    backgroundColor: 'transparent',
+                                    transition: 'all 0.3s ease',
+                                    fontSize: 'clamp(0.85rem, 2vw, 1rem)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    (e.target as HTMLElement).style.backgroundColor = 'rgba(201, 148, 58, 0.1)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                                }}
+                            >
+                                <span>ดูคอมเมนต์เพิ่มเติม</span>
+                                <ChevronDown size={16} className="d-md-none" />
+                                <ChevronDown size={18} className="d-none d-md-block" />
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Show Less Comments Button - Shows when expanded beyond 3 comments */}
+                    {!hasMore && reviews.length > 3 && onShowMore && (
+                        <div className="text-center mt-4">
+                            <button
+                                onClick={() => onShowMore(false, true)}
+                                className="btn btn-outline-gold rounded-pill px-3 px-md-5 py-1 py-md-2 fw-bold d-inline-flex align-items-center gap-2 hover-scale"
+                                style={{
+                                    color: '#c9943a',
+                                    borderColor: '#c9943a',
+                                    backgroundColor: 'transparent',
+                                    transition: 'all 0.3s ease',
+                                    fontSize: 'clamp(0.85rem, 2vw, 1rem)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    (e.target as HTMLElement).style.backgroundColor = 'rgba(201, 148, 58, 0.1)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                                }}
+                            >
+                                <span>ซ่อนคอมเมนต์</span>
+                                <ChevronDown size={16} className="d-md-none" style={{ transform: 'rotate(180deg)' }} />
+                                <ChevronDown size={18} className="d-none d-md-block" style={{ transform: 'rotate(180deg)' }} />
+                            </button>
                         </div>
                     )}
                 </div>
