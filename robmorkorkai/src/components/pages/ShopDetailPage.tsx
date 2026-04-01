@@ -238,6 +238,8 @@ export const ShopDetailPage: React.FC = () => {
                     verifiedOnly={verifiedOnly}
                     onSetVerifiedOnly={setVerifiedOnly}
                     ratingDistribution={ratingDistribution}
+                    hasMore={hasMore}
+                    onShowMore={handleShowMore}
                 />
             </main>
 

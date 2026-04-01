@@ -58,18 +58,6 @@ export const ProfileEditForm: React.FC<Props> = ({ profile, setProfile }) => {
                         disabled // Email cannot be changed for security
                     />
                 </div>
-
-                {/* Phone Number Field - Optional */}
-                <div className="profile-form-field">
-                    <label className="profile-form-label">เบอร์โทรศัพท์ (ถ้ามี)</label>
-                    <input
-                        type="text"
-                        className="profile-form-input"
-                        placeholder="08X-XXX-XXXX"
-                        value={profile.phone || ""}
-                        onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                    />
-                </div>
             </div>
         </div>
     );

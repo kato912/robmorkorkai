@@ -12,7 +12,7 @@
  * - Mobile action buttons
  *
  * Props:
- * - profile: User profile data (name, email, image, role, phone)
+ * - profile: User profile data (name, email, image, role)
  * - isEditing: Whether user is in edit mode
  * - setIsEditing: Callback to toggle edit mode
  * - onLogout: Callback for logout action
