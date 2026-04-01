@@ -52,13 +52,14 @@ export const getStats = async (req: Request, res: Response) => {
 export const getShopById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
+        const idStr = Array.isArray(id) ? id[0] : id;
 
         const shop = await prisma.shop.findUnique({
-            where: { id: id },
+            where: { id: idStr },
             include: {
                 // ดึงรีวิวมาโชว์ พร้อมกับข้อมูลคนที่รีวิว (เอาแค่ชื่อและรูป)
                 reviews: {
-                    include: { user: { select: { name: true, image: true } } },
+                    include: { user: { select: { name: true, image: true, id: true } } },
                     orderBy: { createdAt: 'desc' } // รีวิวใหม่ล่าสุดขึ้นก่อน
                 }
             }
@@ -79,17 +80,18 @@ export const getShopById = async (req: Request, res: Response) => {
 export const getShopImage = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
+        const idStr = Array.isArray(id) ? id[0] : id;
 
         const shop = await prisma.shop.findUnique({
-            where: { id: id },
-            select: { coverImage: true, image: true }
+            where: { id: idStr },
+            select: { coverImage: true }
         });
 
         if (!shop) {
             return res.status(404).json({ message: "Shop not found" });
         }
 
-        const imageUrl = shop.coverImage || shop.image;
+        const imageUrl = shop.coverImage;
         
         if (!imageUrl) {
             // ส่ง placeholder SVG
@@ -110,7 +112,6 @@ export const getShopImage = async (req: Request, res: Response) => {
 
         // Send image URL as redirect (allow browser to handle CORS)
         res.setHeader("Cache-Control", "public, max-age=3600");
-        res.setHeader("Access-Control-Allow-Origin", "*");
         res.redirect(imageUrl);
     } catch (error) {
         console.error("Error in getShopImage:", error);

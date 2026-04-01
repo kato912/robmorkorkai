@@ -25,10 +25,10 @@
     "typescript": "^5.9.3"
   },
   "type": "module",
-  "scripts": {
-    "build": "tsc",
+"scripts": {
+    "postinstall": "npx prisma generate",
+    "build": "npx prisma generate", 
     "start": "node dist/index.js",
-    "dev": "tsx watch src/index.ts",
-    "seed": "tsx src/scripts/seedShopsFromJSON.ts"
+    "dev": "tsx watch src/index.ts"
   }
 }

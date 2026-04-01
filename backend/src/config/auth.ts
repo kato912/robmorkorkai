@@ -6,8 +6,8 @@ export const authConfig = {
     adapter: PrismaAdapter(prisma),
     providers: [
         Google({
-            clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+            clientId: process.env.AUTH_GOOGLE_ID!,
+            clientSecret: process.env.AUTH_GOOGLE_SECRET!,
 
             profile(profile){
                 const isKKU = profile.email?.endsWith("@kkumail.com") || false;
@@ -25,9 +25,57 @@ export const authConfig = {
             }
         }),
     ],
+    useSecureCookies: true,
+    cookies: {
+        csrfToken: {
+            name: '__Host-authjs.csrf-token',
+            options: {
+                httpOnly: true,
+                sameSite: 'none',
+                path: '/',
+                secure: true
+            }
+        },
+        pkceCodeVerifier: {
+            name: '__Secure-authjs.pkce.code_verifier',
+            options: {
+                httpOnly: true,
+                sameSite: 'none',
+                path: '/',
+                secure: true
+            }
+        },
+        state: {
+            name: '__Secure-authjs.state',
+            options: {
+                httpOnly: true,
+                sameSite: 'none',
+                path: '/',
+                secure: true
+            }
+        },
+        callbackUrl: {
+            name: '__Secure-authjs.callback-url',
+            options: {
+                httpOnly: true,
+                sameSite: 'none',
+                path: '/',
+                secure: true
+            }
+        },
+        sessionToken: {
+             name: '__Secure-authjs.session-token',
+             options: {
+                  httpOnly: true,
+                  sameSite: 'none',
+                  path: '/',
+                  secure: true
+             }
+        }
+    },
 
     callbacks: {
-        async session({ session, user }) {
+        async session({ session, user }: { session: any; user: any }) {
             // เอา ID และ Role จาก Database (user) ยัดกลับเข้าไปใน Session
             if (session.user) {
                 session.user.id = user.id;
@@ -35,6 +83,11 @@ export const authConfig = {
                 session.user.isVerifiedStudent = user.isVerifiedStudent;
             }
             return session;
+        },
+        async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
+            // Redirect ไปที่ Frontend หลังจากขึ้นชื่อเสร็จ
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+            return url.startsWith(frontendUrl) ? url : frontendUrl;
         }
     },
     events:{
